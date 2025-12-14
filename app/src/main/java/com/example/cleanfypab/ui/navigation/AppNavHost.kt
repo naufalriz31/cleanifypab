@@ -1,5 +1,6 @@
 package com.example.cleanfypab.ui.navigation
 
+import com.example.cleanfypab.ui.screen.EditProfileScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -102,6 +103,11 @@ fun AppNavHost(
                 val id = backStack.arguments?.getString("id")?.toInt() ?: 0
                 UpdateStatusScreen(nav, id)
             }
+
+            composable(Routes.EDIT_PROFILE) {
+                EditProfileScreen(nav)
+            }
+
 
             // EDIT REPORT
             composable("edit_report/{id}") { backStack ->

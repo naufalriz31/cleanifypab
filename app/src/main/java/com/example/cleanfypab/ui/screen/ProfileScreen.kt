@@ -1,7 +1,8 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.foundation.border
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -21,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-// Theme colors
+// ================= COLORS =================
 val BG_DARK = Color(0xFF071A12)
 val CARD_DARK = Color(0xFF0F2A1D)
 val GREEN_ACCENT = Color(0xFF00E676)
@@ -40,7 +41,7 @@ fun ProfileScreen(nav: NavHostController) {
             .padding(16.dp)
     ) {
 
-        // ==== TOP HEADER ====
+        // ===== HEADER =====
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -54,10 +55,10 @@ fun ProfileScreen(nav: NavHostController) {
                     .clickable { nav.popBackStack() }
             )
 
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(Modifier.width(12.dp))
 
             Text(
-                "Profile",
+                text = "Profile",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = WHITE
@@ -66,7 +67,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ==== PROFILE PHOTO ====
+        // ===== PROFILE INFO =====
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -82,9 +83,9 @@ fun ProfileScreen(nav: NavHostController) {
             ) {
                 Icon(
                     Icons.Default.Person,
-                    modifier = Modifier.size(70.dp),
                     contentDescription = "Profile Photo",
-                    tint = GRAY_TEXT
+                    tint = GRAY_TEXT,
+                    modifier = Modifier.size(70.dp)
                 )
             }
 
@@ -93,14 +94,14 @@ fun ProfileScreen(nav: NavHostController) {
             Text(
                 "Raffi Andika Awal",
                 fontSize = 26.sp,
-                color = WHITE,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = WHITE
             )
 
             Text(
                 "Room Inspector",
-                color = GRAY_TEXT,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = GRAY_TEXT
             )
 
             Spacer(Modifier.height(10.dp))
@@ -110,19 +111,20 @@ fun ProfileScreen(nav: NavHostController) {
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = GREEN_ACCENT,
-                modifier = Modifier.clickable { }
+                modifier = Modifier.clickable {
+                    nav.navigate(Routes.EDIT_PROFILE)
+                }
             )
         }
 
         Spacer(Modifier.height(28.dp))
 
-        // ==== SETTINGS TITLE ====
+        // ===== SETTINGS =====
         Text(
             "SETTINGS",
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = GRAY_TEXT,
-            modifier = Modifier.padding(start = 4.dp)
+            color = GRAY_TEXT
         )
 
         Spacer(Modifier.height(10.dp))
@@ -143,7 +145,7 @@ fun ProfileScreen(nav: NavHostController) {
                 }
             )
 
-            Divider(color = Color(0xFF173327))
+            HorizontalDivider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.DarkMode,
@@ -151,7 +153,7 @@ fun ProfileScreen(nav: NavHostController) {
                 trailing = { ArrowIcon() }
             )
 
-            Divider(color = Color(0xFF173327))
+            HorizontalDivider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Language,
@@ -162,26 +164,24 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ==== ACCOUNT TITLE ====
+        // ===== ACCOUNT =====
         Text(
             "ACCOUNT",
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = GRAY_TEXT,
-            modifier = Modifier.padding(start = 4.dp)
+            color = GRAY_TEXT
         )
 
         Spacer(Modifier.height(10.dp))
 
         SettingsCard {
-
             SettingsItem(
                 icon = Icons.Default.Lock,
                 title = "Change Password",
                 trailing = { ArrowIcon() }
             )
 
-            Divider(color = Color(0xFF173327))
+            HorizontalDivider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Security,
@@ -189,7 +189,7 @@ fun ProfileScreen(nav: NavHostController) {
                 trailing = { ArrowIcon() }
             )
 
-            Divider(color = Color(0xFF173327))
+            HorizontalDivider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Description,
@@ -200,7 +200,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // ==== LOGOUT BUTTON ====
+        // ===== LOGOUT =====
         Button(
             onClick = {
                 nav.navigate(Routes.LOGIN) {
@@ -213,10 +213,17 @@ fun ProfileScreen(nav: NavHostController) {
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = GREEN_ACCENT)
         ) {
-            Text("Log Out", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = BG_DARK)
+            Text(
+                "Log Out",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = BG_DARK
+            )
         }
     }
 }
+
+// ================= COMPONENTS =================
 
 @Composable
 fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
@@ -241,13 +248,9 @@ fun SettingsItem(
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Icon(icon, contentDescription = title, tint = GREEN_ACCENT, modifier = Modifier.size(22.dp))
-
-        Spacer(modifier = Modifier.width(16.dp))
-
+        Icon(icon, contentDescription = title, tint = GREEN_ACCENT)
+        Spacer(Modifier.width(16.dp))
         Text(title, fontSize = 18.sp, color = WHITE, modifier = Modifier.weight(1f))
-
         trailing?.invoke()
     }
 }
@@ -255,7 +258,7 @@ fun SettingsItem(
 @Composable
 fun ArrowIcon() {
     Icon(
-        Icons.Default.KeyboardArrowRight,
+        Icons.AutoMirrored.Filled.KeyboardArrowRight,
         contentDescription = "Next",
         tint = GRAY_TEXT
     )

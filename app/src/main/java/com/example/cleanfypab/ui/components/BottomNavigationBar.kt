@@ -23,61 +23,61 @@ fun BottomNavigationBar(navController: NavController) {
     ) {
 
         NavigationBarItem(
-            selected = currentRoute == Routes.HOME,
-            onClick = { navController.navigate(Routes.HOME) },
+            selected = currentRoute?.startsWith(Routes.HOME) == true,
+            onClick = {
+                navController.navigate(Routes.HOME) {
+                    popUpTo(Routes.HOME)
+                    launchSingleTop = true
+                }
+            },
             icon = { Icon(Icons.Default.Home, contentDescription = "Dashboard") },
             label = { Text("Dashboard") },
-
-            // ⭐ Warna saat selected / unselected
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.White,
-                unselectedTextColor = Color.White,
-                indicatorColor = Color(0xFF00E676) // bubble hijau neon
-            )
+            colors = navColors()
         )
 
         NavigationBarItem(
-            selected = currentRoute == Routes.HISTORY,
-            onClick = { navController.navigate(Routes.HISTORY) },
+            selected = currentRoute?.startsWith(Routes.HISTORY) == true,
+            onClick = {
+                navController.navigate(Routes.HISTORY) {
+                    launchSingleTop = true
+                }
+            },
             icon = { Icon(Icons.Default.List, contentDescription = "Reports") },
             label = { Text("Reports") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.White,
-                unselectedTextColor = Color.White,
-                indicatorColor = Color(0xFF00E676)
-            )
+            colors = navColors()
         )
 
         NavigationBarItem(
-            selected = currentRoute == Routes.SCAN,
-            onClick = { navController.navigate(Routes.SCAN) },
+            selected = currentRoute?.startsWith(Routes.SCAN) == true,
+            onClick = {
+                navController.navigate(Routes.SCAN) {
+                    launchSingleTop = true
+                }
+            },
             icon = { Icon(Icons.Default.QrCodeScanner, contentDescription = "Scan") },
             label = { Text("Scan") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.White,
-                unselectedTextColor = Color.White,
-                indicatorColor = Color(0xFF00E676)
-            )
+            colors = navColors()
         )
 
         NavigationBarItem(
-            selected = currentRoute == Routes.PROFILE,
-            onClick = { navController.navigate(Routes.PROFILE) },
-            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
+            selected = currentRoute?.startsWith(Routes.PROFILE) == true,
+            onClick = {
+                navController.navigate(Routes.PROFILE) {
+                    launchSingleTop = true
+                }
+            },
+            icon = { Icon(Icons.Default.Settings, contentDescription = "Profile") },
             label = { Text("Profile") },
-            colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.Black,
-                selectedTextColor = Color.Black,
-                unselectedIconColor = Color.White,
-                unselectedTextColor = Color.White,
-                indicatorColor = Color(0xFF00E676)
-            )
+            colors = navColors()
         )
     }
 }
+
+@Composable
+private fun navColors() = NavigationBarItemDefaults.colors(
+    selectedIconColor = Color.Black,
+    selectedTextColor = Color.Black,
+    unselectedIconColor = Color.White,
+    unselectedTextColor = Color.White,
+    indicatorColor = Color(0xFF00E676)
+)

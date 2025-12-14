@@ -7,5 +7,6 @@ object Routes {
     const val TASK_TODAY = "task_today"
     const val PROFILE = "profile"
     const val SCAN = "scan"
-}
 
+    const val EDIT_PROFILE = "edit_profile"
+}
