@@ -20,30 +20,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.cleanfypab.viewmodel.RoomViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun UpdateStatusScreen(
     nav: NavHostController,
+    vm: RoomViewModel,
     roomId: Int
 ) {
     var selected by remember { mutableStateOf("") }
     var showPopup by remember { mutableStateOf(false) }
 
-    val roomName = "Room #$roomId"
+    val roomName = vm.getRoomById(roomId)?.name ?: "Room #$roomId"
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF05150E))
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-
             Spacer(Modifier.height(40.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -59,7 +59,6 @@ fun UpdateStatusScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // ROOM INFO
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(18.dp),
@@ -69,7 +68,7 @@ fun UpdateStatusScreen(
                     Text("Room Name", color = Color(0xFF9BA5A0), fontSize = 14.sp)
                     Text(roomName, color = Color.White, fontSize = 20.sp)
                     Spacer(Modifier.height(12.dp))
-                    Text("Last Check: 09:45 AM", color = Color(0xFF6F7B75), fontSize = 14.sp)
+                    Text("Last Check: -", color = Color(0xFF6F7B75), fontSize = 14.sp)
                 }
             }
 
@@ -108,7 +107,16 @@ fun UpdateStatusScreen(
             Spacer(Modifier.height(30.dp))
 
             Button(
-                onClick = { if (selected.isNotEmpty()) showPopup = true },
+                onClick = {
+                    val status = when (selected) {
+                        "cleaned" -> "Selesai"
+                        "notyet" -> "Menunggu"
+                        "issue" -> "Perlu Dicek"
+                        else -> "Menunggu"
+                    }
+                    vm.updateRoomStatus(roomId, status)
+                    showPopup = true
+                },
                 enabled = selected.isNotEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +132,7 @@ fun UpdateStatusScreen(
             SuccessUpdatePopup(
                 onFinished = {
                     showPopup = false
-                    nav.navigate("home")
+                    nav.navigate("history")
                 }
             )
         }
@@ -171,7 +179,6 @@ fun StatusOptionCard(
 
 @Composable
 fun SuccessUpdatePopup(onFinished: () -> Unit) {
-
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -204,7 +211,7 @@ fun SuccessUpdatePopup(onFinished: () -> Unit) {
                     Icon(Icons.Default.CheckCircle, contentDescription = "Success", tint = Color(0xFF00E676), modifier = Modifier.size(80.dp))
                     Spacer(Modifier.height(10.dp))
                     Text("Status Updated!", color = Color.White, fontSize = 22.sp)
-                    Text("Saving your report...", color = Color(0xFFB8C3BD), fontSize = 14.sp)
+                    Text("Saved to database.", color = Color(0xFFB8C3BD), fontSize = 14.sp)
                 }
             }
         }

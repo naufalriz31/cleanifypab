@@ -28,13 +28,11 @@ fun AppNavHost(
     nav: NavHostController,
     vm: RoomViewModel
 ) {
-    // Route yang sedang aktif
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
-            // Bottom nav hanya untuk halaman utama (bukan login)
             val showBottomBar = currentRoute in listOf(
                 Routes.HOME,
                 Routes.HISTORY,
@@ -50,7 +48,7 @@ fun AppNavHost(
 
         NavHost(
             navController = nav,
-            startDestination = Routes.LOGIN,          // Mulai dari login
+            startDestination = Routes.LOGIN,
             modifier = Modifier.padding(innerPadding)
         ) {
 
@@ -101,7 +99,7 @@ fun AppNavHost(
             // UPDATE STATUS
             composable("update_status/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")?.toInt() ?: 0
-                UpdateStatusScreen(nav, id)
+                UpdateStatusScreen(nav, vm, id)
             }
 
             composable(Routes.EDIT_PROFILE) {

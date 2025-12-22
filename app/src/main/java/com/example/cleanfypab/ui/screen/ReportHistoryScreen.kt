@@ -28,16 +28,15 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
     var selectedTab by remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
 
-    val tabs = listOf("All", "Complete", "Pending", "Needs Review")
+    val tabs = listOf("Semua", "Selesai", "Menunggu", "Perlu Dicek")
 
     val filteredRooms = rooms.filter { room ->
         val matchStatus = when (selectedTab) {
-            1 -> room.status == "Complete"
-            2 -> room.status == "Pending"
-            3 -> room.status == "Issue"
+            1 -> room.status == "Selesai"
+            2 -> room.status == "Menunggu"
+            3 -> room.status == "Perlu Dicek"
             else -> true
         }
-
         matchStatus && room.name.contains(searchQuery, ignoreCase = true)
     }
 
@@ -49,14 +48,10 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
     ) {
         Spacer(Modifier.height(20.dp))
 
-        // HEADER
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
-
             Text(
                 "Report History",
                 color = Color.White,
@@ -67,7 +62,6 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
 
         Spacer(Modifier.height(20.dp))
 
-        // SEARCH BAR
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -78,7 +72,7 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = { Text("Search Room 101, B2, etc...", color = Color(0xFF7D8B83)) },
+                placeholder = { Text("Cari ruangan...", color = Color(0xFF7D8B83)) },
                 modifier = Modifier.weight(1f),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
@@ -105,7 +99,6 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
 
         Spacer(Modifier.height(20.dp))
 
-        // TAB FILTERS
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -115,9 +108,7 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(30.dp))
-                        .background(
-                            if (isSelected) Color(0xFF00E676) else Color(0xFF1F2C25)
-                        )
+                        .background(if (isSelected) Color(0xFF00E676) else Color(0xFF1F2C25))
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                         .clickable { selectedTab = index }
                 ) {
@@ -133,10 +124,7 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
 
         Spacer(Modifier.height(16.dp))
 
-        // LIST ITEMS
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(filteredRooms) { room ->
                 ReportHistoryItem(room) {
                     nav.navigate("detail/${room.id}")
@@ -150,9 +138,9 @@ fun ReportHistoryScreen(nav: NavHostController, rooms: List<RoomModel>) {
 fun ReportHistoryItem(room: RoomModel, onClick: () -> Unit) {
 
     val statusColor = when (room.status) {
-        "Complete" -> Color(0xFF2ECC71)
-        "Pending" -> Color(0xFFE67E22)
-        "Issue" -> Color(0xFFE74C3C)
+        "Selesai" -> Color(0xFF2ECC71)
+        "Menunggu" -> Color(0xFFE67E22)
+        "Perlu Dicek" -> Color(0xFFE74C3C)
         else -> Color(0xFF95A5A6)
     }
 
@@ -167,8 +155,6 @@ fun ReportHistoryItem(room: RoomModel, onClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
-            // QR ICON
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -181,16 +167,13 @@ fun ReportHistoryItem(room: RoomModel, onClick: () -> Unit) {
 
             Spacer(Modifier.width(16.dp))
 
-            // ROOM INFO
             Column(modifier = Modifier.weight(1f)) {
-
                 Text(
                     room.name,
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-
                 Text(
                     room.time,
                     color = Color(0xFF9BA5A0),
@@ -200,7 +183,6 @@ fun ReportHistoryItem(room: RoomModel, onClick: () -> Unit) {
                 )
             }
 
-            // STATUS BADGE
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(30.dp))
@@ -216,8 +198,6 @@ fun ReportHistoryItem(room: RoomModel, onClick: () -> Unit) {
             }
 
             Spacer(Modifier.width(6.dp))
-
-            // Arrow →
             Text("›", color = Color(0xFF5F6F67), fontSize = 28.sp)
         }
     }

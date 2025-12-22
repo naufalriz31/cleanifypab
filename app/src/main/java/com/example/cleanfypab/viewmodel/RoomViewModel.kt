@@ -1,35 +1,44 @@
 package com.example.cleanfypab.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cleanfypab.data.local.AppDatabase
 import com.example.cleanfypab.data.model.RoomModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.cleanfypab.data.repository.RoomRepository
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class RoomViewModel : ViewModel() {
+class RoomViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _roomList = MutableStateFlow(
-        listOf(
-            RoomModel(1, "Ruang Meeting A101", "Menunggu", "09:00"),
-            RoomModel(2, "Lobi Utama", "Selesai", "08:30"),
-            RoomModel(3, "Toilet Lt. 2", "Menunggu", "09:15")
-        )
+    private val repo = RoomRepository(
+        AppDatabase.getInstance(application).roomDao()
     )
-    val roomList: StateFlow<List<RoomModel>> = _roomList
 
-    // ✔ fungsi get room by id
-    fun getRoomById(id: Int): RoomModel? {
-        return _roomList.value.firstOrNull { it.id == id }
+    val roomList: StateFlow<List<RoomModel>> =
+        repo.roomsFlow()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    init {
+        viewModelScope.launch {
+            repo.seedDefaultRoomsIfEmpty()
+        }
     }
 
-    // ✔ fungsi update status
+    fun getRoomById(id: Int): RoomModel? =
+        roomList.value.firstOrNull { it.id == id }
+
     fun markRoomClean(id: Int) {
-        _roomList.update { list ->
-            list.map { room ->
-                if (room.id == id)
-                    room.copy(status = "Selesai")
-                else room
-            }
+        viewModelScope.launch {
+            repo.updateStatus(id, "Selesai")
+        }
+    }
+
+    fun updateRoomStatus(id: Int, status: String) {
+        viewModelScope.launch {
+            repo.updateStatus(id, status)
         }
     }
 }
