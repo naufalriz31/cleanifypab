@@ -1,5 +1,6 @@
 package com.example.cleanfypab.ui.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import com.example.cleanfypab.ui.screen.EditProfileScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -31,15 +32,17 @@ fun AppNavHost(
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // ⛔ Bottom bar petugas JANGAN tampil di admin
+    val showBottomBar = currentRoute in listOf(
+        Routes.HOME,
+        Routes.HISTORY,
+        Routes.TASK_TODAY,
+        Routes.PROFILE,
+        Routes.SCAN
+    )
+
     Scaffold(
         bottomBar = {
-            val showBottomBar = currentRoute in listOf(
-                Routes.HOME,
-                Routes.HISTORY,
-                Routes.TASK_TODAY,
-                Routes.PROFILE,
-                Routes.SCAN
-            )
             if (showBottomBar) {
                 BottomNavigationBar(navController = nav)
             }
@@ -52,51 +55,67 @@ fun AppNavHost(
             modifier = Modifier.padding(innerPadding)
         ) {
 
-            // LOGIN
+            /* ================= LOGIN ================= */
             composable(Routes.LOGIN) {
                 LoginScreen(
-                    onLoginSuccess = {
-                        nav.navigate(Routes.HOME) {
-                            // Hapus login dari backstack
-                            popUpTo(Routes.LOGIN) { inclusive = true }
+                    onLoginSuccess = { role ->
+                        if (role == "admin") {
+                            nav.navigate(Routes.ADMIN_ROOT) {
+                                popUpTo(Routes.LOGIN) { inclusive = true }
+                            }
+                        } else {
+                            nav.navigate(Routes.PETUGAS_ROOT) {
+                                popUpTo(Routes.LOGIN) { inclusive = true }
+                            }
                         }
                     }
                 )
             }
 
-            // HOME / DASHBOARD
+            /* ================= ADMIN ================= */
+            composable(Routes.ADMIN_ROOT) {
+                AdminNavHost()
+            }
+
+            /* ================= PETUGAS ================= */
+            composable(Routes.PETUGAS_ROOT) {
+
+                // langsung redirect ke HOME petugas
+                LaunchedEffect(Unit) {
+                    nav.navigate(Routes.HOME) {
+                        popUpTo(Routes.PETUGAS_ROOT) { inclusive = true }
+                    }
+                }
+            }
+
+            /* ================= PETUGAS FLOW LAMA ================= */
+
             composable(Routes.HOME) {
                 HomeScreen(nav)
             }
 
-            // REPORT HISTORY
             composable(Routes.HISTORY) {
                 val rooms = vm.roomList.collectAsState().value
                 ReportHistoryScreen(nav = nav, rooms = rooms)
             }
 
-            // TASK TODAY
             composable(Routes.TASK_TODAY) {
                 TaskTodayScreen(nav, vm)
             }
 
-            // PROFILE
             composable(Routes.PROFILE) {
                 ProfileScreen(nav)
             }
 
-            // SCAN
             composable(Routes.SCAN) {
                 ScanScreen(nav)
             }
 
-            // DETAIL ROOM
             composable("detail/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")?.toInt() ?: 0
                 RoomDetailScreen(nav, vm, id)
             }
 
-            // UPDATE STATUS
             composable("update_status/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")?.toInt() ?: 0
                 UpdateStatusScreen(nav, vm, id)
@@ -106,8 +125,6 @@ fun AppNavHost(
                 EditProfileScreen(nav)
             }
 
-
-            // EDIT REPORT
             composable("edit_report/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")?.toInt() ?: 0
                 EditReportScreen(nav, id)

@@ -1,7 +1,5 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,11 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(
+    onLoginSuccess: (String) -> Unit   // 🔐 ROLE AWARE
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -35,7 +37,6 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(Modifier.height(60.dp))
 
-        // ICON
         Box(
             modifier = Modifier
                 .size(90.dp)
@@ -63,36 +64,31 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(Modifier.height(34.dp))
 
-        // EMAIL FIELD
+        /* EMAIL */
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             placeholder = { Text("Enter your email") },
-            leadingIcon = {
-                Icon(Icons.Default.Email, contentDescription = null)
-            },
+            leadingIcon = { Icon(Icons.Default.Email, null) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF15261D),
                 unfocusedContainerColor = Color(0xFF15261D),
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                focusedLabelColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
 
         Spacer(Modifier.height(16.dp))
 
-        // PASSWORD FIELD
+        /* PASSWORD */
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             placeholder = { Text("Enter your password") },
-            leadingIcon = {
-                Icon(Icons.Default.Lock, contentDescription = null)
-            },
+            leadingIcon = { Icon(Icons.Default.Lock, null) },
             trailingIcon = {
                 Text(
                     if (showPassword) "Hide" else "Show",
@@ -100,33 +96,34 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                     modifier = Modifier.clickable { showPassword = !showPassword }
                 )
             },
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (showPassword)
+                VisualTransformation.None
+            else
+                PasswordVisualTransformation(),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF15261D),
                 unfocusedContainerColor = Color(0xFF15261D),
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
-        )
-
-        Spacer(Modifier.height(10.dp))
-
-        Text(
-            "Forgot Password?",
-            color = Color(0xFF00E676),
-            modifier = Modifier
-                .align(Alignment.End)
-                .clickable { }
+            )
         )
 
         Spacer(Modifier.height(20.dp))
 
-        // LOGIN BUTTON
+        /* LOGIN BUTTON */
         Button(
-            onClick = { onLoginSuccess() },
+            onClick = {
+                // 🔐 DUMMY ROLE (UNTUK DEMO DOSEN)
+                val role = if (email.contains("admin", ignoreCase = true)) {
+                    "admin"
+                } else {
+                    "petugas"
+                }
+                onLoginSuccess(role)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
@@ -149,18 +146,18 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(Modifier.height(24.dp))
 
-        // APPLE LOGIN
-        LoginOptionButton(label = "Sign in with Apple", bg = Color.White, fg = Color.Black)
-
+        LoginOptionButton("Sign in with Apple", Color.White, Color.Black)
         Spacer(Modifier.height(12.dp))
-
-        // GOOGLE LOGIN
-        LoginOptionButton(label = "Sign in with Google", bg = Color(0xFF1A2D23), fg = Color.White)
+        LoginOptionButton("Sign in with Google", Color(0xFF1A2D23), Color.White)
     }
 }
 
 @Composable
-fun LoginOptionButton(label: String, bg: Color, fg: Color) {
+fun LoginOptionButton(
+    label: String,
+    bg: Color,
+    fg: Color
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
