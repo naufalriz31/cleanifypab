@@ -2,13 +2,9 @@ package com.example.cleanfypab.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import com.example.cleanfypab.ui.admin.*
 import com.example.cleanfypab.ui.components.admin.BottomNavigationAdmin
 
@@ -41,12 +37,20 @@ fun AdminNavHost() {
 
             /* ================= ROOMS ================= */
             composable(AdminRoutes.ROOMS) {
-                AdminRoomScreen()
+                AdminRoomScreen(
+                    onAddTask = {
+                        navController.navigate(AdminRoutes.CREATE_TASK)
+                    }
+                )
             }
 
             /* ================= REPORTS ================= */
             composable(AdminRoutes.REPORTS) {
-                AdminReportScreen()
+                AdminReportScreen(
+                    onAssignClick = {
+                        navController.navigate(AdminRoutes.CREATE_TASK)
+                    }
+                )
             }
 
             /* ================= USERS ================= */
@@ -56,12 +60,37 @@ fun AdminNavHost() {
 
             /* ================= PROFILE ================= */
             composable(AdminRoutes.PROFILE) {
-                AdminProfileScreen()
+                AdminProfileScreen(
+                    onEdit = {
+                        // 🔥 EDIT → KE EDIT PROFILE
+                        navController.navigate(AdminRoutes.EDIT_PROFILE)
+                    },
+                    onSignOut = {
+                        // TODO logout logic
+                    }
+                )
             }
 
-            /* ================= ASSIGN ROOM ================= */
-            composable(AdminRoutes.ASSIGN_ROOM) {
-                AdminAssignRoomScreen()
+            /* ================= EDIT PROFILE ================= */
+            composable(AdminRoutes.EDIT_PROFILE) {
+                AdminEditProfileScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    },
+                    onSave = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            /* ================= CREATE TASK ================= */
+            composable(AdminRoutes.CREATE_TASK) {
+                AdminCreateTaskScreen(
+                    onCancel = { navController.popBackStack() },
+                    onAssign = {
+                        navController.popBackStack(AdminRoutes.REPORTS, false)
+                    }
+                )
             }
         }
     }

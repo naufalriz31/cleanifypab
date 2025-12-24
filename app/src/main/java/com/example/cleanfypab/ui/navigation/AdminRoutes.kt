@@ -7,4 +7,8 @@ object AdminRoutes {
     const val USERS = "admin_users"
     const val PROFILE = "admin_profile"
     const val ASSIGN_ROOM = "admin_assign_room"
+    const val EDIT_PROFILE = "admin_edit_profile"
+
+    // 🔥 TAMBAHKAN INI
+    const val CREATE_TASK = "admin_create_task"
 }

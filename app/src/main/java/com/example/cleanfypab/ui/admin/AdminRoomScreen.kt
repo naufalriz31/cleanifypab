@@ -13,17 +13,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun AdminRoomScreen(
-    onAddRoom: () -> Unit = {}
+    onAddTask: () -> Unit = {}
 ) {
 
-    val bgColor = Color(0xFF0F2A1D)
-    val cardColor = Color(0xFF163828)
+    val bg = Color(0xFF0F2A1D)
+    val card = Color(0xFF163828)
     val green = Color(0xFF2DFF8F)
     val red = Color(0xFFFF5C5C)
     val yellow = Color(0xFFFFC107)
@@ -33,11 +34,11 @@ fun AdminRoomScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bgColor)
+            .background(bg)
             .padding(16.dp)
     ) {
 
-        /* HEADER */
+        /* ================= HEADER ================= */
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -51,7 +52,7 @@ fun AdminRoomScreen(
             )
 
             FloatingActionButton(
-                onClick = onAddRoom,
+                onClick = onAddTask,
                 containerColor = green,
                 modifier = Modifier.size(48.dp)
             ) {
@@ -61,7 +62,7 @@ fun AdminRoomScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        /* SEARCH */
+        /* ================= SEARCH ================= */
         OutlinedTextField(
             value = "",
             onValueChange = {},
@@ -70,32 +71,66 @@ fun AdminRoomScreen(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = cardColor,
-                unfocusedContainerColor = cardColor,
+                focusedContainerColor = card,
+                unfocusedContainerColor = card,
                 focusedBorderColor = green,
-                unfocusedBorderColor = cardColor,
+                unfocusedBorderColor = card,
                 cursorColor = green
             )
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
-        /* OVERVIEW */
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OverviewCard("45", "Total Rooms", green, cardColor)
-            OverviewCard("12", "Available Now", green, cardColor)
+        /* ================= OVERVIEW ================= */
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OverviewCard(
+                modifier = Modifier.weight(1f, true),
+                value = "45",
+                label = "Total Rooms",
+                icon = Icons.Default.Apartment,
+                accent = green,
+                bg = card
+            )
+            OverviewCard(
+                modifier = Modifier.weight(1f, true),
+                value = "12",
+                label = "Available Now",
+                icon = Icons.Default.CheckCircle,
+                accent = green,
+                bg = card
+            )
         }
 
         Spacer(Modifier.height(12.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            OverviewCard("28", "Occupied", red, cardColor)
-            OverviewCard("5", "Maintenance", yellow, cardColor)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OverviewCard(
+                modifier = Modifier.weight(1f, true),
+                value = "28",
+                label = "Occupied",
+                icon = Icons.Default.Person,
+                accent = red,
+                bg = card
+            )
+            OverviewCard(
+                modifier = Modifier.weight(1f, true),
+                value = "5",
+                label = "Maintenance",
+                icon = Icons.Default.Build,
+                accent = yellow,
+                bg = card
+            )
         }
 
         Spacer(Modifier.height(20.dp))
 
-        /* FILTER */
+        /* ================= FILTER ================= */
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             RoomFilter("ALL", "All", selectedFilter, green) { selectedFilter = "ALL" }
             RoomFilter("AVAILABLE", "Available", selectedFilter, green) { selectedFilter = "AVAILABLE" }
@@ -105,13 +140,13 @@ fun AdminRoomScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        /* ROOM LIST */
+        /* ================= ROOM LIST ================= */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            item { RoomItem("Room 101", "Deluxe Suite", "Available", green, cardColor) }
-            item { RoomItem("Room 102", "Standard Single", "Occupied", red, cardColor) }
-            item { RoomItem("Room 103", "Conference A", "Maintenance", yellow, cardColor) }
-            item { RoomItem("Room 204", "Double Twin", "Occupied", red, cardColor) }
-            item { RoomItem("Room 205", "Superior Queen", "Available", green, cardColor) }
+            item { RoomItem("Room 101", "Deluxe Suite", "Available", green, card) }
+            item { RoomItem("Room 102", "Standard Single", "Occupied", red, card) }
+            item { RoomItem("Room 103", "Conference A", "Maintenance", yellow, card) }
+            item { RoomItem("Room 204", "Double Twin", "Occupied", red, card) }
+            item { RoomItem("Room 205", "Superior Queen", "Available", green, card) }
         }
     }
 }
@@ -120,19 +155,25 @@ fun AdminRoomScreen(
 
 @Composable
 fun OverviewCard(
+    modifier: Modifier,
     value: String,
     label: String,
+    icon: ImageVector,
     accent: Color,
-    cardColor: Color
+    bg: Color
 ) {
-    Column(
-        modifier = Modifier
-            .background(cardColor, RoundedCornerShape(18.dp))
-            .padding(16.dp)
+    Row(
+        modifier = modifier
+            .background(bg, RoundedCornerShape(18.dp))
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(value, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(6.dp))
-        Text(label, color = accent, fontSize = 13.sp)
+        Column {
+            Text(value, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(label, color = accent, fontSize = 13.sp)
+        }
+        Icon(icon, null, tint = accent)
     }
 }
 
@@ -166,12 +207,12 @@ fun RoomItem(
     type: String,
     status: String,
     statusColor: Color,
-    cardColor: Color
+    card: Color
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(cardColor, RoundedCornerShape(20.dp))
+            .background(card, RoundedCornerShape(20.dp))
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
