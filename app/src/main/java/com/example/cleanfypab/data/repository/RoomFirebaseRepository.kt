@@ -15,13 +15,20 @@ class RoomFirebaseRepository {
 
     private val col = FirebaseProvider.db.collection("rooms")
 
+    /**
+     * Stream real-time daftar rooms.
+     * - Kalau permission ditolak / offline → emit emptyList, tidak crash.
+     */
     fun streamRooms(): Flow<List<RoomDoc>> = callbackFlow {
         var reg: ListenerRegistration? = null
+
         reg = col.addSnapshotListener { snap, err ->
             if (err != null) {
+                // jangan crash
                 trySend(emptyList())
                 return@addSnapshotListener
             }
+
             val list = snap?.documents
                 ?.mapNotNull { it.toObject(RoomDoc::class.java) }
                 ?.sortedBy { it.id }
@@ -29,12 +36,17 @@ class RoomFirebaseRepository {
 
             trySend(list)
         }
+
         awaitClose { reg?.remove() }
     }
 
-    suspend fun seedDefaultRoomsIfEmpty() {
+    /**
+     * Seed data default jika koleksi kosong.
+     * - Aman: return Result, jadi pemanggil tidak crash kalau permission ditolak/offline.
+     */
+    suspend fun seedDefaultRoomsIfEmpty(): Result<Unit> = runCatching {
         val snap = col.limit(1).get().await()
-        if (!snap.isEmpty) return
+        if (!snap.isEmpty) return@runCatching
 
         val defaults = listOf(
             RoomDoc(1, "Ruang Meeting A101", "Menunggu", "09:00"),
@@ -47,8 +59,13 @@ class RoomFirebaseRepository {
         }
     }
 
-    suspend fun updateRoomStatus(roomId: Int, newStatus: String) {
+    /**
+     * Update status room + update time.
+     * - Aman: return Result.
+     */
+    suspend fun updateRoomStatus(roomId: Int, newStatus: String): Result<Unit> = runCatching {
         val nowTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
         col.document(roomId.toString())
             .update(
                 mapOf(
@@ -60,8 +77,12 @@ class RoomFirebaseRepository {
             .await()
     }
 
-    suspend fun getRoomById(roomId: Int): RoomDoc? {
+    /**
+     * Get room by id.
+     * - Aman: return Result<RoomDoc?>
+     */
+    suspend fun getRoomById(roomId: Int): Result<RoomDoc?> = runCatching {
         val snap = col.document(roomId.toString()).get().await()
-        return snap.toObject(RoomDoc::class.java)
+        snap.toObject(RoomDoc::class.java)
     }
 }
