@@ -1,44 +1,64 @@
 package com.example.cleanfypab.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleanfypab.data.local.AppDatabase
+import com.example.cleanfypab.data.model.RoomDoc
 import com.example.cleanfypab.data.model.RoomModel
-import com.example.cleanfypab.data.repository.RoomRepository
-import kotlinx.coroutines.flow.SharingStarted
+import com.example.cleanfypab.data.repository.RoomFirebaseRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class RoomViewModel(application: Application) : AndroidViewModel(application) {
+class RoomViewModel(
+    private val repo: RoomFirebaseRepository = RoomFirebaseRepository()
+) : ViewModel() {
 
-    private val repo = RoomRepository(
-        AppDatabase.getInstance(application).roomDao()
-    )
-
-    val roomList: StateFlow<List<RoomModel>> =
-        repo.roomsFlow()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    private val _roomList = MutableStateFlow<List<RoomModel>>(emptyList())
+    val roomList: StateFlow<List<RoomModel>> = _roomList
 
     init {
         viewModelScope.launch {
             repo.seedDefaultRoomsIfEmpty()
+            repo.streamRooms().collect { rooms ->
+                _roomList.value = rooms.map { it.toRoomModel() }
+            }
         }
     }
 
-    fun getRoomById(id: Int): RoomModel? =
-        roomList.value.firstOrNull { it.id == id }
+    fun getRoomById(id: Int): RoomModel? {
+        return _roomList.value.firstOrNull { it.id == id }
+    }
 
+    /**
+     * ✅ Fungsi utama (baru) yang dipakai backend Firebase
+     */
+    fun updateStatus(roomId: Int, status: String) {
+        viewModelScope.launch {
+            repo.updateRoomStatus(roomId, status)
+        }
+    }
+
+    /**
+     * ✅ Alias untuk UI lama (biar tidak error)
+     */
     fun markRoomClean(id: Int) {
-        viewModelScope.launch {
-            repo.updateStatus(id, "Selesai")
-        }
+        updateStatus(id, "Selesai")
     }
 
+    /**
+     * ✅ Alias untuk UI lama (biar tidak error)
+     * Kamu bisa panggil status apa saja: "Menunggu" / "Selesai"
+     */
     fun updateRoomStatus(id: Int, status: String) {
-        viewModelScope.launch {
-            repo.updateStatus(id, status)
-        }
+        updateStatus(id, status)
+    }
+
+    private fun RoomDoc.toRoomModel(): RoomModel {
+        return RoomModel(
+            id = id,
+            name = name,
+            status = status,
+            time = time
+        )
     }
 }

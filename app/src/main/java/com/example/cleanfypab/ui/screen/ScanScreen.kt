@@ -41,9 +41,7 @@ fun ScanScreen(nav: NavHostController) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
-    var hasScanned by remember { mutableStateOf(false) }   // ⬅ mencegah double navigation
-
+    var hasScanned by remember { mutableStateOf(false) }
     val previewView = remember { PreviewView(context) }
 
     // ==== REQUEST CAMERA PERMISSION ====
@@ -62,17 +60,12 @@ fun ScanScreen(nav: NavHostController) {
     // ==== SETUP CAMERA ====
     LaunchedEffect(Unit) {
 
-        val provider = ProcessCameraProvider.getInstance(context).get()
-        cameraProvider = provider
-
         val preview = Preview.Builder().build().also {
             it.setSurfaceProvider(previewView.surfaceProvider)
         }
 
         val scannerOptions = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(
-                com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE
-            )
+            .setBarcodeFormats(com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE)
             .build()
 
         val scanner = BarcodeScanning.getClient(scannerOptions)
@@ -98,11 +91,12 @@ fun ScanScreen(nav: NavHostController) {
                     if (!hasScanned) {
                         for (barcode in barcodes) {
                             barcode.rawValue?.let { result ->
-                                hasScanned = true      // ⬅ cegah double trigger
-                                provider.unbindAll()    // stop kamera
-
-                                nav.navigate("detail/$result") {
-                                    launchSingleTop = true
+                                val id = result.toIntOrNull()
+                                if (id != null) {
+                                    hasScanned = true
+                                    nav.navigate("detail/$id") {
+                                        launchSingleTop = true
+                                    }
                                 }
                             }
                         }
@@ -113,12 +107,20 @@ fun ScanScreen(nav: NavHostController) {
                 }
         }
 
-        provider.unbindAll()
-        provider.bindToLifecycle(
-            lifecycleOwner,
-            CameraSelector.DEFAULT_BACK_CAMERA,
-            preview,
-            analysis
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+        cameraProviderFuture.addListener(
+            {
+                val cameraProvider = cameraProviderFuture.get()
+
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    lifecycleOwner,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    preview,
+                    analysis
+                )
+            },
+            ContextCompat.getMainExecutor(context)
         )
     }
 
@@ -129,13 +131,11 @@ fun ScanScreen(nav: NavHostController) {
             .background(Color.Black)
     ) {
 
-        // CAMERA PREVIEW
         AndroidView(
             factory = { previewView },
             modifier = Modifier.fillMaxSize()
         )
 
-        // TOP BAR
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -153,7 +153,6 @@ fun ScanScreen(nav: NavHostController) {
             Text("Scan QR Code", color = Color.White, fontSize = 20.sp)
         }
 
-        // GREEN FRAME
         Box(
             modifier = Modifier
                 .size(260.dp)

@@ -1,35 +1,33 @@
 package com.example.cleanfypab.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleanfypab.data.local.AppDatabase
-import com.example.cleanfypab.data.model.CleaningReportEntity
-import com.example.cleanfypab.data.repository.CleaningReportRepository
+import com.example.cleanfypab.data.model.CleaningReportDoc
+import com.example.cleanfypab.data.repository.CleaningReportFirebaseRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ReportViewModel(application: Application) : AndroidViewModel(application) {
+class ReportViewModel(
+    private val repo: CleaningReportFirebaseRepository = CleaningReportFirebaseRepository()
+) : ViewModel() {
 
-    private val repo = CleaningReportRepository(
-        AppDatabase.getInstance(application).cleaningReportDao()
-    )
+    private val _reports = MutableStateFlow<List<CleaningReportDoc>>(emptyList())
+    val reports: StateFlow<List<CleaningReportDoc>> = _reports
 
-    val reports: StateFlow<List<CleaningReportEntity>> =
-        repo.allReports()
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
-
-    fun addReport(report: CleaningReportEntity) {
-        viewModelScope.launch { repo.addReport(report) }
+    init {
+        viewModelScope.launch {
+            repo.streamReports().collect { _reports.value = it }
+        }
     }
 
-    fun updateReport(report: CleaningReportEntity) {
-        viewModelScope.launch { repo.updateReport(report) }
+    fun addReportAndUpdateRoom(report: CleaningReportDoc, newStatus: String) {
+        viewModelScope.launch {
+            repo.addReportAndUpdateRoom(report, newStatus)
+        }
     }
 
-    fun deleteReport(report: CleaningReportEntity) {
-        viewModelScope.launch { repo.deleteReport(report) }
+    fun deleteReport(reportId: String) {
+        viewModelScope.launch { repo.deleteReport(reportId) }
     }
 }

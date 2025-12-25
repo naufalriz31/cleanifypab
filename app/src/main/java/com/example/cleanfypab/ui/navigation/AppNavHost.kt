@@ -1,10 +1,9 @@
 package com.example.cleanfypab.ui.navigation
 
-import androidx.compose.runtime.LaunchedEffect
-import com.example.cleanfypab.ui.screen.EditProfileScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -13,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.cleanfypab.ui.components.BottomNavigationBar
+import com.example.cleanfypab.ui.screen.EditProfileScreen
 import com.example.cleanfypab.ui.screen.EditReportScreen
 import com.example.cleanfypab.ui.screen.HomeScreen
 import com.example.cleanfypab.ui.screen.LoginScreen
@@ -32,7 +32,7 @@ fun AppNavHost(
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // ⛔ Bottom bar petugas JANGAN tampil di admin
+    // BottomBar hanya tampil di halaman petugas (bukan di login/admin)
     val showBottomBar = currentRoute in listOf(
         Routes.HOME,
         Routes.HISTORY,
@@ -57,15 +57,18 @@ fun AppNavHost(
 
             /* ================= LOGIN ================= */
             composable(Routes.LOGIN) {
+                // ⚠️ LoginScreen harus mengirim role: "admin" / "petugas"
                 LoginScreen(
                     onLoginSuccess = { role ->
                         if (role == "admin") {
                             nav.navigate(Routes.ADMIN_ROOT) {
                                 popUpTo(Routes.LOGIN) { inclusive = true }
+                                launchSingleTop = true
                             }
                         } else {
                             nav.navigate(Routes.PETUGAS_ROOT) {
                                 popUpTo(Routes.LOGIN) { inclusive = true }
+                                launchSingleTop = true
                             }
                         }
                     }
@@ -74,22 +77,22 @@ fun AppNavHost(
 
             /* ================= ADMIN ================= */
             composable(Routes.ADMIN_ROOT) {
+                // Admin punya NavHost sendiri
                 AdminNavHost()
             }
 
-            /* ================= PETUGAS ================= */
+            /* ================= PETUGAS ROOT ================= */
             composable(Routes.PETUGAS_ROOT) {
-
-                // langsung redirect ke HOME petugas
+                // Saat masuk petugas_root, langsung redirect ke home
                 LaunchedEffect(Unit) {
                     nav.navigate(Routes.HOME) {
                         popUpTo(Routes.PETUGAS_ROOT) { inclusive = true }
+                        launchSingleTop = true
                     }
                 }
             }
 
-            /* ================= PETUGAS FLOW LAMA ================= */
-
+            /* ================= PETUGAS FLOW ================= */
             composable(Routes.HOME) {
                 HomeScreen(nav)
             }
@@ -111,13 +114,14 @@ fun AppNavHost(
                 ScanScreen(nav)
             }
 
+            /* ================= ROUTE PARAMETER ================= */
             composable("detail/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toInt() ?: 0
+                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
                 RoomDetailScreen(nav, vm, id)
             }
 
             composable("update_status/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toInt() ?: 0
+                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
                 UpdateStatusScreen(nav, vm, id)
             }
 
@@ -126,7 +130,7 @@ fun AppNavHost(
             }
 
             composable("edit_report/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toInt() ?: 0
+                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
                 EditReportScreen(nav, id)
             }
         }

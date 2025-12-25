@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -33,20 +33,25 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlinOptions { jvmTarget = "11" }
 
-    buildFeatures {
-        compose = true
-    }
+    buildFeatures { compose = true }
+}
+
+/**
+ * ✅ PENTING:
+ * AndroidX kadang menarik "listenablefuture:9999.0-empty-to-avoid-conflict-with-guava"
+ * yang TIDAK punya class ListenableFuture.
+ * Maka kita exclude itu, lalu tambah guava asli.
+ */
+configurations.all {
+    exclude(group = "com.google.guava", module = "listenablefuture")
 }
 
 dependencies {
 
     // ===== Compose BOM =====
     implementation(platform(libs.androidx.compose.bom))
-
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -63,16 +68,29 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
-    // CameraX
+    // ===== CameraX =====
     implementation("androidx.camera:camera-core:1.3.3")
     implementation("androidx.camera:camera-camera2:1.3.3")
     implementation("androidx.camera:camera-lifecycle:1.3.3")
     implementation("androidx.camera:camera-view:1.3.3")
 
-    // ML Kit
+    // ✅ WAJIB: Guava asli (berisi com.google.common.util.concurrent.ListenableFuture)
+    implementation("com.google.guava:guava:33.2.1-android")
+
+    // ===== ML Kit =====
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
-    // Testing
+    // ===== Firebase =====
+    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
+    // ===== Testing =====
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,9 +99,4 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    // Backend
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
 }

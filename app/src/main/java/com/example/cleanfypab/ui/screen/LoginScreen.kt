@@ -17,15 +17,28 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cleanfypab.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginSuccess: (String) -> Unit   // 🔐 ROLE AWARE
+    onLoginSuccess: (role: String) -> Unit,
+    vm: AuthViewModel = viewModel()
 ) {
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showPassword by remember { mutableStateOf(false) }
+
+    val state by vm.uiState.collectAsState()
+
+    // ✅ kalau login sukses, lempar role ke AppNavHost
+    LaunchedEffect(state.loggedIn) {
+        if (state.loggedIn) {
+            val role = state.role ?: "petugas"
+            vm.consumeLogin()
+            onLoginSuccess(role)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -37,6 +50,7 @@ fun LoginScreen(
 
         Spacer(Modifier.height(60.dp))
 
+        // ICON
         Box(
             modifier = Modifier
                 .size(90.dp)
@@ -64,31 +78,33 @@ fun LoginScreen(
 
         Spacer(Modifier.height(34.dp))
 
-        /* EMAIL */
+        // EMAIL FIELD
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             placeholder = { Text("Enter your email") },
-            leadingIcon = { Icon(Icons.Default.Email, null) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF15261D),
                 unfocusedContainerColor = Color(0xFF15261D),
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedLabelColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            enabled = !state.loading
         )
 
         Spacer(Modifier.height(16.dp))
 
-        /* PASSWORD */
+        // PASSWORD FIELD
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             placeholder = { Text("Enter your password") },
-            leadingIcon = { Icon(Icons.Default.Lock, null) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
             trailingIcon = {
                 Text(
                     if (showPassword) "Hide" else "Show",
@@ -96,41 +112,60 @@ fun LoginScreen(
                     modifier = Modifier.clickable { showPassword = !showPassword }
                 )
             },
-            visualTransformation = if (showPassword)
-                VisualTransformation.None
-            else
-                PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF15261D),
                 unfocusedContainerColor = Color(0xFF15261D),
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
-            )
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            enabled = !state.loading
         )
+
+        Spacer(Modifier.height(10.dp))
+
+        Text(
+            "Forgot Password?",
+            color = Color(0xFF00E676),
+            modifier = Modifier
+                .align(Alignment.End)
+                .clickable { /* optional */ }
+        )
+
+        // ✅ ERROR MESSAGE (tambah tanpa mengubah layout besar)
+        if (state.error != null) {
+            Spacer(Modifier.height(10.dp))
+            Text(
+                text = state.error!!,
+                color = Color(0xFFFF6B6B),
+                fontSize = 14.sp,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         Spacer(Modifier.height(20.dp))
 
-        /* LOGIN BUTTON */
+        // LOGIN BUTTON (✅ sekarang validasi via Firebase)
         Button(
             onClick = {
-                // 🔐 DUMMY ROLE (UNTUK DEMO DOSEN)
-                val role = if (email.contains("admin", ignoreCase = true)) {
-                    "admin"
-                } else {
-                    "petugas"
-                }
-                onLoginSuccess(role)
+                // email bisa diisi: admin / user / admin@gmail.com / user@gmail.com
+                vm.login(email, password)
             },
+            enabled = !state.loading,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676)),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Text("Log In", fontSize = 18.sp, color = Color.Black)
+            Text(
+                text = if (state.loading) "Checking..." else "Log In",
+                fontSize = 18.sp,
+                color = Color.Black
+            )
         }
 
         Spacer(Modifier.height(28.dp))
@@ -146,18 +181,18 @@ fun LoginScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        LoginOptionButton("Sign in with Apple", Color.White, Color.Black)
+        // APPLE LOGIN (dummy UI)
+        LoginOptionButton(label = "Sign in with Apple", bg = Color.White, fg = Color.Black)
+
         Spacer(Modifier.height(12.dp))
-        LoginOptionButton("Sign in with Google", Color(0xFF1A2D23), Color.White)
+
+        // GOOGLE LOGIN (dummy UI)
+        LoginOptionButton(label = "Sign in with Google", bg = Color(0xFF1A2D23), fg = Color.White)
     }
 }
 
 @Composable
-fun LoginOptionButton(
-    label: String,
-    bg: Color,
-    fg: Color
-) {
+fun LoginOptionButton(label: String, bg: Color, fg: Color) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
