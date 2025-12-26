@@ -87,17 +87,17 @@ fun AdminRoomScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OverviewCard(
-                modifier = Modifier.weight(1f, true),
-                value = "45",
+                modifier = Modifier.weight(1f),
+                value = "30",
                 label = "Total Rooms",
                 icon = Icons.Default.Apartment,
                 accent = green,
                 bg = card
             )
             OverviewCard(
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier.weight(1f),
                 value = "12",
-                label = "Available Now",
+                label = "Available",
                 icon = Icons.Default.CheckCircle,
                 accent = green,
                 bg = card
@@ -111,15 +111,15 @@ fun AdminRoomScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OverviewCard(
-                modifier = Modifier.weight(1f, true),
-                value = "28",
+                modifier = Modifier.weight(1f),
+                value = "13",
                 label = "Occupied",
                 icon = Icons.Default.Person,
                 accent = red,
                 bg = card
             )
             OverviewCard(
-                modifier = Modifier.weight(1f, true),
+                modifier = Modifier.weight(1f),
                 value = "5",
                 label = "Maintenance",
                 icon = Icons.Default.Build,
@@ -140,13 +140,43 @@ fun AdminRoomScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        /* ================= ROOM LIST ================= */
+        /* ================= ROOM LIST (30 ROOMS) ================= */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            item { RoomItem("Room 101", "Deluxe Suite", "Available", green, card) }
+
+            // FLOOR 1
+            item { RoomItem("Room 101", "Standard Single", "Available", green, card) }
             item { RoomItem("Room 102", "Standard Single", "Occupied", red, card) }
-            item { RoomItem("Room 103", "Conference A", "Maintenance", yellow, card) }
-            item { RoomItem("Room 204", "Double Twin", "Occupied", red, card) }
-            item { RoomItem("Room 205", "Superior Queen", "Available", green, card) }
+            item { RoomItem("Room 103", "Standard Single", "Available", green, card) }
+            item { RoomItem("Room 104", "Deluxe Suite", "Occupied", red, card) }
+            item { RoomItem("Room 105", "Deluxe Suite", "Maintenance", yellow, card) }
+
+            // FLOOR 2
+            item { RoomItem("Room 201", "Standard Double", "Available", green, card) }
+            item { RoomItem("Room 202", "Standard Double", "Occupied", red, card) }
+            item { RoomItem("Room 203", "Standard Double", "Available", green, card) }
+            item { RoomItem("Room 204", "Superior Queen", "Occupied", red, card) }
+            item { RoomItem("Room 205", "Superior Queen", "Maintenance", yellow, card) }
+
+            // FLOOR 3
+            item { RoomItem("Room 301", "Twin Bed", "Available", green, card) }
+            item { RoomItem("Room 302", "Twin Bed", "Occupied", red, card) }
+            item { RoomItem("Room 303", "Twin Bed", "Available", green, card) }
+            item { RoomItem("Room 304", "Executive Room", "Occupied", red, card) }
+            item { RoomItem("Room 305", "Executive Room", "Maintenance", yellow, card) }
+
+            // FLOOR 4
+            item { RoomItem("Room 401", "Meeting Room", "Available", green, card) }
+            item { RoomItem("Room 402", "Meeting Room", "Occupied", red, card) }
+            item { RoomItem("Room 403", "Meeting Room", "Available", green, card) }
+            item { RoomItem("Room 404", "Conference Hall", "Occupied", red, card) }
+            item { RoomItem("Room 405", "Conference Hall", "Maintenance", yellow, card) }
+
+            // FLOOR 5
+            item { RoomItem("Room 501", "VIP Suite", "Available", green, card) }
+            item { RoomItem("Room 502", "VIP Suite", "Occupied", red, card) }
+            item { RoomItem("Room 503", "VIP Suite", "Available", green, card) }
+            item { RoomItem("Room 504", "Presidential Suite", "Occupied", red, card) }
+            item { RoomItem("Room 505", "Presidential Suite", "Maintenance", yellow, card) }
         }
     }
 }

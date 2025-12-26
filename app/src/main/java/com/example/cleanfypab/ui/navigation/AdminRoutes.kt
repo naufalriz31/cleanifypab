@@ -11,4 +11,5 @@ object AdminRoutes {
 
     // 🔥 TAMBAHKAN INI
     const val CREATE_TASK = "admin_create_task"
+    const val NOTIFICATIONS = "admin_notifications" // ✅ TAMBAH INI
 }

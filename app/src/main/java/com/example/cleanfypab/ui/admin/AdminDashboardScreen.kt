@@ -1,6 +1,7 @@
 package com.example.cleanfypab.ui.admin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -19,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun AdminDashboardScreen() {
+fun AdminDashboardScreen(
+    onNotificationClick: () -> Unit = {} // ✅ TAMBAHAN INI
+) {
 
     val bgColor = Color(0xFF0F2A1D)
     val cardColor = Color(0xFF163828)
@@ -52,18 +55,24 @@ fun AdminDashboardScreen() {
                     )
                 }
 
+                // 🔔 NOTIFICATION ICON (BISA DIKLIK)
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(cardColor, CircleShape),
+                        .background(cardColor, CircleShape)
+                        .clickable { onNotificationClick() }, // ✅ KONEKSI
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Notifications, null, tint = Color.White)
+                    Icon(
+                        Icons.Default.Notifications,
+                        contentDescription = "Notifications",
+                        tint = Color.White
+                    )
                 }
             }
         }
 
-        /* ================= STATISTIK HARI INI ================= */
+        /* ================= STATISTIK ================= */
         item {
             Text(
                 text = "Statistik Hari Ini",
@@ -74,56 +83,24 @@ fun AdminDashboardScreen() {
         }
 
         item {
-            DashboardCard(
-                title = "Total Ruangan",
-                value = "120",
-                subtitle = "Keseluruhan",
-                icon = Icons.Default.Home,
-                accent = green,
-                cardColor = cardColor
-            )
+            DashboardCard("Total Ruangan", "30", "Keseluruhan", Icons.Default.Home, green, cardColor)
         }
 
         item {
-            DashboardCard(
-                title = "Ruangan Bersih",
-                value = "85",
-                subtitle = "Siap digunakan",
-                icon = Icons.Default.CheckCircle,
-                accent = green,
-                cardColor = cardColor
-            )
+            DashboardCard("Ruangan Bersih", "12", "Siap digunakan", Icons.Default.CheckCircle, green, cardColor)
         }
 
         item {
-            DashboardCard(
-                title = "Belum Dibersihkan",
-                value = "35",
-                subtitle = "Perlu tindakan",
-                icon = Icons.Default.Warning,
-                accent = red,
-                cardColor = cardColor
-            )
+            DashboardCard("Belum Dibersihkan", "13", "Perlu tindakan", Icons.Default.Warning, red, cardColor)
         }
 
         item {
-            DashboardCard(
-                title = "Laporan Hari Ini",
-                value = "5",
-                subtitle = "Masuk hari ini",
-                icon = Icons.Default.Description,
-                accent = yellow,
-                cardColor = cardColor
-            )
+            DashboardCard("Laporan Hari Ini", "5", "Masuk hari ini", Icons.Default.Description, yellow, cardColor)
         }
 
         /* ================= QUICK ACTIONS ================= */
         item {
-            Text(
-                text = "Quick Actions",
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
+            Text("Quick Actions", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         item {
@@ -132,48 +109,44 @@ fun AdminDashboardScreen() {
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 QuickActionCard(
-                    title = "Manage Rooms",
-                    subtitle = "Edit availability",
-                    icon = Icons.Default.MeetingRoom,
-                    cardColor = cardColor,
-                    modifier = Modifier.weight(1f)
+                    "Manage Rooms",
+                    "Edit availability",
+                    Icons.Default.MeetingRoom,
+                    cardColor,
+                    Modifier.weight(1f)
                 )
                 QuickActionCard(
-                    title = "View Reports",
-                    subtitle = "5 active issues",
-                    icon = Icons.AutoMirrored.Filled.List,
-                    cardColor = cardColor,
-                    modifier = Modifier.weight(1f)
+                    "View Reports",
+                    "5 active issues",
+                    Icons.AutoMirrored.Filled.List,
+                    cardColor,
+                    Modifier.weight(1f)
                 )
             }
         }
 
-        /* ================= RECENT ACTIVITY ================= */
+        /* ================= ACTIVITY ================= */
         item {
-            Text(
-                text = "Recent Activity",
-                color = Color.White,
-                fontWeight = FontWeight.Bold
+            Text("Recent Activity", color = Color.White, fontWeight = FontWeight.Bold)
+        }
+
+        item {
+            ActivityCard(
+                "Room 304 - AC Malfunction",
+                "Reported by Housekeeping",
+                "2m ago",
+                red,
+                cardColor
             )
         }
 
         item {
             ActivityCard(
-                title = "Room 304 - AC Malfunction",
-                subtitle = "Reported by Housekeeping",
-                time = "2m ago",
-                accent = red,
-                cardColor = cardColor
-            )
-        }
-
-        item {
-            ActivityCard(
-                title = "Lobby - Light Replacement",
-                subtitle = "Maintenance scheduled",
-                time = "1h ago",
-                accent = yellow,
-                cardColor = cardColor
+                "Room 105 - Cleaning Delayed",
+                "Pending housekeeping",
+                "1h ago",
+                yellow,
+                cardColor
             )
         }
 

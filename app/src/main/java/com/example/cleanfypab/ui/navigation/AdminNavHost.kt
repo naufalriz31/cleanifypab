@@ -32,7 +32,12 @@ fun AdminNavHost() {
 
             /* ================= DASHBOARD ================= */
             composable(AdminRoutes.DASHBOARD) {
-                AdminDashboardScreen()
+                AdminDashboardScreen(
+                    onNotificationClick = {
+                        // 🔔 ICON LONCENG → NOTIFICATION
+                        navController.navigate(AdminRoutes.NOTIFICATIONS)
+                    }
+                )
             }
 
             /* ================= ROOMS ================= */
@@ -62,11 +67,10 @@ fun AdminNavHost() {
             composable(AdminRoutes.PROFILE) {
                 AdminProfileScreen(
                     onEdit = {
-                        // 🔥 EDIT → KE EDIT PROFILE
                         navController.navigate(AdminRoutes.EDIT_PROFILE)
                     },
                     onSignOut = {
-                        // TODO logout logic
+                        // TODO: logout logic (FirebaseAuth.signOut dll)
                     }
                 )
             }
@@ -74,11 +78,17 @@ fun AdminNavHost() {
             /* ================= EDIT PROFILE ================= */
             composable(AdminRoutes.EDIT_PROFILE) {
                 AdminEditProfileScreen(
-                    onBack = {
-                        navController.popBackStack()
-                    },
-                    onSave = {
-                        navController.popBackStack()
+                    onBack = { navController.popBackStack() },
+                    onSave = { navController.popBackStack() }
+                )
+            }
+
+            /* ================= NOTIFICATIONS ================= */
+            composable(AdminRoutes.NOTIFICATIONS) {
+                AdminNotificationScreen(
+                    onBack = { navController.popBackStack() },
+                    onAssignTask = {
+                        navController.navigate(AdminRoutes.CREATE_TASK)
                     }
                 )
             }
