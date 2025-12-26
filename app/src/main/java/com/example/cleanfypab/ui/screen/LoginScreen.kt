@@ -63,7 +63,7 @@ fun LoginScreen(
         Spacer(Modifier.height(24.dp))
 
         Text(
-            "Welcome Back",
+            "CLEANFY",
             fontSize = 32.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold
