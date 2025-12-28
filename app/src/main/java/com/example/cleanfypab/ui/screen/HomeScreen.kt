@@ -1,282 +1,294 @@
 package com.example.cleanfypab.ui.screen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-
-// =========================
-// COLOR PALETTE
-// =========================
-val HomeDarkGreen = Color(0xFF071A12)
-val HomeNeonBlue = Color(0xFF2979FF)
-val HomeCardDark = Color(0xFF0F2A1D)
-val HomeTextGray = Color(0xFF9BA5A0)
+import com.example.cleanfypab.ui.navigation.Routes
 
 @Composable
-fun HomeScreen(
-    nav: NavHostController,
-    modifier: Modifier = Modifier   // ← WAJIB agar Scaffold padding bekerja
-) {
+fun HomeScreen(nav: NavHostController) {
 
-    Column(
-        modifier = modifier
+    val bg = Color(0xFF0D1F15)
+    val card = Color(0xFF14231C)
+    val cardAlt = Color(0xFF1F2C25)
+    val green = Color(0xFF00E676)
+    val blue = Color(0xFF2196F3)
+    val orange = Color(0xFFFFA000)
+
+    LazyColumn(
+        modifier = Modifier
             .fillMaxSize()
-            .background(HomeDarkGreen)
-            .padding(horizontal = 20.dp)
+            .background(bg)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-        // =========================
-        // HEADER
-        // =========================
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "Good Morning, Olivia",
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-
-            Icon(
-                Icons.Default.Person,
-                contentDescription = "Profile",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(36.dp)
-                    .clickable { nav.navigate("profile") }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(26.dp))
-
-        // =========================
-        // QR SCAN CARD
-        // =========================
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = HomeCardDark),
-            shape = RoundedCornerShape(20.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(22.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+        /* ================= HEADER ================= */
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(70.dp)
-                        .background(Color(0xFF1B2F23), RoundedCornerShape(50)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.QrCodeScanner,
-                        contentDescription = "Scan QR",
-                        tint = HomeNeonBlue,
-                        modifier = Modifier.size(40.dp)
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        "Good Morning, Olivia",
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        "Have a productive day",
+                        color = Color(0xFF9BA5A0),
+                        fontSize = 13.sp
                     )
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(cardAlt, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(Icons.Default.Person, null, tint = Color.White)
+                }
+            }
+        }
 
+        /* ================= DAILY TASKS ================= */
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Daily Tasks", color = Color.White, fontWeight = FontWeight.Bold)
                 Text(
-                    "Scan Room QR Code",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
+                    "See All",
+                    color = green,
+                    fontSize = 13.sp,
+                    modifier = Modifier.clickable {
+                        nav.navigate(Routes.TASK_TODAY)
+                    }
                 )
+            }
+        }
 
-                Text(
-                    "Start a new room check by scanning the QR code.",
-                    color = HomeTextGray,
-                    fontSize = 14.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 6.dp)
-                )
+        item {
+            TaskCard(
+                title = "Room 405",
+                subtitle = "Deep Clean Required",
+                indicatorColor = orange,
+                cardColor = card
+            )
+        }
 
-                Spacer(modifier = Modifier.height(16.dp))
+        item {
+            TaskCard(
+                title = "Room 408",
+                subtitle = "Standard Service",
+                indicatorColor = blue,
+                cardColor = card
+            )
+        }
 
-                Button(
-                    onClick = { nav.navigate("scan") },
+        /* ================= PROGRESS ================= */
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(card, RoundedCornerShape(20.dp))
+                    .padding(16.dp)
+            ) {
+                Text("Today's Progress", color = Color.White, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("3/10 rooms", color = Color.White)
+                    Spacer(Modifier.weight(1f))
+                    Text("30%", color = green, fontWeight = FontWeight.Bold)
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                LinearProgressIndicator(
+                    progress = 0.3f,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(48.dp),
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = HomeNeonBlue)
+                        .height(8.dp)
+                        .clip(RoundedCornerShape(10.dp)),
+                    color = green,
+                    trackColor = Color(0xFF0F2A1D)
+                )
+
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    "7 rooms remaining in your queue",
+                    color = Color(0xFF9BA5A0),
+                    fontSize = 12.sp
+                )
+            }
+        }
+
+        /* ================= ACTION BUTTONS ================= */
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(14.dp)
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(blue, RoundedCornerShape(18.dp))
+                        .clickable { nav.navigate(Routes.SCAN) }
+                        .padding(vertical = 22.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Scan Now", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Icon(
+                        Icons.Default.QrCodeScanner,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text("Scan Room", color = Color.White, fontWeight = FontWeight.Bold)
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(card, RoundedCornerShape(18.dp))
+                        .clickable { nav.navigate(Routes.HISTORY) }
+                        .padding(vertical = 22.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        Icons.Default.Warning,
+                        contentDescription = null,
+                        tint = orange,
+                        modifier = Modifier.size(26.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text("Open Reports", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("3 Action Needed", color = orange, fontSize = 12.sp)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // =========================
-        // QUICK STATS
-        // =========================
-        Text(
-            "Quick Stats",
-            color = Color.White,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            StatCard(title = "Rooms Cleaned", value = "12")
-            StatCard(title = "Open Reports", value = "3")
+        /* ================= RECENT REPORTS ================= */
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text("Recent Reports", color = Color.White, fontWeight = FontWeight.Bold)
+                Text(
+                    "View All",
+                    color = green,
+                    fontSize = 13.sp,
+                    modifier = Modifier.clickable {
+                        nav.navigate(Routes.HISTORY)
+                    }
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
-
-        // =========================
-        // RECENT REPORTS
-        // =========================
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                "Recent Reports",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Text(
-                "View All",
-                color = HomeNeonBlue,
-                fontSize = 14.sp,
-                modifier = Modifier.clickable {
-                    nav.navigate("history")
-                }
-            )
+        item {
+            RecentReportItem("Room 301", "Completed • 10:45 AM", Color(0xFF2ECC71))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        item {
+            RecentReportItem("Room 215", "In Progress • 09:30 AM", orange)
+        }
 
-        RecentReportItem(
-            room = "Room 301",
-            status = "Completed",
-            time = "10:45 AM",
-            statusColor = Color(0xFF4CAF50)
-        )
+        item {
+            RecentReportItem("Lobby Restroom", "Completed • 08:12 AM", Color(0xFF2ECC71))
+        }
 
-        RecentReportItem(
-            room = "Room 215",
-            status = "In Progress",
-            time = "09:30 AM",
-            statusColor = Color(0xFFFFA726)
-        )
-
-        RecentReportItem(
-            room = "Lobby Restroom",
-            status = "Completed",
-            time = "08:12 AM",
-            statusColor = Color(0xFF4CAF50)
-        )
+        item { Spacer(Modifier.height(30.dp)) }
     }
 }
 
-
-
-// =================================================
-// STAT CARD COMPONENT
-// =================================================
+/* ================= COMPONENTS ================= */
 
 @Composable
-fun StatCard(title: String, value: String) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = HomeCardDark),
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
-            .width(165.dp)
-            .height(90.dp)
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(title, color = HomeTextGray, fontSize = 14.sp)
-            Text(value, color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
-        }
-    }
-}
-
-
-
-// =================================================
-// RECENT REPORT ITEM
-// =================================================
-
-@Composable
-fun RecentReportItem(room: String, status: String, time: String, statusColor: Color) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = HomeCardDark),
+private fun TaskCard(
+    title: String,
+    subtitle: String,
+    indicatorColor: Color,
+    cardColor: Color
+) {
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 12.dp)
-            .clickable { }
+            .background(cardColor, RoundedCornerShape(18.dp))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
 
-            Box(
-                modifier = Modifier
-                    .size(42.dp)
-                    .background(Color(0xFF1B2F23), RoundedCornerShape(12.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Default.QrCodeScanner,
-                    contentDescription = "QR",
-                    tint = HomeNeonBlue,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
+        Box(
+            modifier = Modifier
+                .width(6.dp)
+                .height(48.dp)
+                .background(indicatorColor, RoundedCornerShape(6.dp))
+        )
 
-            Spacer(modifier = Modifier.width(12.dp))
+        Spacer(Modifier.width(12.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
-                Text(room, color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                Text("$status • $time", color = HomeTextGray, fontSize = 14.sp)
-            }
-
-            Surface(
-                color = statusColor.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    status,
-                    color = statusColor,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                )
-            }
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = Color(0xFF9BA5A0), fontSize = 12.sp)
         }
+
+        Box(
+            modifier = Modifier
+                .size(22.dp)
+                .border(2.dp, Color(0xFF3C4B44), CircleShape)
+        )
+    }
+}
+
+@Composable
+private fun RecentReportItem(
+    title: String,
+    subtitle: String,
+    statusColor: Color
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color(0xFF14231C), RoundedCornerShape(16.dp))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .background(statusColor, CircleShape)
+        )
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, color = Color.White, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = Color(0xFF9BA5A0), fontSize = 12.sp)
+        }
+        Text("›", color = Color(0xFF5F6F67), fontSize = 28.sp)
     }
 }

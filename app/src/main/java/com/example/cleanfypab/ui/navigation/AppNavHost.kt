@@ -29,10 +29,11 @@ fun AppNavHost(
     nav: NavHostController,
     vm: RoomViewModel
 ) {
+
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // BottomBar hanya tampil di halaman petugas (bukan di login/admin)
+    // Bottom bar hanya tampil di flow PETUGAS
     val showBottomBar = currentRoute in listOf(
         Routes.HOME,
         Routes.HISTORY,
@@ -57,7 +58,6 @@ fun AppNavHost(
 
             /* ================= LOGIN ================= */
             composable(Routes.LOGIN) {
-                // ⚠️ LoginScreen harus mengirim role: "admin" / "petugas"
                 LoginScreen(
                     onLoginSuccess = { role ->
                         if (role == "admin") {
@@ -75,15 +75,13 @@ fun AppNavHost(
                 )
             }
 
-            /* ================= ADMIN ================= */
+            /* ================= ADMIN ROOT ================= */
             composable(Routes.ADMIN_ROOT) {
-                // Admin punya NavHost sendiri
                 AdminNavHost()
             }
 
             /* ================= PETUGAS ROOT ================= */
             composable(Routes.PETUGAS_ROOT) {
-                // Saat masuk petugas_root, langsung redirect ke home
                 LaunchedEffect(Unit) {
                     nav.navigate(Routes.HOME) {
                         popUpTo(Routes.PETUGAS_ROOT) { inclusive = true }
@@ -114,7 +112,7 @@ fun AppNavHost(
                 ScanScreen(nav)
             }
 
-            /* ================= ROUTE PARAMETER ================= */
+            /* ================= DETAIL & UPDATE ================= */
             composable("detail/{id}") { backStack ->
                 val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
                 RoomDetailScreen(nav, vm, id)
@@ -125,6 +123,7 @@ fun AppNavHost(
                 UpdateStatusScreen(nav, vm, id)
             }
 
+            /* ================= EDIT ================= */
             composable(Routes.EDIT_PROFILE) {
                 EditProfileScreen(nav)
             }
