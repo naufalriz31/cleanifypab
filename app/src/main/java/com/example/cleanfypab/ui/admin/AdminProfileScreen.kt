@@ -3,8 +3,10 @@ package com.example.cleanfypab.ui.admin
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -35,6 +37,7 @@ fun AdminProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(bg)
+            .verticalScroll(rememberScrollState()) // ✅ SCROLL FIX
             .padding(horizontal = 16.dp)
     ) {
 
@@ -165,7 +168,9 @@ fun AdminProfileScreen(
 
         OutlinedButton(
             onClick = onSignOut,
-            modifier = Modifier.fillMaxWidth().height(54.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(54.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = red)
         ) {
             Icon(Icons.AutoMirrored.Filled.Logout, null)
@@ -181,6 +186,8 @@ fun AdminProfileScreen(
             fontSize = 12.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
+
+        Spacer(Modifier.height(24.dp)) // ruang aman bawah
     }
 }
 
