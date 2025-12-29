@@ -1,14 +1,14 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -26,6 +26,7 @@ import com.example.cleanfypab.ui.navigation.Routes
 @Composable
 fun HomeScreen(nav: NavHostController) {
 
+    /* ===== PALET WARNA ===== */
     val bg = Color(0xFF0D1F15)
     val card = Color(0xFF14231C)
     val cardAlt = Color(0xFF1F2C25)
@@ -47,40 +48,49 @@ fun HomeScreen(nav: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        "Good Morning, Olivia",
+                        text = "Selamat Pagi, Olivia",
                         color = Color.White,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        "Have a productive day",
+                        text = "Semoga harimu produktif",
                         color = Color(0xFF9BA5A0),
                         fontSize = 13.sp
                     )
                 }
 
+                // 🔔 TOMBOL NOTIFIKASI
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(cardAlt, CircleShape),
+                        .background(cardAlt, CircleShape)
+                        .clickable {
+                            nav.navigate(Routes.NOTIFICATION)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Person, null, tint = Color.White)
+                    Icon(
+                        Icons.Default.Notifications,
+                        contentDescription = "Notifikasi",
+                        tint = Color.White
+                    )
                 }
             }
         }
 
-        /* ================= DAILY TASKS ================= */
+        /* ================= TUGAS HARI INI ================= */
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Daily Tasks", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Tugas Hari Ini", color = Color.White, fontWeight = FontWeight.Bold)
                 Text(
-                    "See All",
+                    "Lihat Semua",
                     color = green,
                     fontSize = 13.sp,
                     modifier = Modifier.clickable {
@@ -92,8 +102,8 @@ fun HomeScreen(nav: NavHostController) {
 
         item {
             TaskCard(
-                title = "Room 405",
-                subtitle = "Deep Clean Required",
+                title = "Ruang 305",
+                subtitle = "Perlu Pembersihan Mendalam",
                 indicatorColor = orange,
                 cardColor = card
             )
@@ -101,14 +111,14 @@ fun HomeScreen(nav: NavHostController) {
 
         item {
             TaskCard(
-                title = "Room 408",
-                subtitle = "Standard Service",
+                title = "Ruang 405",
+                subtitle = "Pembersihan Standar",
                 indicatorColor = blue,
                 cardColor = card
             )
         }
 
-        /* ================= PROGRESS ================= */
+        /* ================= PROGRES ================= */
         item {
             Column(
                 modifier = Modifier
@@ -116,12 +126,12 @@ fun HomeScreen(nav: NavHostController) {
                     .background(card, RoundedCornerShape(20.dp))
                     .padding(16.dp)
             ) {
-                Text("Today's Progress", color = Color.White, fontWeight = FontWeight.Bold)
+
+                Text("Progres Hari Ini", color = Color.White, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("3/10 rooms", color = Color.White)
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("3/10 ruangan", color = Color.White)
                     Spacer(Modifier.weight(1f))
                     Text("30%", color = green, fontWeight = FontWeight.Bold)
                 }
@@ -140,14 +150,14 @@ fun HomeScreen(nav: NavHostController) {
 
                 Spacer(Modifier.height(6.dp))
                 Text(
-                    "7 rooms remaining in your queue",
+                    "7 ruangan tersisa dalam antrean",
                     color = Color(0xFF9BA5A0),
                     fontSize = 12.sp
                 )
             }
         }
 
-        /* ================= ACTION BUTTONS ================= */
+        /* ================= TOMBOL AKSI ================= */
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -169,7 +179,7 @@ fun HomeScreen(nav: NavHostController) {
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("Scan Room", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Scan Ruangan", color = Color.White, fontWeight = FontWeight.Bold)
                 }
 
                 Column(
@@ -187,21 +197,21 @@ fun HomeScreen(nav: NavHostController) {
                         modifier = Modifier.size(26.dp)
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("Open Reports", color = Color.White, fontWeight = FontWeight.Bold)
-                    Text("3 Action Needed", color = orange, fontSize = 12.sp)
+                    Text("Laporan Masuk", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("3 Perlu Tindakan", color = orange, fontSize = 12.sp)
                 }
             }
         }
 
-        /* ================= RECENT REPORTS ================= */
+        /* ================= LAPORAN TERBARU ================= */
         item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Recent Reports", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Laporan Terbaru", color = Color.White, fontWeight = FontWeight.Bold)
                 Text(
-                    "View All",
+                    "Lihat Semua",
                     color = green,
                     fontSize = 13.sp,
                     modifier = Modifier.clickable {
@@ -212,22 +222,22 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            RecentReportItem("Room 301", "Completed • 10:45 AM", Color(0xFF2ECC71))
+            RecentReportItem("Ruang 301", "Selesai • 10:45", Color(0xFF2ECC71))
         }
 
         item {
-            RecentReportItem("Room 215", "In Progress • 09:30 AM", orange)
+            RecentReportItem("Ruang 205", "Sedang Dibersihkan • 09:30", orange)
         }
 
         item {
-            RecentReportItem("Lobby Restroom", "Completed • 08:12 AM", Color(0xFF2ECC71))
+            RecentReportItem("Ruang 101", "Selesai • 08:12", Color(0xFF2ECC71))
         }
 
         item { Spacer(Modifier.height(30.dp)) }
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= KOMPONEN ================= */
 
 @Composable
 private fun TaskCard(

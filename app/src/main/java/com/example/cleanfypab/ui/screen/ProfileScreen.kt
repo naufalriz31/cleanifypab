@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-// ================= COLORS =================
+// ================= WARNA =================
 val BG_DARK = Color(0xFF071A12)
 val CARD_DARK = Color(0xFF0F2A1D)
 val GREEN_ACCENT = Color(0xFF00E676)
@@ -48,7 +48,7 @@ fun ProfileScreen(nav: NavHostController) {
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Kembali",
                 tint = WHITE,
                 modifier = Modifier
                     .size(28.dp)
@@ -58,7 +58,7 @@ fun ProfileScreen(nav: NavHostController) {
             Spacer(Modifier.width(12.dp))
 
             Text(
-                text = "Profile",
+                text = "Profil",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = WHITE
@@ -67,7 +67,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== PROFILE INFO =====
+        // ===== INFORMASI PROFIL =====
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -83,7 +83,7 @@ fun ProfileScreen(nav: NavHostController) {
             ) {
                 Icon(
                     Icons.Default.Person,
-                    contentDescription = "Profile Photo",
+                    contentDescription = "Foto Profil",
                     tint = GRAY_TEXT,
                     modifier = Modifier.size(70.dp)
                 )
@@ -99,7 +99,7 @@ fun ProfileScreen(nav: NavHostController) {
             )
 
             Text(
-                "Room Inspector",
+                "Petugas Pemeriksa Ruangan",
                 fontSize = 16.sp,
                 color = GRAY_TEXT
             )
@@ -107,7 +107,7 @@ fun ProfileScreen(nav: NavHostController) {
             Spacer(Modifier.height(10.dp))
 
             Text(
-                "Edit Profile",
+                "Ubah Profil",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = GREEN_ACCENT,
@@ -119,9 +119,9 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== SETTINGS =====
+        // ===== PENGATURAN =====
         Text(
-            "SETTINGS",
+            "PENGATURAN",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = GRAY_TEXT
@@ -132,7 +132,7 @@ fun ProfileScreen(nav: NavHostController) {
         SettingsCard {
             SettingsItem(
                 icon = Icons.Default.Notifications,
-                title = "Notifications",
+                title = "Notifikasi",
                 trailing = {
                     Switch(
                         checked = notificationEnabled,
@@ -149,7 +149,7 @@ fun ProfileScreen(nav: NavHostController) {
 
             SettingsItem(
                 icon = Icons.Default.DarkMode,
-                title = "Appearance",
+                title = "Tampilan",
                 trailing = { ArrowIcon() }
             )
 
@@ -157,16 +157,16 @@ fun ProfileScreen(nav: NavHostController) {
 
             SettingsItem(
                 icon = Icons.Default.Language,
-                title = "Language",
+                title = "Bahasa",
                 trailing = { ArrowIcon() }
             )
         }
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== ACCOUNT =====
+        // ===== AKUN =====
         Text(
-            "ACCOUNT",
+            "AKUN",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             color = GRAY_TEXT
@@ -177,7 +177,7 @@ fun ProfileScreen(nav: NavHostController) {
         SettingsCard {
             SettingsItem(
                 icon = Icons.Default.Lock,
-                title = "Change Password",
+                title = "Ganti Kata Sandi",
                 trailing = { ArrowIcon() }
             )
 
@@ -185,7 +185,7 @@ fun ProfileScreen(nav: NavHostController) {
 
             SettingsItem(
                 icon = Icons.Default.Security,
-                title = "Privacy Policy",
+                title = "Kebijakan Privasi",
                 trailing = { ArrowIcon() }
             )
 
@@ -193,14 +193,14 @@ fun ProfileScreen(nav: NavHostController) {
 
             SettingsItem(
                 icon = Icons.Default.Description,
-                title = "Terms of Service",
+                title = "Syarat & Ketentuan",
                 trailing = { ArrowIcon() }
             )
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // ===== LOGOUT =====
+        // ===== KELUAR =====
         Button(
             onClick = {
                 nav.navigate(Routes.LOGIN) {
@@ -214,7 +214,7 @@ fun ProfileScreen(nav: NavHostController) {
             colors = ButtonDefaults.buttonColors(containerColor = GREEN_ACCENT)
         ) {
             Text(
-                "Log Out",
+                "Keluar",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = BG_DARK
@@ -223,7 +223,7 @@ fun ProfileScreen(nav: NavHostController) {
     }
 }
 
-// ================= COMPONENTS =================
+// ================= KOMPONEN =================
 
 @Composable
 fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
@@ -259,7 +259,7 @@ fun SettingsItem(
 fun ArrowIcon() {
     Icon(
         Icons.AutoMirrored.Filled.KeyboardArrowRight,
-        contentDescription = "Next",
+        contentDescription = "Lanjut",
         tint = GRAY_TEXT
     )
 }

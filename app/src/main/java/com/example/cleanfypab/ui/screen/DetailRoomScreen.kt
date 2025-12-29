@@ -33,9 +33,12 @@ fun DetailRoomScreen(
 
     var note by remember { mutableStateOf("") }
 
-    // Animasi warna status badge
+    // Animasi warna badge status
     val statusColor by animateColorAsState(
-        targetValue = if (room.status == "Selesai") Color(0xFF4CAF50) else Color(0xFFE53935),
+        targetValue = if (room.status == "Selesai")
+            Color(0xFF4CAF50)
+        else
+            Color(0xFFE53935),
         label = "statusColorAnim"
     )
 
@@ -45,7 +48,7 @@ fun DetailRoomScreen(
             .padding(16.dp)
     ) {
 
-        // BACK BUTTON + TITLE
+        // TOMBOL KEMBALI + JUDUL
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -54,7 +57,7 @@ fun DetailRoomScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Kembali",
                 modifier = Modifier
                     .size(30.dp)
                     .clickable { nav.popBackStack() }
@@ -69,7 +72,7 @@ fun DetailRoomScreen(
 
         Spacer(Modifier.height(10.dp))
 
-        // CARD INFO RUANGAN
+        // KARTU INFORMASI RUANGAN
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(6.dp),
@@ -85,7 +88,7 @@ fun DetailRoomScreen(
 
                 Spacer(Modifier.height(8.dp))
 
-                // STATUS BADGE
+                // BADGE STATUS
                 Box(
                     modifier = Modifier
                         .background(
@@ -105,7 +108,7 @@ fun DetailRoomScreen(
                 Spacer(Modifier.height(10.dp))
 
                 Text(
-                    "Jam Penugasan: ${room.time}",
+                    "Waktu Penugasan: ${room.time}",
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
@@ -114,19 +117,19 @@ fun DetailRoomScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // UPLOAD FOTO BUKTI
+        // UNGGAH FOTO BUKTI
         OutlinedButton(
-            onClick = { /* TODO: Buka kamera / galeri */ },
+            onClick = { /* TODO: Buka kamera atau galeri */ },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Icon(Icons.Default.CameraAlt, contentDescription = "Camera")
+            Icon(Icons.Default.CameraAlt, contentDescription = "Kamera")
             Spacer(Modifier.width(8.dp))
             Text("Tambah Foto Bukti (Opsional)")
         }
 
         Spacer(Modifier.height(20.dp))
 
-        // CATATAN OPSIONAL
+        // CATATAN TAMBAHAN
         Text("Catatan Tambahan (Opsional)")
         OutlinedTextField(
             value = note,
@@ -136,7 +139,7 @@ fun DetailRoomScreen(
 
         Spacer(Modifier.weight(1f))
 
-        // BUTTON KONFIRMASI
+        // TOMBOL KONFIRMASI
         Button(
             onClick = {
                 vm.markRoomClean(roomId)
@@ -146,7 +149,7 @@ fun DetailRoomScreen(
                 .fillMaxWidth()
                 .height(56.dp)
         ) {
-            Text("Tandai Sudah Dibersihkan")
+            Text("Tandai Sebagai Sudah Dibersihkan")
         }
     }
 }

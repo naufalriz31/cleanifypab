@@ -1,5 +1,6 @@
 package com.example.cleanfypab.ui.navigation
 
+import com.example.cleanfypab.ui.screen.NotificationScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -111,6 +112,11 @@ fun AppNavHost(
             composable(Routes.SCAN) {
                 ScanScreen(nav)
             }
+
+            composable(Routes.NOTIFICATION) {
+                NotificationScreen(nav)
+            }
+
 
             /* ================= DETAIL & UPDATE ================= */
             composable("detail/{id}") { backStack ->

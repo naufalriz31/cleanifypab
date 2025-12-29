@@ -31,10 +31,10 @@ fun ManualReportScreen(nav: NavHostController) {
     var showPopup by remember { mutableStateOf(false) }
 
     val categories = listOf(
-        "QR Code Missing",
-        "QR Code Damaged",
-        "Unexpected Cleaning Task",
-        "Emergency Cleaning Required"
+        "QR Code Hilang",
+        "QR Code Rusak",
+        "Tugas Pembersihan Tambahan",
+        "Perlu Pembersihan Darurat"
     )
 
     Column(
@@ -53,12 +53,12 @@ fun ManualReportScreen(nav: NavHostController) {
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = "Kembali",
                     tint = Color.White
                 )
             }
             Text(
-                "Manual Report",
+                "Laporan Manual",
                 color = Color.White,
                 fontSize = 22.sp,
                 modifier = Modifier.padding(start = 8.dp)
@@ -68,15 +68,15 @@ fun ManualReportScreen(nav: NavHostController) {
         Spacer(Modifier.height(24.dp))
 
         // -------------------------------
-        // INPUT ROOM NAME
+        // INPUT NAMA RUANGAN
         // -------------------------------
-        Text("Room Name", color = Color.White, fontSize = 16.sp)
+        Text("Nama Ruangan", color = Color.White, fontSize = 16.sp)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = roomName,
             onValueChange = { roomName = it },
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Enter room name...", color = Color.LightGray) },
+            placeholder = { Text("Masukkan nama ruangan...", color = Color.LightGray) },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF0F2A1D),
                 unfocusedContainerColor = Color(0xFF0F2A1D),
@@ -91,9 +91,9 @@ fun ManualReportScreen(nav: NavHostController) {
         Spacer(Modifier.height(24.dp))
 
         // -------------------------------
-        // CATEGORY DROPDOWN
+        // DROPDOWN KATEGORI
         // -------------------------------
-        Text("Report Category", color = Color.White, fontSize = 16.sp)
+        Text("Kategori Laporan", color = Color.White, fontSize = 16.sp)
         Spacer(Modifier.height(8.dp))
 
         var expanded by remember { mutableStateOf(false) }
@@ -107,7 +107,7 @@ fun ManualReportScreen(nav: NavHostController) {
                     contentColor = Color.White
                 )
             ) {
-                Text(if (category.isEmpty()) "Choose category..." else category)
+                Text(if (category.isEmpty()) "Pilih kategori..." else category)
             }
 
             DropdownMenu(
@@ -130,9 +130,9 @@ fun ManualReportScreen(nav: NavHostController) {
         Spacer(Modifier.height(24.dp))
 
         // -------------------------------
-        // PHOTO SECTION
+        // BAGIAN FOTO
         // -------------------------------
-        Text("Upload Photo (optional)", color = Color.White, fontSize = 16.sp)
+        Text("Unggah Foto (opsional)", color = Color.White, fontSize = 16.sp)
         Spacer(Modifier.height(12.dp))
 
         if (!photoAttached) {
@@ -147,7 +147,7 @@ fun ManualReportScreen(nav: NavHostController) {
             ) {
                 Icon(
                     Icons.Default.AddAPhoto,
-                    contentDescription = "Add Photo",
+                    contentDescription = "Tambah Foto",
                     tint = Color(0xFF00E676),
                     modifier = Modifier.size(40.dp)
                 )
@@ -161,16 +161,16 @@ fun ManualReportScreen(nav: NavHostController) {
                     .background(Color(0xFF1D2E24)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Photo Attached", color = Color.White)
+                Text("Foto Terlampir", color = Color.White)
             }
         }
 
         Spacer(Modifier.height(24.dp))
 
         // -------------------------------
-        // NOTES
+        // CATATAN
         // -------------------------------
-        Text("Additional Notes", color = Color.White, fontSize = 16.sp)
+        Text("Catatan Tambahan", color = Color.White, fontSize = 16.sp)
         Spacer(Modifier.height(8.dp))
 
         OutlinedTextField(
@@ -179,7 +179,7 @@ fun ManualReportScreen(nav: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp),
-            placeholder = { Text("Write message...", color = Color.LightGray) },
+            placeholder = { Text("Tulis pesan...", color = Color.LightGray) },
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF0F2A1D),
                 unfocusedContainerColor = Color(0xFF0F2A1D),
@@ -194,7 +194,7 @@ fun ManualReportScreen(nav: NavHostController) {
         Spacer(Modifier.height(30.dp))
 
         // -------------------------------
-        // SUBMIT
+        // KIRIM
         // -------------------------------
         Button(
             onClick = {
@@ -208,11 +208,11 @@ fun ManualReportScreen(nav: NavHostController) {
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676)),
             shape = RoundedCornerShape(12.dp)
         ) {
-            Text("Submit Manual Report", color = Color.Black, fontSize = 18.sp)
+            Text("Kirim Laporan Manual", color = Color.Black, fontSize = 18.sp)
         }
     }
 
-    // Popup
+    // POPUP SUKSES
     if (showPopup) {
         ManualReportSuccessPopup {
             showPopup = false
@@ -256,19 +256,23 @@ fun ManualReportSuccessPopup(onFinished: () -> Unit) {
 
                     Icon(
                         Icons.Default.AddAPhoto,
-                        contentDescription = "Done",
+                        contentDescription = "Selesai",
                         tint = Color(0xFF00E676),
                         modifier = Modifier.size(70.dp)
                     )
 
                     Spacer(Modifier.height(12.dp))
 
-                    Text("Manual Report Sent!", color = Color.White, fontSize = 22.sp)
+                    Text(
+                        "Laporan Manual Terkirim!",
+                        color = Color.White,
+                        fontSize = 22.sp
+                    )
 
                     Spacer(Modifier.height(6.dp))
 
                     Text(
-                        "Your manual cleaning report has been saved.",
+                        "Laporan pembersihan manual berhasil disimpan.",
                         color = Color(0xFFB8C3BD),
                         fontSize = 14.sp
                     )

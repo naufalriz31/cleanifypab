@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-// ===== EDIT PROFILE COLORS (UNIQUE) =====
+// ===== WARNA EDIT PROFIL =====
 private val EP_BG = Color(0xFF071A12)
 private val EP_CARD = Color(0xFF0F2A1D)
 private val EP_GREEN = Color(0xFF00E676)
@@ -44,14 +44,14 @@ fun EditProfileScreen(nav: NavHostController) {
             .padding(16.dp)
     ) {
 
-        // ===== TOP BAR =====
+        // ===== BAR ATAS =====
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Kembali",
                 tint = EP_WHITE,
                 modifier = Modifier
                     .size(28.dp)
@@ -61,7 +61,7 @@ fun EditProfileScreen(nav: NavHostController) {
             Spacer(Modifier.width(12.dp))
 
             Text(
-                "Edit Profile",
+                "Edit Profil",
                 color = EP_WHITE,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
@@ -70,7 +70,7 @@ fun EditProfileScreen(nav: NavHostController) {
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Save",
+                "Simpan",
                 color = EP_GREEN,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { nav.popBackStack() }
@@ -79,7 +79,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== PHOTO =====
+        // ===== FOTO =====
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
@@ -106,72 +106,78 @@ fun EditProfileScreen(nav: NavHostController) {
         }
 
         Spacer(Modifier.height(10.dp))
-        Text("Change Photo", color = EP_GREEN, modifier = Modifier.align(Alignment.CenterHorizontally))
+        Text(
+            "Ganti Foto",
+            color = EP_GREEN,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== PERSONAL INFO =====
-        EditProfileSectionTitle("PERSONAL INFORMATION")
+        // ===== INFORMASI PRIBADI =====
+        EditProfileSectionTitle("INFORMASI PRIBADI")
 
         EditProfileInput(
-            label = "Full Name",
+            label = "Nama Lengkap",
             value = fullName,
             onValueChange = { fullName = it },
             trailingIcon = Icons.Default.CheckCircle
         )
 
         EditProfileDisabled(
-            label = "Email Address",
+            label = "Alamat Email",
             value = "john.doe@company.com",
-            note = "Contact admin to update email address."
+            note = "Hubungi admin untuk memperbarui alamat email."
         )
 
         EditProfileInput(
-            label = "Phone Number",
+            label = "Nomor Telepon",
             value = phone,
             onValueChange = { phone = it }
         )
 
         EditProfileDisabled(
-            label = "Job Title",
-            value = "Room Manager",
+            label = "Jabatan",
+            value = "Manajer Ruangan",
             leadingIcon = Icons.Default.Badge
         )
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== SECURITY =====
-        EditProfileSectionTitle("SECURITY")
+        // ===== KEAMANAN =====
+        EditProfileSectionTitle("KEAMANAN")
 
         EditProfileInput(
-            label = "Password",
+            label = "Kata Sandi",
             value = password,
             onValueChange = { password = it },
             isPassword = true,
             trailingIcon = Icons.Default.Visibility
         )
 
-        Text("Change Password", color = EP_GREEN, fontSize = 14.sp)
+        Text("Ubah Kata Sandi", color = EP_GREEN, fontSize = 14.sp)
 
         Spacer(Modifier.weight(1f))
 
-        // ===== SAVE BUTTON =====
+        // ===== TOMBOL SIMPAN =====
         Button(
             onClick = {
                 nav.navigate(Routes.PROFILE) {
                     popUpTo(Routes.PROFILE) { inclusive = true }
                 }
             },
-            modifier = Modifier.fillMaxWidth().height(55.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(55.dp),
             colors = ButtonDefaults.buttonColors(containerColor = EP_GREEN),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Text("Save Changes", fontWeight = FontWeight.Bold, color = EP_BG)
+            Text("Simpan Perubahan", fontWeight = FontWeight.Bold, color = EP_BG)
         }
     }
 }
 
-// ===== UNIQUE COMPONENTS =====
+// ===== KOMPONEN =====
 
 @Composable
 fun EditProfileSectionTitle(text: String) {
@@ -209,7 +215,9 @@ fun EditProfileInput(
             focusedTextColor = EP_WHITE,
             unfocusedTextColor = EP_WHITE
         ),
-        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
     )
 
     Spacer(Modifier.height(16.dp))

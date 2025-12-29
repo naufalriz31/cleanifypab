@@ -40,13 +40,13 @@ fun ReportHistoryScreen(
     val tabs = listOf("Semua", "Selesai", "Menunggu", "Perlu Dicek")
 
     val filteredRooms = rooms.filter { room ->
-        val matchStatus = when (selectedTab) {
+        val cocokStatus = when (selectedTab) {
             1 -> room.status == "Selesai"
             2 -> room.status == "Menunggu"
             3 -> room.status == "Perlu Dicek"
             else -> true
         }
-        matchStatus && room.name.contains(searchQuery, ignoreCase = true)
+        cocokStatus && room.name.contains(searchQuery, ignoreCase = true)
     }
 
     Column(
@@ -63,12 +63,12 @@ fun ReportHistoryScreen(
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = "Kembali",
                     tint = Color.White
                 )
             }
             Text(
-                "Report History",
+                "Riwayat Laporan",
                 color = Color.White,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
@@ -77,7 +77,7 @@ fun ReportHistoryScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        /* ===== SEARCH ===== */
+        /* ===== PENCARIAN ===== */
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,13 +110,17 @@ fun ReportHistoryScreen(
                     .background(card),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.FilterList, null, tint = Color.White)
+                Icon(
+                    Icons.Default.FilterList,
+                    contentDescription = "Filter",
+                    tint = Color.White
+                )
             }
         }
 
         Spacer(Modifier.height(20.dp))
 
-        /* ===== TABS ===== */
+        /* ===== TAB FILTER ===== */
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -142,7 +146,7 @@ fun ReportHistoryScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        /* ===== LIST ===== */
+        /* ===== DAFTAR LAPORAN ===== */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(filteredRooms) { room ->
                 ReportHistoryItem(room) {

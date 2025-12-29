@@ -27,14 +27,14 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
     var notes by remember { mutableStateOf("") }
 
     val checklistItems = listOf(
-        "Restocked mini-bar",
-        "Changed bed linens",
-        "Cleaned bathroom surfaces",
-        "Checked smoke detector"
+        "Mengisi ulang minibar",
+        "Mengganti seprai tempat tidur",
+        "Membersihkan permukaan kamar mandi",
+        "Memeriksa detektor asap"
     )
 
     var selectedChecklist = remember {
-        mutableStateOf(mutableSetOf("Cleaned bathroom surfaces"))
+        mutableStateOf(mutableSetOf("Membersihkan permukaan kamar mandi"))
     }
 
     Column(
@@ -44,13 +44,13 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
             .padding(16.dp)
     ) {
 
-        // TOP BAR
+        // BAR ATAS
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Kembali",
                 tint = Color.White,
                 modifier = Modifier
                     .size(28.dp)
@@ -60,7 +60,7 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
             Spacer(Modifier.width(16.dp))
 
             Text(
-                "Edit Report",
+                "Edit Laporan",
                 fontSize = 20.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
@@ -69,7 +69,7 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Save",
+                "Simpan",
                 fontSize = 18.sp,
                 color = Color(0xFF00E676),
                 modifier = Modifier.clickable { nav.popBackStack() }
@@ -78,9 +78,9 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
 
         Spacer(Modifier.height(24.dp))
 
-        // TITLE
+        // JUDUL
         Text(
-            "Room 301 - Cleaning Report",
+            "Ruang 301 - Laporan Pembersihan",
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
@@ -89,15 +89,20 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
         Spacer(Modifier.height(6.dp))
 
         Text(
-            "Created: Jan 24, 2024 at 10:32 AM",
+            "Dibuat: 24 Jan 2024 pukul 10:32",
             color = Color(0xFF4CAF50),
             fontSize = 14.sp
         )
 
         Spacer(Modifier.height(20.dp))
 
-        // Photos Section
-        Text("Photos", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        // BAGIAN FOTO
+        Text(
+            "Foto",
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
+        )
 
         Spacer(Modifier.height(12.dp))
 
@@ -112,7 +117,7 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                 ) {
                     Icon(
                         Icons.Default.Image,
-                        contentDescription = "Photo",
+                        contentDescription = "Foto",
                         tint = Color.Gray,
                         modifier = Modifier.size(50.dp)
                     )
@@ -134,12 +139,12 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             Icons.Default.AddAPhoto,
-                            contentDescription = "Add Photo",
+                            contentDescription = "Tambah Foto",
                             tint = Color.Gray,
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(Modifier.height(4.dp))
-                        Text("Add Photo", color = Color.Gray, fontSize = 12.sp)
+                        Text("Tambah Foto", color = Color.Gray, fontSize = 12.sp)
                     }
                 }
             }
@@ -147,14 +152,21 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
 
         Spacer(Modifier.height(20.dp))
 
-        // Notes Section
-        Text("Notes", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        // BAGIAN CATATAN
+        Text(
+            "Catatan",
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
+        )
         Spacer(Modifier.height(8.dp))
 
         TextField(
             value = notes,
             onValueChange = { notes = it },
-            placeholder = { Text("Add any relevant details...", color = Color.Gray) },
+            placeholder = {
+                Text("Tambahkan detail yang relevan...", color = Color.Gray)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp)
@@ -172,8 +184,13 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
 
         Spacer(Modifier.height(24.dp))
 
-        // Checklist Section
-        Text("Optional Checklist", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        // BAGIAN CHECKLIST
+        Text(
+            "Checklist Opsional",
+            color = Color.White,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold
+        )
         Spacer(Modifier.height(12.dp))
 
         checklistItems.forEach { item ->
@@ -184,7 +201,9 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                     .clickable {
                         if (selectedChecklist.value.contains(item)) {
                             selectedChecklist.value.remove(item)
-                        } else selectedChecklist.value.add(item)
+                        } else {
+                            selectedChecklist.value.add(item)
+                        }
                     }
                     .padding(vertical = 10.dp)
             ) {
@@ -193,7 +212,9 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                     onCheckedChange = {
                         if (selectedChecklist.value.contains(item)) {
                             selectedChecklist.value.remove(item)
-                        } else selectedChecklist.value.add(item)
+                        } else {
+                            selectedChecklist.value.add(item)
+                        }
                     },
                     colors = CheckboxDefaults.colors(
                         checkedColor = Color(0xFF00E676),
@@ -219,7 +240,12 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                 containerColor = Color(0xFF00E676)
             )
         ) {
-            Text("Save Changes", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
+            Text(
+                "Simpan Perubahan",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
         }
     }
 }

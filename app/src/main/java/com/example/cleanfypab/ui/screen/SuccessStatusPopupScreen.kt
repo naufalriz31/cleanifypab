@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.*
 
 @Composable
 fun SuccessStatusPopupScreen(nav: NavHostController) {
@@ -44,15 +43,23 @@ fun SuccessStatusPopupScreen(nav: NavHostController) {
 
                 Icon(
                     Icons.Default.CheckCircle,
-                    contentDescription = null,
+                    contentDescription = "Berhasil",
                     tint = Color(0xFF00E676),
                     modifier = Modifier.size(80.dp)
                 )
 
                 Spacer(Modifier.height(12.dp))
 
-                Text("Status Updated!", color = Color.White, fontSize = 22.sp)
-                Text("Saving your report...", color = Color(0xFFB8C3BD), fontSize = 14.sp)
+                Text(
+                    "Status Berhasil Diperbarui!",
+                    color = Color.White,
+                    fontSize = 22.sp
+                )
+                Text(
+                    "Menyimpan laporan Anda...",
+                    color = Color(0xFFB8C3BD),
+                    fontSize = 14.sp
+                )
             }
         }
     }

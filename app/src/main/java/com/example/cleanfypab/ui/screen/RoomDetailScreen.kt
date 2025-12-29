@@ -38,12 +38,12 @@ fun RoomDetailScreen(
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = "Kembali",
                     tint = Color.White
                 )
             }
             Text(
-                "Room Detail",
+                "Detail Ruangan",
                 color = Color.White,
                 fontSize = 22.sp,
                 modifier = Modifier.padding(start = 8.dp)
@@ -58,8 +58,16 @@ fun RoomDetailScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(Modifier.padding(20.dp)) {
-                Text(room?.name ?: "Room $id", color = Color.White, fontSize = 24.sp)
-                Text("Last Update: ${room?.time ?: "-"}", color = Color(0xFF9BA5A0), fontSize = 14.sp)
+                Text(
+                    room?.name ?: "Ruang $id",
+                    color = Color.White,
+                    fontSize = 24.sp
+                )
+                Text(
+                    "Pembaruan Terakhir: ${room?.time ?: "-"}",
+                    color = Color(0xFF9BA5A0),
+                    fontSize = 14.sp
+                )
 
                 Spacer(Modifier.height(16.dp))
 
@@ -87,7 +95,7 @@ fun RoomDetailScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        Text("Photos", color = Color.White, fontSize = 18.sp)
+        Text("Foto", color = Color.White, fontSize = 18.sp)
         Spacer(Modifier.height(12.dp))
 
         Row(
@@ -104,7 +112,7 @@ fun RoomDetailScreen(
                 ) {
                     Icon(
                         Icons.Default.Image,
-                        contentDescription = null,
+                        contentDescription = "Foto",
                         tint = Color.Gray,
                         modifier = Modifier.size(40.dp)
                     )
@@ -122,7 +130,7 @@ fun RoomDetailScreen(
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676))
         ) {
-            Text("Update Status", color = Color.Black, fontSize = 18.sp)
+            Text("Perbarui Status", color = Color.Black, fontSize = 18.sp)
         }
 
         Spacer(Modifier.height(12.dp))
@@ -136,7 +144,7 @@ fun RoomDetailScreen(
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
         ) {
-            Text("Tandai Selesai (Quick)")
+            Text("Tandai Selesai (Cepat)")
         }
     }
 }

@@ -32,7 +32,7 @@ fun UpdateStatusScreen(
     var selected by remember { mutableStateOf("") }
     var showPopup by remember { mutableStateOf(false) }
 
-    val roomName = vm.getRoomById(roomId)?.name ?: "Room #$roomId"
+    val roomName = vm.getRoomById(roomId)?.name ?: "Ruang #$roomId"
 
     Box(
         modifier = Modifier
@@ -50,11 +50,11 @@ fun UpdateStatusScreen(
                 IconButton(onClick = { nav.popBackStack() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = "Kembali",
                         tint = Color.White
                     )
                 }
-                Text("Update Status", color = Color.White, fontSize = 22.sp)
+                Text("Perbarui Status", color = Color.White, fontSize = 22.sp)
             }
 
             Spacer(Modifier.height(20.dp))
@@ -65,21 +65,21 @@ fun UpdateStatusScreen(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFF0A2018))
             ) {
                 Column(Modifier.padding(20.dp)) {
-                    Text("Room Name", color = Color(0xFF9BA5A0), fontSize = 14.sp)
+                    Text("Nama Ruangan", color = Color(0xFF9BA5A0), fontSize = 14.sp)
                     Text(roomName, color = Color.White, fontSize = 20.sp)
                     Spacer(Modifier.height(12.dp))
-                    Text("Last Check: -", color = Color(0xFF6F7B75), fontSize = 14.sp)
+                    Text("Pemeriksaan Terakhir: -", color = Color(0xFF6F7B75), fontSize = 14.sp)
                 }
             }
 
             Spacer(Modifier.height(30.dp))
 
-            Text("Select Room Status", color = Color.White, fontSize = 18.sp)
+            Text("Pilih Status Ruangan", color = Color.White, fontSize = 18.sp)
             Spacer(Modifier.height(16.dp))
 
             StatusOptionCard(
-                title = "Cleaned",
-                description = "Room has been cleaned properly",
+                title = "Sudah Dibersihkan",
+                description = "Ruangan telah dibersihkan dengan baik",
                 color = Color(0xFF4CAF50),
                 icon = Icons.Default.CheckCircle,
                 selected = selected == "cleaned",
@@ -87,8 +87,8 @@ fun UpdateStatusScreen(
             )
 
             StatusOptionCard(
-                title = "Not Yet",
-                description = "Room has not been cleaned yet",
+                title = "Belum Dibersihkan",
+                description = "Ruangan belum dibersihkan",
                 color = Color(0xFFFFC107),
                 icon = Icons.Default.Close,
                 selected = selected == "notyet",
@@ -96,8 +96,8 @@ fun UpdateStatusScreen(
             )
 
             StatusOptionCard(
-                title = "Needs Cleaning",
-                description = "Room requires urgent cleaning",
+                title = "Perlu Pembersihan",
+                description = "Ruangan memerlukan pembersihan segera",
                 color = Color(0xFFE53935),
                 icon = Icons.Default.Warning,
                 selected = selected == "issue",
@@ -124,7 +124,7 @@ fun UpdateStatusScreen(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676))
             ) {
-                Text("Submit Status", color = Color.Black, fontSize = 18.sp)
+                Text("Kirim Status", color = Color.Black, fontSize = 18.sp)
             }
         }
 
@@ -171,7 +171,7 @@ fun StatusOptionCard(
                 Text(description, color = Color(0xFF9BA5A0), fontSize = 13.sp)
             }
             if (selected) {
-                Icon(Icons.Default.CheckCircle, contentDescription = "Selected", tint = color)
+                Icon(Icons.Default.CheckCircle, contentDescription = "Dipilih", tint = color)
             }
         }
     }
@@ -208,10 +208,15 @@ fun SuccessUpdatePopup(onFinished: () -> Unit) {
                     modifier = Modifier.padding(26.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(Icons.Default.CheckCircle, contentDescription = "Success", tint = Color(0xFF00E676), modifier = Modifier.size(80.dp))
+                    Icon(
+                        Icons.Default.CheckCircle,
+                        contentDescription = "Berhasil",
+                        tint = Color(0xFF00E676),
+                        modifier = Modifier.size(80.dp)
+                    )
                     Spacer(Modifier.height(10.dp))
-                    Text("Status Updated!", color = Color.White, fontSize = 22.sp)
-                    Text("Saved to database.", color = Color(0xFFB8C3BD), fontSize = 14.sp)
+                    Text("Status Berhasil Diperbarui!", color = Color.White, fontSize = 22.sp)
+                    Text("Data berhasil disimpan.", color = Color(0xFFB8C3BD), fontSize = 14.sp)
                 }
             }
         }

@@ -3,15 +3,15 @@ package com.example.cleanfypab.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.cleanfypab.data.model.RoomModel
 
 @Composable
@@ -19,47 +19,76 @@ fun TaskItem(
     room: RoomModel,
     onScanClick: () -> Unit
 ) {
+
+    // 🎨 WARNA KONSISTEN DENGAN HOME & REPORT
+    val cardColor = Color(0xFF14231C)
+    val mutedText = Color(0xFF9BA5A0)
+    val green = Color(0xFF00E676)
+    val orange = Color(0xFFFFA000)
+    val red = Color(0xFFE53935)
+    val blue = Color(0xFF2196F3)
+
+    val statusColor = when (room.status) {
+        "Selesai" -> green
+        "Menunggu" -> orange
+        "Perlu Dicek" -> red
+        else -> mutedText
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        shape = MaterialTheme.shapes.medium
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = cardColor // ✅ INI KUNCI UTAMA
+        )
     ) {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // LEFT SIDE — Room Info
-            Column {
+            // LEFT — INFO
+            Column(modifier = Modifier.weight(1f)) {
 
                 Text(
                     room.name,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize
+                    fontSize = 16.sp
                 )
+
+                Spacer(Modifier.height(4.dp))
 
                 Text(
                     "Status: ${room.status}",
-                    color = if (room.status == "Selesai") Color(0xFF4CAF50) else Color(0xFFE53935)
+                    color = statusColor,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium
                 )
+
+                Spacer(Modifier.height(2.dp))
 
                 Text(
                     "Jam Penugasan: ${room.time}",
-                    color = Color.Gray
+                    color = mutedText,
+                    fontSize = 12.sp
                 )
             }
 
-            // RIGHT SIDE — Scan button
+            // RIGHT — SCAN BUTTON
             Box(
                 modifier = Modifier
-                    .background(Color(0xFF1E88E5), shape = MaterialTheme.shapes.small)
-                    .padding(horizontal = 14.dp, vertical = 8.dp)
-                    .clickable { onScanClick() }
+                    .background(blue, RoundedCornerShape(10.dp))
+                    .clickable(enabled = room.status != "Selesai") {
+                        onScanClick()
+                    }
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     "Scan",
