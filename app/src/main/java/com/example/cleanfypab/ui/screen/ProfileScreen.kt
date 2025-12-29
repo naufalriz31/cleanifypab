@@ -1,14 +1,16 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-// ================= WARNA =================
+/* ================= WARNA ================= */
 val BG_DARK = Color(0xFF071A12)
 val CARD_DARK = Color(0xFF0F2A1D)
 val GREEN_ACCENT = Color(0xFF00E676)
@@ -38,10 +40,11 @@ fun ProfileScreen(nav: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .background(BG_DARK)
+            .verticalScroll(rememberScrollState()) // ✅ FIX SCROLL
             .padding(16.dp)
     ) {
 
-        // ===== HEADER =====
+        /* ===== HEADER ===== */
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -67,7 +70,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== INFORMASI PROFIL =====
+        /* ===== INFORMASI PROFIL ===== */
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
@@ -119,7 +122,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== PENGATURAN =====
+        /* ===== PENGATURAN ===== */
         Text(
             "PENGATURAN",
             fontSize = 14.sp,
@@ -145,7 +148,7 @@ fun ProfileScreen(nav: NavHostController) {
                 }
             )
 
-            HorizontalDivider(color = Color(0xFF173327))
+            Divider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.DarkMode,
@@ -153,7 +156,7 @@ fun ProfileScreen(nav: NavHostController) {
                 trailing = { ArrowIcon() }
             )
 
-            HorizontalDivider(color = Color(0xFF173327))
+            Divider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Language,
@@ -164,7 +167,7 @@ fun ProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== AKUN =====
+        /* ===== AKUN ===== */
         Text(
             "AKUN",
             fontSize = 14.sp,
@@ -181,7 +184,7 @@ fun ProfileScreen(nav: NavHostController) {
                 trailing = { ArrowIcon() }
             )
 
-            HorizontalDivider(color = Color(0xFF173327))
+            Divider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Security,
@@ -189,7 +192,7 @@ fun ProfileScreen(nav: NavHostController) {
                 trailing = { ArrowIcon() }
             )
 
-            HorizontalDivider(color = Color(0xFF173327))
+            Divider(color = Color(0xFF173327))
 
             SettingsItem(
                 icon = Icons.Default.Description,
@@ -198,9 +201,9 @@ fun ProfileScreen(nav: NavHostController) {
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(Modifier.height(32.dp))
 
-        // ===== KELUAR =====
+        /* ===== KELUAR ===== */
         Button(
             onClick = {
                 nav.navigate(Routes.LOGIN) {
@@ -220,10 +223,12 @@ fun ProfileScreen(nav: NavHostController) {
                 color = BG_DARK
             )
         }
+
+        Spacer(Modifier.height(20.dp))
     }
 }
 
-// ================= KOMPONEN =================
+/* ================= KOMPONEN ================= */
 
 @Composable
 fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {

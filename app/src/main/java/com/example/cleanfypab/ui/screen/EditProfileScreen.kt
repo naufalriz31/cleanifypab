@@ -4,8 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
@@ -41,10 +43,11 @@ fun EditProfileScreen(nav: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .background(EP_BG)
+            .verticalScroll(rememberScrollState()) // ✅ FIX SCROLL
             .padding(16.dp)
     ) {
 
-        // ===== BAR ATAS =====
+        /* ===== BAR ATAS ===== */
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -79,7 +82,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== FOTO =====
+        /* ===== FOTO ===== */
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
@@ -114,7 +117,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== INFORMASI PRIBADI =====
+        /* ===== INFORMASI PRIBADI ===== */
         EditProfileSectionTitle("INFORMASI PRIBADI")
 
         EditProfileInput(
@@ -144,7 +147,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
         Spacer(Modifier.height(28.dp))
 
-        // ===== KEAMANAN =====
+        /* ===== KEAMANAN ===== */
         EditProfileSectionTitle("KEAMANAN")
 
         EditProfileInput(
@@ -157,9 +160,9 @@ fun EditProfileScreen(nav: NavHostController) {
 
         Text("Ubah Kata Sandi", color = EP_GREEN, fontSize = 14.sp)
 
-        Spacer(Modifier.weight(1f))
+        Spacer(Modifier.height(32.dp))
 
-        // ===== TOMBOL SIMPAN =====
+        /* ===== TOMBOL SIMPAN ===== */
         Button(
             onClick = {
                 nav.navigate(Routes.PROFILE) {
@@ -174,10 +177,12 @@ fun EditProfileScreen(nav: NavHostController) {
         ) {
             Text("Simpan Perubahan", fontWeight = FontWeight.Bold, color = EP_BG)
         }
+
+        Spacer(Modifier.height(24.dp)) // ruang aman bawah
     }
 }
 
-// ===== KOMPONEN =====
+/* ===== KOMPONEN ===== */
 
 @Composable
 fun EditProfileSectionTitle(text: String) {
