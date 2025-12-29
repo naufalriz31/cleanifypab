@@ -45,7 +45,7 @@ fun AdminRoomScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "Room Management",
+                "Manajemen Ruangan",
                 color = Color.White,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
@@ -66,7 +66,7 @@ fun AdminRoomScreen(
         OutlinedTextField(
             value = "",
             onValueChange = {},
-            placeholder = { Text("Search room number or type...") },
+            placeholder = { Text("Cari nomor atau tipe ruangan...") },
             leadingIcon = { Icon(Icons.Default.Search, null) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
@@ -89,7 +89,7 @@ fun AdminRoomScreen(
             OverviewCard(
                 modifier = Modifier.weight(1f),
                 value = "30",
-                label = "Total Rooms",
+                label = "Total Ruangan",
                 icon = Icons.Default.Apartment,
                 accent = green,
                 bg = card
@@ -97,7 +97,7 @@ fun AdminRoomScreen(
             OverviewCard(
                 modifier = Modifier.weight(1f),
                 value = "12",
-                label = "Available",
+                label = "Tersedia",
                 icon = Icons.Default.CheckCircle,
                 accent = green,
                 bg = card
@@ -113,7 +113,7 @@ fun AdminRoomScreen(
             OverviewCard(
                 modifier = Modifier.weight(1f),
                 value = "13",
-                label = "Occupied",
+                label = "Terpakai",
                 icon = Icons.Default.Person,
                 accent = red,
                 bg = card
@@ -121,7 +121,7 @@ fun AdminRoomScreen(
             OverviewCard(
                 modifier = Modifier.weight(1f),
                 value = "5",
-                label = "Maintenance",
+                label = "Perawatan",
                 icon = Icons.Default.Build,
                 accent = yellow,
                 bg = card
@@ -132,10 +132,10 @@ fun AdminRoomScreen(
 
         /* ================= FILTER ================= */
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            RoomFilter("ALL", "All", selectedFilter, green) { selectedFilter = "ALL" }
-            RoomFilter("AVAILABLE", "Available", selectedFilter, green) { selectedFilter = "AVAILABLE" }
-            RoomFilter("OCCUPIED", "Occupied", selectedFilter, green) { selectedFilter = "OCCUPIED" }
-            RoomFilter("MAINT", "Maintenance", selectedFilter, green) { selectedFilter = "MAINT" }
+            RoomFilter("ALL", "Semua", selectedFilter, green) { selectedFilter = "ALL" }
+            RoomFilter("AVAILABLE", "Tersedia", selectedFilter, green) { selectedFilter = "AVAILABLE" }
+            RoomFilter("OCCUPIED", "Terpakai", selectedFilter, green) { selectedFilter = "OCCUPIED" }
+            RoomFilter("MAINT", "Perawatan", selectedFilter, green) { selectedFilter = "MAINT" }
         }
 
         Spacer(Modifier.height(16.dp))
@@ -143,45 +143,45 @@ fun AdminRoomScreen(
         /* ================= ROOM LIST (30 ROOMS) ================= */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
 
-            // FLOOR 1
-            item { RoomItem("Room 101", "Standard Single", "Available", green, card) }
-            item { RoomItem("Room 102", "Standard Single", "Occupied", red, card) }
-            item { RoomItem("Room 103", "Standard Single", "Available", green, card) }
-            item { RoomItem("Room 104", "Deluxe Suite", "Occupied", red, card) }
-            item { RoomItem("Room 105", "Deluxe Suite", "Maintenance", yellow, card) }
+            // LANTAI 1
+            item { RoomItem("Ruang 101", "Standar Single", "Tersedia", green, card) }
+            item { RoomItem("Ruang 102", "Standar Single", "Terpakai", red, card) }
+            item { RoomItem("Ruang 103", "Standar Single", "Tersedia", green, card) }
+            item { RoomItem("Ruang 104", "Suite Deluxe", "Terpakai", red, card) }
+            item { RoomItem("Ruang 105", "Suite Deluxe", "Perawatan", yellow, card) }
 
-            // FLOOR 2
-            item { RoomItem("Room 201", "Standard Double", "Available", green, card) }
-            item { RoomItem("Room 202", "Standard Double", "Occupied", red, card) }
-            item { RoomItem("Room 203", "Standard Double", "Available", green, card) }
-            item { RoomItem("Room 204", "Superior Queen", "Occupied", red, card) }
-            item { RoomItem("Room 205", "Superior Queen", "Maintenance", yellow, card) }
+            // LANTAI 2
+            item { RoomItem("Ruang 201", "Standar Double", "Tersedia", green, card) }
+            item { RoomItem("Ruang 202", "Standar Double", "Terpakai", red, card) }
+            item { RoomItem("Ruang 203", "Standar Double", "Tersedia", green, card) }
+            item { RoomItem("Ruang 204", "Superior Queen", "Terpakai", red, card) }
+            item { RoomItem("Ruang 205", "Superior Queen", "Perawatan", yellow, card) }
 
-            // FLOOR 3
-            item { RoomItem("Room 301", "Twin Bed", "Available", green, card) }
-            item { RoomItem("Room 302", "Twin Bed", "Occupied", red, card) }
-            item { RoomItem("Room 303", "Twin Bed", "Available", green, card) }
-            item { RoomItem("Room 304", "Executive Room", "Occupied", red, card) }
-            item { RoomItem("Room 305", "Executive Room", "Maintenance", yellow, card) }
+            // LANTAI 3
+            item { RoomItem("Ruang 301", "Twin Bed", "Tersedia", green, card) }
+            item { RoomItem("Ruang 302", "Twin Bed", "Terpakai", red, card) }
+            item { RoomItem("Ruang 303", "Twin Bed", "Tersedia", green, card) }
+            item { RoomItem("Ruang 304", "Ruang Eksekutif", "Terpakai", red, card) }
+            item { RoomItem("Ruang 305", "Ruang Eksekutif", "Perawatan", yellow, card) }
 
-            // FLOOR 4
-            item { RoomItem("Room 401", "Meeting Room", "Available", green, card) }
-            item { RoomItem("Room 402", "Meeting Room", "Occupied", red, card) }
-            item { RoomItem("Room 403", "Meeting Room", "Available", green, card) }
-            item { RoomItem("Room 404", "Conference Hall", "Occupied", red, card) }
-            item { RoomItem("Room 405", "Conference Hall", "Maintenance", yellow, card) }
+            // LANTAI 4
+            item { RoomItem("Ruang 401", "Ruang Rapat", "Tersedia", green, card) }
+            item { RoomItem("Ruang 402", "Ruang Rapat", "Terpakai", red, card) }
+            item { RoomItem("Ruang 403", "Ruang Rapat", "Tersedia", green, card) }
+            item { RoomItem("Ruang 404", "Aula Konferensi", "Terpakai", red, card) }
+            item { RoomItem("Ruang 405", "Aula Konferensi", "Perawatan", yellow, card) }
 
-            // FLOOR 5
-            item { RoomItem("Room 501", "VIP Suite", "Available", green, card) }
-            item { RoomItem("Room 502", "VIP Suite", "Occupied", red, card) }
-            item { RoomItem("Room 503", "VIP Suite", "Available", green, card) }
-            item { RoomItem("Room 504", "Presidential Suite", "Occupied", red, card) }
-            item { RoomItem("Room 505", "Presidential Suite", "Maintenance", yellow, card) }
+            // LANTAI 5
+            item { RoomItem("Ruang 501", "Suite VIP", "Tersedia", green, card) }
+            item { RoomItem("Ruang 502", "Suite VIP", "Terpakai", red, card) }
+            item { RoomItem("Ruang 503", "Suite VIP", "Tersedia", green, card) }
+            item { RoomItem("Ruang 504", "Suite Presiden", "Terpakai", red, card) }
+            item { RoomItem("Ruang 505", "Suite Presiden", "Perawatan", yellow, card) }
         }
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= KOMPONEN ================= */
 
 @Composable
 fun OverviewCard(

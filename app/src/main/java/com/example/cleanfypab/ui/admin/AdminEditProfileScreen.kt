@@ -34,7 +34,7 @@ fun AdminEditProfileScreen(
     val red = Color(0xFFFF5C5C)
 
     var fullName by remember { mutableStateOf("Jane Doe") }
-    var jobTitle by remember { mutableStateOf("Room Manager") }
+    var jobTitle by remember { mutableStateOf("Manajer Ruangan") }
     var email by remember { mutableStateOf("jane.doe@company.com") }
     var phone by remember { mutableStateOf("+1 (555) 123-4567") }
     var newPassword by remember { mutableStateOf("") }
@@ -57,7 +57,12 @@ fun AdminEditProfileScreen(
                 modifier = Modifier.clickable { onBack() }
             )
             Spacer(Modifier.width(16.dp))
-            Text("Edit Profile", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "Edit Profil",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
         Spacer(Modifier.height(24.dp))
@@ -96,50 +101,52 @@ fun AdminEditProfileScreen(
             shape = RoundedCornerShape(50),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Change Photo", color = green)
+            Text("Ganti Foto", color = green)
         }
 
         Spacer(Modifier.height(24.dp))
 
         /* PERSONAL INFO */
-        ProfileSectionTitle("PERSONAL INFORMATION")
+        ProfileSectionTitle("INFORMASI PRIBADI")
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("Full Name", fullName) { fullName = it }
-        ProfileTextField("Job Title", jobTitle) { jobTitle = it }
+        ProfileTextField("Nama Lengkap", fullName) { fullName = it }
+        ProfileTextField("Jabatan", jobTitle) { jobTitle = it }
 
         Spacer(Modifier.height(20.dp))
 
         /* CONTACT */
-        ProfileSectionTitle("CONTACT DETAILS")
+        ProfileSectionTitle("DETAIL KONTAK")
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("Email Address", email, Icons.Default.Email, enabled = false) {}
-        ProfileTextField("Phone Number", phone, Icons.Default.Phone) { phone = it }
+        ProfileTextField("Alamat Email", email, Icons.Default.Email, enabled = false) {}
+        ProfileTextField("Nomor Telepon", phone, Icons.Default.Phone) { phone = it }
 
         Spacer(Modifier.height(20.dp))
 
         /* SECURITY */
-        ProfileSectionTitle("SECURITY")
+        ProfileSectionTitle("KEAMANAN")
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("New Password", newPassword, Icons.Default.Lock, true) { newPassword = it }
-        ProfileTextField("Confirm Password", confirmPassword, Icons.Default.Lock, true) { confirmPassword = it }
+        ProfileTextField("Kata Sandi Baru", newPassword, Icons.Default.Lock, true) { newPassword = it }
+        ProfileTextField("Konfirmasi Kata Sandi", confirmPassword, Icons.Default.Lock, true) { confirmPassword = it }
 
         Spacer(Modifier.height(24.dp))
 
         TextButton(onClick = onDelete, modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Icon(Icons.Default.Delete, null, tint = red)
             Spacer(Modifier.width(6.dp))
-            Text("Delete Account", color = red)
+            Text("Hapus Akun", color = red)
         }
 
         Spacer(Modifier.height(24.dp))
 
         Button(
             onClick = onSave,
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = green),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text("Save Changes", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text("Simpan Perubahan", color = Color.Black, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -168,7 +175,10 @@ private fun ProfileTextField(
             onValueChange = onValueChange,
             enabled = enabled,
             leadingIcon = { icon?.let { Icon(it, null) } },
-            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+            visualTransformation = if (isPassword)
+                PasswordVisualTransformation()
+            else
+                VisualTransformation.None,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(

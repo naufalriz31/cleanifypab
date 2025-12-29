@@ -26,7 +26,7 @@ fun AdminAssignRoomScreen(
     val borderColor = Color(0xFF245C3A)
     val green = Color(0xFF2DFF8F)
 
-    var selectedOfficer by remember { mutableStateOf("Ofc. Wick") }
+    var selectedOfficer by remember { mutableStateOf("Petugas Wick") }
     var notes by remember { mutableStateOf("") }
 
     Box(
@@ -40,14 +40,12 @@ fun AdminAssignRoomScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-                .padding(bottom = 90.dp) // ruang tombol
+                .padding(bottom = 90.dp)
                 .verticalScroll(rememberScrollState())
         ) {
 
             /* HEADER */
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     Icons.Default.Close,
                     contentDescription = null,
@@ -56,7 +54,7 @@ fun AdminAssignRoomScreen(
                 )
                 Spacer(Modifier.width(16.dp))
                 Text(
-                    "Assign Room",
+                    "Penugasan Ruangan",
                     color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -66,9 +64,9 @@ fun AdminAssignRoomScreen(
             Spacer(Modifier.height(24.dp))
 
             /* SELECT ROOM */
-            Text("Select Room", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Pilih Ruangan", color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
-            Text("Room Number or Name", color = Color.Gray, fontSize = 12.sp)
+            Text("Nomor atau Nama Ruangan", color = Color.Gray, fontSize = 12.sp)
             Spacer(Modifier.height(8.dp))
 
             Box(
@@ -82,7 +80,7 @@ fun AdminAssignRoomScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Choose a room...", color = Color.Gray)
+                    Text("Pilih ruangan...", color = Color.Gray)
                     Icon(Icons.Default.KeyboardArrowDown, null, tint = Color.Gray)
                 }
             }
@@ -90,14 +88,14 @@ fun AdminAssignRoomScreen(
             Spacer(Modifier.height(24.dp))
 
             /* ASSIGN PERSONNEL */
-            Text("Assign Personnel", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Tugaskan Petugas", color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
 
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
                 leadingIcon = { Icon(Icons.Default.Search, null) },
-                placeholder = { Text("Search officer by name...") },
+                placeholder = { Text("Cari petugas berdasarkan nama...") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = cardColor,
@@ -113,18 +111,18 @@ fun AdminAssignRoomScreen(
 
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 item {
-                    OfficerChip("Ofc. Sarah", selectedOfficer == "Ofc. Sarah", green) {
-                        selectedOfficer = "Ofc. Sarah"
+                    OfficerChip("Petugas Sarah", selectedOfficer == "Petugas Sarah", green) {
+                        selectedOfficer = "Petugas Sarah"
                     }
                 }
                 item {
-                    OfficerChip("Ofc. Wick", selectedOfficer == "Ofc. Wick", green) {
-                        selectedOfficer = "Ofc. Wick"
+                    OfficerChip("Petugas Wick", selectedOfficer == "Petugas Wick", green) {
+                        selectedOfficer = "Petugas Wick"
                     }
                 }
                 item {
-                    OfficerChip("Ofc. Bob", selectedOfficer == "Ofc. Bob", green) {
-                        selectedOfficer = "Ofc. Bob"
+                    OfficerChip("Petugas Bob", selectedOfficer == "Petugas Bob", green) {
+                        selectedOfficer = "Petugas Bob"
                     }
                 }
             }
@@ -132,14 +130,14 @@ fun AdminAssignRoomScreen(
             Spacer(Modifier.height(24.dp))
 
             /* NOTES */
-            Text("Additional Notes", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Catatan Tambahan", color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
 
             OutlinedTextField(
                 value = notes,
                 onValueChange = { notes = it },
                 placeholder = {
-                    Text("Enter any special instructions or equipment needs...")
+                    Text("Masukkan instruksi khusus atau kebutuhan peralatan...")
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,8 +156,7 @@ fun AdminAssignRoomScreen(
         /* ================= CONFIRM BUTTON ================= */
         Button(
             onClick = {
-                // AKSI CONFIRM
-                println("ASSIGNMENT CONFIRMED")
+                println("PENUGASAN DIKONFIRMASI")
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -172,7 +169,7 @@ fun AdminAssignRoomScreen(
             Icon(Icons.Default.CheckCircle, null, tint = Color.Black)
             Spacer(Modifier.width(8.dp))
             Text(
-                "Confirm Assignment",
+                "Konfirmasi Penugasan",
                 color = Color.Black,
                 fontWeight = FontWeight.Bold
             )

@@ -52,7 +52,7 @@ fun AdminProfileScreen(
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Profile",
+                "Profil",
                 color = Color.White,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -128,38 +128,38 @@ fun AdminProfileScreen(
             Spacer(Modifier.height(8.dp))
 
             Text("jane.doe@company.com", color = Color.Gray, fontSize = 13.sp)
-            Text("Senior Facility Manager", color = Color.Gray, fontSize = 13.sp)
+            Text("Manajer Fasilitas Senior", color = Color.Gray, fontSize = 13.sp)
         }
 
         Spacer(Modifier.height(28.dp))
 
-        /* ================= STATS (NO WEIGHT) ================= */
+        /* ================= STATS ================= */
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            StatBox("12", "PENDING\nTASKS", card, green)
-            StatBox("45", "ROOMS\nMANAGED", card, green)
-            StatBox("98%", "RESPONSE\nRATE", card, green)
+            StatBox("12", "TUGAS\nMENUNGGU", card, green)
+            StatBox("45", "RUANGAN\nDIKELOLA", card, green)
+            StatBox("98%", "TINGKAT\nRESPON", card, green)
         }
 
         Spacer(Modifier.height(32.dp))
 
-        SectionTitle("ACCOUNT SETTINGS")
-        MenuItem(Icons.Default.Lock, "Account Security", "Password, 2FA")
-        MenuItem(Icons.Default.Notifications, "Notifications", "Push, Email, SMS")
+        SectionTitle("PENGATURAN AKUN")
+        MenuItem(Icons.Default.Lock, "Keamanan Akun", "Kata sandi, 2FA")
+        MenuItem(Icons.Default.Notifications, "Notifikasi", "Push, Email, SMS")
 
         Spacer(Modifier.height(24.dp))
 
-        SectionTitle("APP SETTINGS")
-        ToggleItem(Icons.Default.DarkMode, "Appearance", "Dark Mode Active")
-        MenuItem(Icons.Default.Language, "Language", "English (US)")
+        SectionTitle("PENGATURAN APLIKASI")
+        ToggleItem(Icons.Default.DarkMode, "Tampilan", "Mode Gelap Aktif")
+        MenuItem(Icons.Default.Language, "Bahasa", "Bahasa Indonesia")
 
         Spacer(Modifier.height(24.dp))
 
-        SectionTitle("SUPPORT")
-        MenuItem(Icons.Default.Help, "Help Center")
-        MenuItem(Icons.Default.BugReport, "Report a Bug")
+        SectionTitle("DUKUNGAN")
+        MenuItem(Icons.Default.Help, "Pusat Bantuan")
+        MenuItem(Icons.Default.BugReport, "Laporkan Bug")
 
         Spacer(Modifier.height(28.dp))
 
@@ -170,13 +170,13 @@ fun AdminProfileScreen(
         ) {
             Icon(Icons.AutoMirrored.Filled.Logout, null)
             Spacer(Modifier.width(8.dp))
-            Text("Sign Out", fontWeight = FontWeight.Bold)
+            Text("Keluar", fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(16.dp))
 
         Text(
-            "Version 1.0.2 (Build 240)",
+            "Versi 1.0.2 (Build 240)",
             color = Color.Gray,
             fontSize = 12.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -208,7 +208,11 @@ private fun SectionTitle(text: String) {
 }
 
 @Composable
-private fun MenuItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String? = null) {
+private fun MenuItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String? = null
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,7 +233,11 @@ private fun MenuItem(icon: androidx.compose.ui.graphics.vector.ImageVector, titl
 }
 
 @Composable
-private fun ToggleItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, subtitle: String) {
+private fun ToggleItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    subtitle: String
+) {
     var enabled by remember { mutableStateOf(true) }
 
     Row(

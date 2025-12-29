@@ -22,7 +22,11 @@ fun AdminAuditLogScreen() {
             .padding(16.dp)
     ) {
 
-        Text("Audit Log", color = Color.White, fontWeight = FontWeight.Bold)
+        Text(
+            "Log Audit",
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
 
         Spacer(Modifier.height(12.dp))
 

@@ -52,13 +52,13 @@ fun AdminCreateTaskScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Cancel",
+                    "Batal",
                     color = green,
                     modifier = Modifier.clickable { onCancel() }
                 )
 
                 Text(
-                    "Create Task",
+                    "Buat Tugas",
                     color = Color.White,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -69,15 +69,15 @@ fun AdminCreateTaskScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("ASSIGNMENT")
+            AdminTaskSectionTitle("PENUGASAN")
 
             AdminTaskCard(cardBg, border) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Person, null, tint = Color.Gray)
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Select Officer", color = Color.White)
-                        Text("Who is responsible?", color = Color.Gray, fontSize = 12.sp)
+                        Text("Pilih Petugas", color = Color.White)
+                        Text("Siapa yang bertanggung jawab?", color = Color.Gray, fontSize = 12.sp)
                     }
                     Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
                 }
@@ -85,13 +85,13 @@ fun AdminCreateTaskScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("CONTEXT & TYPE")
+            AdminTaskSectionTitle("KONTEKS & JENIS")
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                AdminTaskTypeChip("Room Specific", taskType == "ROOM", green) {
+                AdminTaskTypeChip("Spesifik Ruangan", taskType == "ROOM", green) {
                     taskType = "ROOM"
                 }
-                AdminTaskTypeChip("General", taskType == "GENERAL", green) {
+                AdminTaskTypeChip("Umum", taskType == "GENERAL", green) {
                     taskType = "GENERAL"
                 }
             }
@@ -102,31 +102,31 @@ fun AdminCreateTaskScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.MeetingRoom, null, tint = green)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Search Room Number (e.g. 101)", color = Color.Gray)
+                    Text("Cari Nomor Ruangan (mis. 101)", color = Color.Gray)
                 }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("TASK DETAILS")
+            AdminTaskSectionTitle("DETAIL TUGAS")
 
             AdminTaskCard(cardBg, border) {
                 Column {
 
-                    Text("TASK TITLE", color = green, fontSize = 12.sp)
+                    Text("JUDUL TUGAS", color = green, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     AdminTaskInput(
                         value = title,
-                        placeholder = "e.g., Fix AC Unit"
+                        placeholder = "mis., Perbaiki Unit AC"
                     ) { title = it }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    Text("NOTES", color = Color.Gray, fontSize = 12.sp)
+                    Text("CATATAN", color = Color.Gray, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     AdminTaskInput(
                         value = notes,
-                        placeholder = "Add detailed instructions...",
+                        placeholder = "Tambahkan instruksi detail...",
                         height = 120.dp
                     ) { notes = it }
 
@@ -141,15 +141,15 @@ fun AdminCreateTaskScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("TIMING & URGENCY")
+            AdminTaskSectionTitle("WAKTU & PRIORITAS")
 
             AdminTaskCard(cardBg, border) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.CalendarToday, null, tint = green)
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("Due Date", color = Color.White)
-                        Text("Tomorrow, 10:00 AM", color = Color.Gray, fontSize = 12.sp)
+                        Text("Batas Waktu", color = Color.White)
+                        Text("Besok, 10:00", color = Color.Gray, fontSize = 12.sp)
                     }
                     Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
                 }
@@ -162,8 +162,8 @@ fun AdminCreateTaskScreen(
                     Icon(Icons.Default.PriorityHigh, null, tint = Color.Red)
                     Spacer(modifier = Modifier.width(12.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Text("High Priority", color = Color.White)
-                        Text("Flag this task as urgent", color = Color.Gray, fontSize = 12.sp)
+                        Text("Prioritas Tinggi", color = Color.White)
+                        Text("Tandai tugas ini sebagai mendesak", color = Color.Gray, fontSize = 12.sp)
                     }
                     Switch(
                         checked = urgent,
@@ -189,7 +189,7 @@ fun AdminCreateTaskScreen(
         ) {
             Icon(Icons.Default.CheckCircle, null, tint = Color.Black)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Assign Task", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text("Tetapkan Tugas", color = Color.Black, fontWeight = FontWeight.Bold)
         }
     }
 }

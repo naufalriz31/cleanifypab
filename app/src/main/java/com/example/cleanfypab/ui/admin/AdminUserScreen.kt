@@ -61,7 +61,7 @@ fun AdminUserScreen(
                         )
                         Spacer(Modifier.width(12.dp))
                         Text(
-                            text = "User Management",
+                            text = "Manajemen Pengguna",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -83,7 +83,7 @@ fun AdminUserScreen(
                 OutlinedTextField(
                     value = "",
                     onValueChange = {},
-                    placeholder = { Text("Search users...") },
+                    placeholder = { Text("Cari pengguna...") },
                     leadingIcon = { Icon(Icons.Default.Search, null) },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -100,9 +100,9 @@ fun AdminUserScreen(
             /* ================= FILTER ================= */
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    UserFilter("ALL", "All", selectedTab, green) { selectedTab = "ALL" }
-                    UserFilter("ADMIN", "Admins", selectedTab, green) { selectedTab = "ADMIN" }
-                    UserFilter("STAFF", "Staff", selectedTab, green) { selectedTab = "STAFF" }
+                    UserFilter("ALL", "Semua", selectedTab, green) { selectedTab = "ALL" }
+                    UserFilter("ADMIN", "Admin", selectedTab, green) { selectedTab = "ADMIN" }
+                    UserFilter("STAFF", "Staf", selectedTab, green) { selectedTab = "STAFF" }
                     UserFilter("MAINTENANCE", "Maintenance", selectedTab, green) {
                         selectedTab = "MAINTENANCE"
                     }
@@ -116,13 +116,13 @@ fun AdminUserScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "ALL USERS (24)",
+                        text = "SEMUA PENGGUNA (24)",
                         color = Color.Gray,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
                     )
                     Text(
-                        text = "SORT BY",
+                        text = "URUTKAN",
                         color = green,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp
@@ -157,7 +157,7 @@ fun AdminUserScreen(
                 UserCard(
                     name = "Robert Fox",
                     email = "robert@cleaning.com",
-                    role = "Staff",
+                    role = "Staf",
                     roleColor = Color(0xFFFFC107),
                     active = false,
                     cardColor = cardColor
@@ -168,7 +168,7 @@ fun AdminUserScreen(
                 UserCard(
                     name = "Sarah Connor",
                     email = "sarah@security.com",
-                    role = "Security",
+                    role = "Keamanan",
                     roleColor = Color(0xFFFF6B6B),
                     active = true,
                     cardColor = cardColor,
@@ -278,7 +278,7 @@ fun UserCard(
 
                     if (!active) {
                         Spacer(Modifier.width(8.dp))
-                        Text("Inactive", color = Color.Gray, fontSize = 11.sp)
+                        Text("Tidak Aktif", color = Color.Gray, fontSize = 11.sp)
                     }
                 }
             }

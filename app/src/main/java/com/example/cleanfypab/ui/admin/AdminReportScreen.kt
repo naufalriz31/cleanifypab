@@ -29,7 +29,7 @@ fun AdminReportScreen(
     val yellow = Color(0xFFFFC107)
     val gray = Color(0xFF9E9E9E)
 
-    var selectedFilter by remember { mutableStateOf("All") }
+    var selectedFilter by remember { mutableStateOf("Semua") }
 
     Box(
         modifier = Modifier
@@ -49,14 +49,14 @@ fun AdminReportScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Default.ArrowBack, null, tint = Color.White)
+                Icon(Icons.Default.ArrowBack, contentDescription = "Kembali", tint = Color.White)
                 Text(
-                    "Report Management",
+                    "Manajemen Laporan",
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Icon(Icons.Default.Download, null, tint = Color.White)
+                Icon(Icons.Default.Download, contentDescription = "Unduh", tint = Color.White)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -69,9 +69,9 @@ fun AdminReportScreen(
                     .padding(horizontal = 16.dp, vertical = 14.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Search, null, tint = gray)
+                    Icon(Icons.Default.Search, contentDescription = "Cari", tint = gray)
                     Spacer(Modifier.width(8.dp))
-                    Text("Search by room or issue...", color = gray)
+                    Text("Cari berdasarkan ruangan atau masalah...", color = gray)
                 }
             }
 
@@ -79,10 +79,10 @@ fun AdminReportScreen(
 
             /* ===== FILTER ===== */
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FilterChip("All", selectedFilter == "All", green) { selectedFilter = "All" }
-                FilterChip("New", selectedFilter == "New", green, dot = true) { selectedFilter = "New" }
-                FilterChip("Assigned", selectedFilter == "Assigned", green) { selectedFilter = "Assigned" }
-                FilterChip("Resolved", selectedFilter == "Resolved", green) { selectedFilter = "Resolved" }
+                FilterChip("Semua", selectedFilter == "Semua", green) { selectedFilter = "Semua" }
+                FilterChip("Baru", selectedFilter == "Baru", green, dot = true) { selectedFilter = "Baru" }
+                FilterChip("Ditugaskan", selectedFilter == "Ditugaskan", green) { selectedFilter = "Ditugaskan" }
+                FilterChip("Selesai", selectedFilter == "Selesai", green) { selectedFilter = "Selesai" }
             }
 
             Spacer(Modifier.height(20.dp))
@@ -92,37 +92,37 @@ fun AdminReportScreen(
 
                 item {
                     ReportItem(
-                        title = "Room 304 - AC Malfunction",
-                        desc = "The AC unit is making a loud rattling noise and not cooling...",
-                        status = "CRITICAL",
+                        title = "Ruang 304 - AC Bermasalah",
+                        desc = "Unit AC mengeluarkan suara keras dan tidak mendinginkan ruangan...",
+                        status = "KRITIS",
                         statusColor = red,
-                        time = "2h ago",
+                        time = "2 jam lalu",
                         user = "John Doe",
-                        actionText = "Assign >",
+                        actionText = "Tetapkan >",
                         onActionClick = onAssignClick
                     )
                 }
 
                 item {
                     ReportItem(
-                        title = "Lobby - Spill",
-                        desc = "Large coffee spill near the main entrance...",
-                        status = "NEW",
+                        title = "Lobi - Tumpahan",
+                        desc = "Tumpahan kopi besar di dekat pintu masuk utama...",
+                        status = "BARU",
                         statusColor = green,
-                        time = "4h ago",
+                        time = "4 jam lalu",
                         user = "Sarah Smith",
-                        actionText = "Details >",
+                        actionText = "Detail >",
                         onActionClick = {}
                     )
                 }
 
                 item {
                     ReportItem(
-                        title = "Corridor 2F - Flickering Light",
-                        desc = "Light fixture flickering constantly. Parts ordered.",
-                        status = "IN PROGRESS",
+                        title = "Koridor Lt. 2 - Lampu Berkedip",
+                        desc = "Lampu berkedip terus-menerus. Suku cadang telah dipesan.",
+                        status = "DALAM PROSES",
                         statusColor = yellow,
-                        time = "Updated 10m ago",
+                        time = "Diperbarui 10 menit lalu",
                         user = "Mike R.",
                         actionText = "",
                         onActionClick = {}
@@ -140,7 +140,7 @@ fun AdminReportScreen(
                 .align(Alignment.BottomEnd)
                 .padding(20.dp)
         ) {
-            Icon(Icons.Default.Add, null, tint = Color.Black)
+            Icon(Icons.Default.Add, contentDescription = "Tambah", tint = Color.Black)
         }
     }
 }

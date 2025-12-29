@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AdminDashboardScreen(
-    onNotificationClick: () -> Unit = {} // ✅ TAMBAHAN INI
+    onNotificationClick: () -> Unit = {} // ✅ TIDAK DIUBAH
 ) {
 
     val bgColor = Color(0xFF0F2A1D)
@@ -48,24 +48,24 @@ fun AdminDashboardScreen(
                 Column {
                     Text("CLEANFY", color = Color.Gray, fontSize = 12.sp)
                     Text(
-                        "Admin User",
+                        "Pengguna Admin",
                         color = Color.White,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                // 🔔 NOTIFICATION ICON (BISA DIKLIK)
+                // 🔔 IKON NOTIFIKASI
                 Box(
                     modifier = Modifier
                         .size(40.dp)
                         .background(cardColor, CircleShape)
-                        .clickable { onNotificationClick() }, // ✅ KONEKSI
+                        .clickable { onNotificationClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Notifications,
-                        contentDescription = "Notifications",
+                        contentDescription = "Notifikasi",
                         tint = Color.White
                     )
                 }
@@ -83,24 +83,52 @@ fun AdminDashboardScreen(
         }
 
         item {
-            DashboardCard("Total Ruangan", "30", "Keseluruhan", Icons.Default.Home, green, cardColor)
+            DashboardCard(
+                "Total Ruangan",
+                "30",
+                "Keseluruhan",
+                Icons.Default.Home,
+                green,
+                cardColor
+            )
         }
 
         item {
-            DashboardCard("Ruangan Bersih", "12", "Siap digunakan", Icons.Default.CheckCircle, green, cardColor)
+            DashboardCard(
+                "Ruangan Bersih",
+                "12",
+                "Siap digunakan",
+                Icons.Default.CheckCircle,
+                green,
+                cardColor
+            )
         }
 
         item {
-            DashboardCard("Belum Dibersihkan", "13", "Perlu tindakan", Icons.Default.Warning, red, cardColor)
+            DashboardCard(
+                "Belum Dibersihkan",
+                "13",
+                "Perlu tindakan",
+                Icons.Default.Warning,
+                red,
+                cardColor
+            )
         }
 
         item {
-            DashboardCard("Laporan Hari Ini", "5", "Masuk hari ini", Icons.Default.Description, yellow, cardColor)
+            DashboardCard(
+                "Laporan Hari Ini",
+                "5",
+                "Masuk hari ini",
+                Icons.Default.Description,
+                yellow,
+                cardColor
+            )
         }
 
-        /* ================= QUICK ACTIONS ================= */
+        /* ================= AKSI CEPAT ================= */
         item {
-            Text("Quick Actions", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Aksi Cepat", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         item {
@@ -109,15 +137,15 @@ fun AdminDashboardScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 QuickActionCard(
-                    "Manage Rooms",
-                    "Edit availability",
+                    "Kelola Ruangan",
+                    "Atur ketersediaan",
                     Icons.Default.MeetingRoom,
                     cardColor,
                     Modifier.weight(1f)
                 )
                 QuickActionCard(
-                    "View Reports",
-                    "5 active issues",
+                    "Lihat Laporan",
+                    "5 masalah aktif",
                     Icons.AutoMirrored.Filled.List,
                     cardColor,
                     Modifier.weight(1f)
@@ -125,16 +153,16 @@ fun AdminDashboardScreen(
             }
         }
 
-        /* ================= ACTIVITY ================= */
+        /* ================= AKTIVITAS ================= */
         item {
-            Text("Recent Activity", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Aktivitas Terbaru", color = Color.White, fontWeight = FontWeight.Bold)
         }
 
         item {
             ActivityCard(
-                "Room 304 - AC Malfunction",
-                "Reported by Housekeeping",
-                "2m ago",
+                "Ruang 304 - AC Bermasalah",
+                "Dilaporkan oleh petugas kebersihan",
+                "2 menit lalu",
                 red,
                 cardColor
             )
@@ -142,9 +170,9 @@ fun AdminDashboardScreen(
 
         item {
             ActivityCard(
-                "Room 105 - Cleaning Delayed",
-                "Pending housekeeping",
-                "1h ago",
+                "Ruang 105 - Pembersihan Tertunda",
+                "Menunggu petugas",
+                "1 jam lalu",
                 yellow,
                 cardColor
             )
@@ -154,7 +182,7 @@ fun AdminDashboardScreen(
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= KOMPONEN ================= */
 
 @Composable
 fun DashboardCard(

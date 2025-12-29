@@ -30,7 +30,7 @@ fun AdminNotificationScreen(
     val border = Color(0xFF245C3A)
     val green = Color(0xFF2DFF8F)
 
-    var selected by remember { mutableStateOf("All") }
+    var selected by remember { mutableStateOf("Semua") }
 
     Column(
         modifier = Modifier
@@ -46,7 +46,7 @@ fun AdminNotificationScreen(
         ) {
             Icon(
                 Icons.Default.ArrowBack,
-                contentDescription = "Back",
+                contentDescription = "Kembali",
                 tint = Color.White,
                 modifier = Modifier.clickable { onBack() }
             )
@@ -54,7 +54,7 @@ fun AdminNotificationScreen(
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Notifications",
+                "Notifikasi",
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
@@ -63,7 +63,7 @@ fun AdminNotificationScreen(
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Mark all read",
+                "Tandai semua dibaca",
                 color = green,
                 fontSize = 13.sp
             )
@@ -73,23 +73,23 @@ fun AdminNotificationScreen(
 
         /* ===== FILTER ===== */
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            NotificationChip("All", selected, green) { selected = "All" }
-            NotificationChip("Reports", selected, green) { selected = "Reports" }
-            NotificationChip("Tasks", selected, green) { selected = "Tasks" }
-            NotificationChip("Rooms", selected, green) { selected = "Rooms" }
+            NotificationChip("Semua", selected, green) { selected = "Semua" }
+            NotificationChip("Laporan", selected, green) { selected = "Laporan" }
+            NotificationChip("Tugas", selected, green) { selected = "Tugas" }
+            NotificationChip("Ruangan", selected, green) { selected = "Ruangan" }
         }
 
         Spacer(Modifier.height(20.dp))
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
 
-            item { SectionTitle("NEW") }
+            item { SectionTitle("BARU") }
 
             item {
                 NotificationCard(
-                    title = "Plumbing issue reported",
-                    subtitle = "Room 102 – Maintenance reported a leak in the bathroom sink.",
-                    time = "2m ago",
+                    title = "Masalah pipa dilaporkan",
+                    subtitle = "Ruang 102 – Tim pemeliharaan melaporkan kebocoran pada wastafel.",
+                    time = "2 menit lalu",
                     icon = Icons.Default.Warning,
                     accent = green,
                     card = card,
@@ -101,9 +101,9 @@ fun AdminNotificationScreen(
 
             item {
                 NotificationCard(
-                    title = "Cleaning Completed",
-                    subtitle = "Room 205 – Jane Doe finished the cleaning task.",
-                    time = "1h ago",
+                    title = "Pembersihan Selesai",
+                    subtitle = "Ruang 205 – Jane Doe telah menyelesaikan tugas pembersihan.",
+                    time = "1 jam lalu",
                     icon = Icons.Default.CheckCircle,
                     accent = green,
                     card = card,
@@ -111,13 +111,13 @@ fun AdminNotificationScreen(
                 )
             }
 
-            item { SectionTitle("EARLIER") }
+            item { SectionTitle("SEBELUMNYA") }
 
             item {
                 NotificationCard(
-                    title = "Room Status Update",
-                    subtitle = "Room 401 marked as Vacant/Dirty.",
-                    time = "3h ago",
+                    title = "Pembaruan Status Ruangan",
+                    subtitle = "Ruang 401 ditandai sebagai Kosong/Kotor.",
+                    time = "3 jam lalu",
                     icon = Icons.Default.Sync,
                     accent = green,
                     card = card,
@@ -127,9 +127,9 @@ fun AdminNotificationScreen(
 
             item {
                 NotificationCard(
-                    title = "System Maintenance",
-                    subtitle = "Database maintenance scheduled at 02:00 AM.",
-                    time = "5h ago",
+                    title = "Pemeliharaan Sistem",
+                    subtitle = "Pemeliharaan basis data dijadwalkan pukul 02:00.",
+                    time = "5 jam lalu",
                     icon = Icons.Default.Settings,
                     accent = green,
                     card = card,
@@ -140,7 +140,7 @@ fun AdminNotificationScreen(
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= KOMPONEN ================= */
 
 @Composable
 private fun NotificationChip(
@@ -227,7 +227,7 @@ private fun NotificationCard(
                     colors = ButtonDefaults.buttonColors(containerColor = accent),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Assign Task", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Tetapkan Tugas", color = Color.Black, fontWeight = FontWeight.Bold)
                 }
 
                 OutlinedButton(
@@ -235,7 +235,7 @@ private fun NotificationCard(
                     border = BorderStroke(1.dp, accent),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("View Details", color = accent)
+                    Text("Lihat Detail", color = accent)
                 }
             }
         }
