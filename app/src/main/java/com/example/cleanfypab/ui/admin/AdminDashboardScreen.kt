@@ -46,7 +46,7 @@ fun AdminDashboardScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("CLEANFY", color = Color.Gray, fontSize = 12.sp)
+                    Text("CLEANIFY", color = Color.Gray, fontSize = 12.sp)
                     Text(
                         "Pengguna Admin",
                         color = Color.White,
