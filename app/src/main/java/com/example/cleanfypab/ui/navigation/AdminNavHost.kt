@@ -34,7 +34,6 @@ fun AdminNavHost() {
             composable(AdminRoutes.DASHBOARD) {
                 AdminDashboardScreen(
                     onNotificationClick = {
-                        // 🔔 ICON LONCENG → NOTIFICATION
                         navController.navigate(AdminRoutes.NOTIFICATIONS)
                     }
                 )
@@ -70,7 +69,11 @@ fun AdminNavHost() {
                         navController.navigate(AdminRoutes.EDIT_PROFILE)
                     },
                     onSignOut = {
-                        // TODO: logout logic (FirebaseAuth.signOut dll)
+                        // ✅ LOGOUT → LOGIN SCREEN (BUKAN KELUAR APLIKASI)
+                        navController.navigate(Routes.LOGIN) {
+                            popUpTo(0) { inclusive = true } // hapus semua backstack
+                            launchSingleTop = true
+                        }
                     }
                 )
             }
