@@ -35,6 +35,7 @@ fun LoginScreen(
 
     val state by vm.uiState.collectAsState()
 
+    /* ===== WARNA ===== */
     val primaryGreen = Color(0xFF2ECC71)
     val darkText = Color(0xFF1E2D28)
     val grayText = Color(0xFF6B7C75)
@@ -67,32 +68,34 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(24.dp))
 
             /* ================= LOGO ================= */
             Image(
                 painter = painterResource(id = R.drawable.logo_cleanify),
                 contentDescription = "Logo Cleanify",
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier
+                    .size(250.dp)
+                    .padding(bottom = 4.dp)
             )
 
-            /* ===== TEXT DIGESER NAIK (MENEMPEL LOGO) ===== */
+
             Text(
                 text = "CLEANIFY",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = darkText,
-                modifier = Modifier.offset(y = (-12).dp)
+                modifier = Modifier.offset(y = (-20).dp)
             )
 
             Text(
                 text = "Monitoring Petugas Kebersihan",
                 fontSize = 14.sp,
                 color = grayText,
-                modifier = Modifier.offset(y = (-16).dp)
+                modifier = Modifier.offset(y = (-24).dp)
             )
 
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(12.dp))
 
             /* ================= CARD LOGIN ================= */
             Card(
@@ -203,42 +206,6 @@ fun LoginScreen(
                     }
                 }
             }
-
-            Spacer(Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Divider(modifier = Modifier.weight(1f))
-                Text("  Or continue with  ", color = grayText)
-                Divider(modifier = Modifier.weight(1f))
-            }
-
-            Spacer(Modifier.height(20.dp))
-
-            LoginOptionButton("Sign in with Apple")
-            Spacer(Modifier.height(12.dp))
-            LoginOptionButton("Sign in with Google")
         }
-    }
-}
-
-@Composable
-fun LoginOptionButton(label: String) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .background(Color.White, RoundedCornerShape(14.dp))
-            .clickable { },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF1E2D28)
-        )
     }
 }
