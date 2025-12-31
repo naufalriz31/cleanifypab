@@ -1,5 +1,6 @@
 package com.example.cleanfypab.ui.components.admin
 
+import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
@@ -10,15 +11,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import com.example.cleanfypab.ui.navigation.AdminRoutes
 
-
 @Composable
 fun BottomNavigationAdmin(
     navController: NavController,
     currentRoute: String?
 ) {
 
-    val green = Color(0xFF2DFF8F)
-    val inactive = Color.Gray
+    /* ===== CLEANIFY LIGHT PALET ===== */
+    val bg = Color.White
+    val green = Color(0xFF2ECC71)
+    val inactive = Color(0xFF6B7C75)
+    val borderTop = Color(0xFFE0E0E0)
 
     val items = listOf(
         AdminBottomNavItem(
@@ -43,34 +46,52 @@ fun BottomNavigationAdmin(
         )
     )
 
-    NavigationBar(
-        containerColor = Color(0xFF0F2A1D)
+    Surface(
+        color = bg,
+        shadowElevation = 8.dp,
+        tonalElevation = 0.dp,
+        border = androidx.compose.foundation.BorderStroke(1.dp, borderTop)
     ) {
-        items.forEach { item ->
-            val selected = currentRoute == item.route
+        NavigationBar(
+            containerColor = bg
+        ) {
+            items.forEach { item ->
+                val selected = currentRoute == item.route
 
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(AdminRoutes.DASHBOARD) { inclusive = false }
-                        launchSingleTop = true
-                    }
-                },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.label,
-                        tint = if (selected) green else inactive
+                NavigationBarItem(
+                    selected = selected,
+                    onClick = {
+                        if (!selected) {
+                            navController.navigate(item.route) {
+                                popUpTo(AdminRoutes.DASHBOARD) {
+                                    inclusive = false
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            tint = if (selected) green else inactive
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = item.label,
+                            color = if (selected) green else inactive
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = Color.Transparent,   // ❌ tidak ada bubble hijau
+                        selectedIconColor = green,
+                        selectedTextColor = green,
+                        unselectedIconColor = inactive,
+                        unselectedTextColor = inactive
                     )
-                },
-                label = {
-                    Text(
-                        text = item.label,
-                        color = if (selected) green else inactive
-                    )
-                }
-            )
+                )
+            }
         }
     }
 }

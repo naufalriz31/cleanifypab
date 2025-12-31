@@ -1,10 +1,14 @@
 package com.example.cleanfypab.ui.admin
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -21,10 +25,12 @@ fun AdminAssignRoomScreen(
     onClose: () -> Unit = {}
 ) {
 
-    val bgColor = Color(0xFF0F2A1D)
-    val cardColor = Color(0xFF163828)
-    val borderColor = Color(0xFF245C3A)
-    val green = Color(0xFF2DFF8F)
+    /* ===== PALET ADMIN ===== */
+    val bg = Color(0xFF0F2A1D)
+    val card = Color(0xFF163828)
+    val border = Color(0xFF245C3A)
+    val green = Color(0xFF2ECC71)
+    val textSecondary = Color(0xFF9BA5A0)
 
     var selectedOfficer by remember { mutableStateOf("Petugas Wick") }
     var notes by remember { mutableStateOf("") }
@@ -32,7 +38,7 @@ fun AdminAssignRoomScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(bgColor)
+            .background(bg)
     ) {
 
         /* ================= CONTENT ================= */
@@ -44,11 +50,11 @@ fun AdminAssignRoomScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            /* HEADER */
+            /* ===== HEADER ===== */
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     Icons.Default.Close,
-                    contentDescription = null,
+                    contentDescription = "Tutup",
                     tint = Color.White,
                     modifier = Modifier.clickable { onClose() }
                 )
@@ -63,46 +69,59 @@ fun AdminAssignRoomScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            /* SELECT ROOM */
+            /* ===== PILIH RUANGAN ===== */
             Text("Pilih Ruangan", color = Color.White, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.height(8.dp))
-            Text("Nomor atau Nama Ruangan", color = Color.Gray, fontSize = 12.sp)
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "Nomor atau nama ruangan",
+                color = textSecondary,
+                fontSize = 12.sp
+            )
+
+            Spacer(Modifier.height(10.dp))
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(cardColor, RoundedCornerShape(16.dp))
-                    .border(1.dp, borderColor, RoundedCornerShape(16.dp))
+                    .background(card, RoundedCornerShape(16.dp))
+                    .border(1.dp, border, RoundedCornerShape(16.dp))
                     .padding(16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Pilih ruangan...", color = Color.Gray)
-                    Icon(Icons.Default.KeyboardArrowDown, null, tint = Color.Gray)
+                    Text("Pilih ruangan...", color = textSecondary)
+                    Icon(
+                        Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = textSecondary
+                    )
                 }
             }
 
             Spacer(Modifier.height(24.dp))
 
-            /* ASSIGN PERSONNEL */
+            /* ===== PILIH PETUGAS ===== */
             Text("Tugaskan Petugas", color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
 
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                leadingIcon = { Icon(Icons.Default.Search, null) },
-                placeholder = { Text("Cari petugas berdasarkan nama...") },
+                leadingIcon = { Icon(Icons.Default.Search, null, tint = textSecondary) },
+                placeholder = {
+                    Text("Cari petugas berdasarkan nama...", color = textSecondary)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = cardColor,
-                    unfocusedContainerColor = cardColor,
+                    focusedContainerColor = card,
+                    unfocusedContainerColor = card,
                     focusedBorderColor = green,
-                    unfocusedBorderColor = borderColor,
-                    cursorColor = green
+                    unfocusedBorderColor = border,
+                    cursorColor = green,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
@@ -129,7 +148,7 @@ fun AdminAssignRoomScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            /* NOTES */
+            /* ===== CATATAN ===== */
             Text("Catatan Tambahan", color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
 
@@ -137,23 +156,28 @@ fun AdminAssignRoomScreen(
                 value = notes,
                 onValueChange = { notes = it },
                 placeholder = {
-                    Text("Masukkan instruksi khusus atau kebutuhan peralatan...")
+                    Text(
+                        "Masukkan instruksi khusus atau kebutuhan peralatan...",
+                        color = textSecondary
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = cardColor,
-                    unfocusedContainerColor = cardColor,
+                    focusedContainerColor = card,
+                    unfocusedContainerColor = card,
                     focusedBorderColor = green,
-                    unfocusedBorderColor = borderColor,
-                    cursorColor = green
+                    unfocusedBorderColor = border,
+                    cursorColor = green,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 ),
                 shape = RoundedCornerShape(16.dp)
             )
         }
 
-        /* ================= CONFIRM BUTTON ================= */
+        /* ================= BUTTON KONFIRMASI ================= */
         Button(
             onClick = {
                 println("PENUGASAN DIKONFIRMASI")
@@ -200,12 +224,12 @@ fun OfficerChip(
         Box(
             modifier = Modifier
                 .size(32.dp)
-                .background(accent, CircleShape),
+                .background(accent.copy(alpha = 0.9f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Default.Person, null, tint = Color.Black)
         }
         Spacer(Modifier.width(8.dp))
-        Text(name, color = Color.White)
+        Text(name, color = Color.White, fontSize = 14.sp)
     }
 }

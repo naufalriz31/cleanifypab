@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -25,17 +26,28 @@ fun AdminNotificationScreen(
     onBack: () -> Unit = {},
     onAssignTask: () -> Unit = {}
 ) {
-    val bg = Color(0xFF0F2A1D)
-    val card = Color(0xFF163828)
-    val border = Color(0xFF245C3A)
-    val green = Color(0xFF2DFF8F)
+
+    /* ===== WARNA CLEANIFY ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val cardColor = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     var selected by remember { mutableStateOf("Semua") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
             .padding(16.dp)
     ) {
 
@@ -47,7 +59,7 @@ fun AdminNotificationScreen(
             Icon(
                 Icons.Default.ArrowBack,
                 contentDescription = "Kembali",
-                tint = Color.White,
+                tint = darkText,
                 modifier = Modifier.clickable { onBack() }
             )
 
@@ -55,17 +67,18 @@ fun AdminNotificationScreen(
 
             Text(
                 "Notifikasi",
-                color = Color.White,
-                fontSize = 18.sp,
+                color = darkText,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
 
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Tandai semua dibaca",
+                "Tandai semua",
                 color = green,
-                fontSize = 13.sp
+                fontSize = 13.sp,
+                modifier = Modifier.clickable { }
             )
         }
 
@@ -73,69 +86,79 @@ fun AdminNotificationScreen(
 
         /* ===== FILTER ===== */
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            NotificationChip("Semua", selected, green) { selected = "Semua" }
-            NotificationChip("Laporan", selected, green) { selected = "Laporan" }
-            NotificationChip("Tugas", selected, green) { selected = "Tugas" }
-            NotificationChip("Ruangan", selected, green) { selected = "Ruangan" }
+            NotificationChipLight("Semua", selected, green) { selected = "Semua" }
+            NotificationChipLight("Laporan", selected, green) { selected = "Laporan" }
+            NotificationChipLight("Tugas", selected, green) { selected = "Tugas" }
+            NotificationChipLight("Ruangan", selected, green) { selected = "Ruangan" }
         }
 
         Spacer(Modifier.height(20.dp))
 
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
 
-            item { SectionTitle("BARU") }
+            item { SectionTitleLight("BARU") }
 
             item {
-                NotificationCard(
+                NotificationCardLight(
                     title = "Masalah pipa dilaporkan",
-                    subtitle = "Ruang 102 – Tim pemeliharaan melaporkan kebocoran pada wastafel.",
+                    subtitle = "Ruang 102 – Kebocoran pada wastafel.",
                     time = "2 menit lalu",
                     icon = Icons.Default.Warning,
                     accent = green,
-                    card = card,
-                    border = border,
+                    card = cardColor,
+                    border = borderSoft,
+                    darkText = darkText,
+                    grayText = grayText,
                     showActions = true,
                     onAssign = onAssignTask
                 )
             }
 
             item {
-                NotificationCard(
+                NotificationCardLight(
                     title = "Pembersihan Selesai",
-                    subtitle = "Ruang 205 – Jane Doe telah menyelesaikan tugas pembersihan.",
+                    subtitle = "Ruang 205 telah dibersihkan.",
                     time = "1 jam lalu",
                     icon = Icons.Default.CheckCircle,
                     accent = green,
-                    card = card,
-                    border = border
+                    card = cardColor,
+                    border = borderSoft,
+                    darkText = darkText,
+                    grayText = grayText
                 )
             }
 
-            item { SectionTitle("SEBELUMNYA") }
+            item { SectionTitleLight("SEBELUMNYA") }
 
             item {
-                NotificationCard(
+                NotificationCardLight(
                     title = "Pembaruan Status Ruangan",
-                    subtitle = "Ruang 401 ditandai sebagai Kosong/Kotor.",
+                    subtitle = "Ruang 401 ditandai Perlu Dicek.",
                     time = "3 jam lalu",
                     icon = Icons.Default.Sync,
                     accent = green,
-                    card = card,
-                    border = border
+                    card = cardColor,
+                    border = borderSoft,
+                    darkText = darkText,
+                    grayText = grayText
                 )
             }
 
             item {
-                NotificationCard(
+                NotificationCardLight(
                     title = "Pemeliharaan Sistem",
-                    subtitle = "Pemeliharaan basis data dijadwalkan pukul 02:00.",
+                    subtitle = "Maintenance dijadwalkan pukul 02:00.",
                     time = "5 jam lalu",
                     icon = Icons.Default.Settings,
                     accent = green,
-                    card = card,
-                    border = border
+                    card = cardColor,
+                    border = borderSoft,
+                    darkText = darkText,
+                    grayText = grayText
                 )
             }
+
+            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }
@@ -143,7 +166,7 @@ fun AdminNotificationScreen(
 /* ================= KOMPONEN ================= */
 
 @Composable
-private fun NotificationChip(
+private fun NotificationChipLight(
     text: String,
     selected: String,
     accent: Color,
@@ -152,16 +175,20 @@ private fun NotificationChip(
     Box(
         modifier = Modifier
             .background(
-                if (selected == text) accent else Color.Transparent,
+                if (selected == text) accent.copy(alpha = 0.15f) else Color.Transparent,
                 RoundedCornerShape(20.dp)
             )
-            .border(1.dp, accent, RoundedCornerShape(20.dp))
+            .border(
+                1.dp,
+                if (selected == text) accent else Color(0xFFE0E0E0),
+                RoundedCornerShape(20.dp)
+            )
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text,
-            color = if (selected == text) Color.Black else Color.White,
+            color = if (selected == text) accent else Color(0xFF1E2D28),
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
         )
@@ -169,17 +196,17 @@ private fun NotificationChip(
 }
 
 @Composable
-private fun SectionTitle(text: String) {
+private fun SectionTitleLight(text: String) {
     Text(
         text,
-        color = Color.Gray,
+        color = Color(0xFF6B7C75),
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp
     )
 }
 
 @Composable
-private fun NotificationCard(
+private fun NotificationCardLight(
     title: String,
     subtitle: String,
     time: String,
@@ -187,6 +214,8 @@ private fun NotificationCard(
     accent: Color,
     card: Color,
     border: Color,
+    darkText: Color,
+    grayText: Color,
     showActions: Boolean = false,
     onAssign: () -> Unit = {}
 ) {
@@ -203,17 +232,17 @@ private fun NotificationCard(
             Box(
                 modifier = Modifier
                     .size(36.dp)
-                    .background(accent.copy(alpha = 0.2f), CircleShape),
+                    .background(accent.copy(alpha = 0.15f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(icon, contentDescription = null, tint = accent)
+                Icon(icon, null, tint = accent)
             }
 
             Spacer(Modifier.width(12.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-                Text(subtitle, color = Color.Gray, fontSize = 12.sp)
+                Text(title, color = darkText, fontWeight = FontWeight.Bold)
+                Text(subtitle, color = grayText, fontSize = 12.sp)
             }
 
             Text(time, color = accent, fontSize = 11.sp)
@@ -222,12 +251,13 @@ private fun NotificationCard(
         if (showActions) {
             Spacer(Modifier.height(12.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+
                 Button(
                     onClick = onAssign,
                     colors = ButtonDefaults.buttonColors(containerColor = accent),
                     shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Tetapkan Tugas", color = Color.Black, fontWeight = FontWeight.Bold)
+                    Text("Tetapkan Tugas", color = Color.White, fontWeight = FontWeight.Bold)
                 }
 
                 OutlinedButton(

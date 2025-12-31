@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -21,19 +22,31 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun AdminDashboardScreen(
-    onNotificationClick: () -> Unit = {} // ✅ TIDAK DIUBAH
+    onNotificationClick: () -> Unit = {}
 ) {
 
-    val bgColor = Color(0xFF0F2A1D)
-    val cardColor = Color(0xFF163828)
-    val green = Color(0xFF2DFF8F)
-    val red = Color(0xFFFF6B6B)
+    /* ===== WARNA SESUAI LOGIN ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val cardColor = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val red = Color(0xFFE53935)
     val yellow = Color(0xFFFFC107)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(bgColor)
+            .background(bgGradient)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -46,27 +59,26 @@ fun AdminDashboardScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("CLEANIFY", color = Color.Gray, fontSize = 12.sp)
+                    Text("CLEANIFY", color = grayText, fontSize = 12.sp)
                     Text(
-                        "Pengguna Admin",
-                        color = Color.White,
-                        fontSize = 20.sp,
+                        "Admin Dashboard",
+                        color = darkText,
+                        fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
 
-                // 🔔 IKON NOTIFIKASI
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
-                        .background(cardColor, CircleShape)
+                        .size(42.dp)
+                        .background(Color.White, CircleShape)
                         .clickable { onNotificationClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Notifications,
                         contentDescription = "Notifikasi",
-                        tint = Color.White
+                        tint = green
                     )
                 }
             }
@@ -75,8 +87,8 @@ fun AdminDashboardScreen(
         /* ================= STATISTIK ================= */
         item {
             Text(
-                text = "Statistik Hari Ini",
-                color = Color.White,
+                "Statistik Hari Ini",
+                color = darkText,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
@@ -89,7 +101,9 @@ fun AdminDashboardScreen(
                 "Keseluruhan",
                 Icons.Default.Home,
                 green,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
@@ -100,7 +114,9 @@ fun AdminDashboardScreen(
                 "Siap digunakan",
                 Icons.Default.CheckCircle,
                 green,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
@@ -111,7 +127,9 @@ fun AdminDashboardScreen(
                 "Perlu tindakan",
                 Icons.Default.Warning,
                 red,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
@@ -122,13 +140,15 @@ fun AdminDashboardScreen(
                 "Masuk hari ini",
                 Icons.Default.Description,
                 yellow,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
         /* ================= AKSI CEPAT ================= */
         item {
-            Text("Aksi Cepat", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Aksi Cepat", color = darkText, fontWeight = FontWeight.Bold)
         }
 
         item {
@@ -140,14 +160,19 @@ fun AdminDashboardScreen(
                     "Kelola Ruangan",
                     "Atur ketersediaan",
                     Icons.Default.MeetingRoom,
+                    green,
                     cardColor,
+                    darkText,
                     Modifier.weight(1f)
                 )
+
                 QuickActionCard(
                     "Lihat Laporan",
                     "5 masalah aktif",
                     Icons.AutoMirrored.Filled.List,
+                    green,
                     cardColor,
+                    darkText,
                     Modifier.weight(1f)
                 )
             }
@@ -155,16 +180,18 @@ fun AdminDashboardScreen(
 
         /* ================= AKTIVITAS ================= */
         item {
-            Text("Aktivitas Terbaru", color = Color.White, fontWeight = FontWeight.Bold)
+            Text("Aktivitas Terbaru", color = darkText, fontWeight = FontWeight.Bold)
         }
 
         item {
             ActivityCard(
                 "Ruang 304 - AC Bermasalah",
-                "Dilaporkan oleh petugas kebersihan",
+                "Dilaporkan oleh petugas",
                 "2 menit lalu",
                 red,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
@@ -174,7 +201,9 @@ fun AdminDashboardScreen(
                 "Menunggu petugas",
                 "1 jam lalu",
                 yellow,
-                cardColor
+                cardColor,
+                darkText,
+                grayText
             )
         }
 
@@ -191,7 +220,9 @@ fun DashboardCard(
     subtitle: String,
     icon: ImageVector,
     accent: Color,
-    cardColor: Color
+    cardColor: Color,
+    darkText: Color,
+    grayText: Color
 ) {
     Row(
         modifier = Modifier
@@ -202,15 +233,15 @@ fun DashboardCard(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(title, color = Color.Gray, fontSize = 12.sp)
-            Text(value, color = Color.White, fontSize = 26.sp, fontWeight = FontWeight.Bold)
+            Text(title, color = grayText, fontSize = 12.sp)
+            Text(value, color = darkText, fontSize = 26.sp, fontWeight = FontWeight.Bold)
             Text(subtitle, color = accent, fontSize = 12.sp)
         }
 
         Box(
             modifier = Modifier
-                .size(44.dp)
-                .background(accent.copy(alpha = 0.2f), CircleShape),
+                .size(46.dp)
+                .background(accent.copy(alpha = 0.15f), CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(icon, null, tint = accent)
@@ -223,7 +254,9 @@ fun QuickActionCard(
     title: String,
     subtitle: String,
     icon: ImageVector,
+    accent: Color,
     cardColor: Color,
+    darkText: Color,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -231,10 +264,10 @@ fun QuickActionCard(
             .background(cardColor, RoundedCornerShape(20.dp))
             .padding(16.dp)
     ) {
-        Icon(icon, null, tint = Color(0xFF2DFF8F))
+        Icon(icon, null, tint = accent)
         Spacer(Modifier.height(8.dp))
-        Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-        Text(subtitle, color = Color.Gray, fontSize = 12.sp)
+        Text(title, color = darkText, fontWeight = FontWeight.Bold)
+        Text(subtitle, color = Color(0xFF6B7C75), fontSize = 12.sp)
     }
 }
 
@@ -244,7 +277,9 @@ fun ActivityCard(
     subtitle: String,
     time: String,
     accent: Color,
-    cardColor: Color
+    cardColor: Color,
+    darkText: Color,
+    grayText: Color
 ) {
     Row(
         modifier = Modifier
@@ -254,8 +289,8 @@ fun ActivityCard(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-            Text(subtitle, color = Color.Gray, fontSize = 12.sp)
+            Text(title, color = darkText, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = grayText, fontSize = 12.sp)
         }
         Text(time, color = accent, fontSize = 12.sp)
     }

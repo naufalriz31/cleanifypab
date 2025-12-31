@@ -234,15 +234,15 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            RecentReportItem("Ruang 301", "Selesai • 10:45", primaryGreen)
+            RecentReportItem("Ruang Meeting A101", "Selesai • 10:45", primaryGreen)
         }
 
         item {
-            RecentReportItem("Ruang 205", "Sedang Dibersihkan • 09:30", orange)
+            RecentReportItem("Lobi Utama", "Sedang Dibersihkan • 09:30", orange)
         }
 
         item {
-            RecentReportItem("Ruang 101", "Selesai • 08:12", primaryGreen)
+            RecentReportItem("Toilet Lt.2", "Selesai • 08:12", primaryGreen)
         }
 
         item { Spacer(Modifier.height(30.dp)) }

@@ -1,7 +1,6 @@
 package com.example.cleanfypab.ui.admin
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -28,10 +28,22 @@ fun AdminEditProfileScreen(
     onDelete: () -> Unit = {}
 ) {
 
-    val bg = Color(0xFF0F2A1D)
-    val card = Color(0xFF163828)
-    val green = Color(0xFF2DFF8F)
-    val red = Color(0xFFFF5C5C)
+    /* ===== CLEANIFY LIGHT PALET ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val cardColor = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val red = Color(0xFFFF6B6B)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     var fullName by remember { mutableStateOf("Jane Doe") }
     var jobTitle by remember { mutableStateOf("Manajer Ruangan") }
@@ -43,23 +55,23 @@ fun AdminEditProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
 
-        /* HEADER */
+        /* ================= HEADER ================= */
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 Icons.Default.ArrowBack,
                 contentDescription = null,
-                tint = Color.White,
+                tint = darkText,
                 modifier = Modifier.clickable { onBack() }
             )
             Spacer(Modifier.width(16.dp))
             Text(
                 "Edit Profil",
-                color = Color.White,
+                color = darkText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -67,18 +79,26 @@ fun AdminEditProfileScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        /* AVATAR */
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        /* ================= AVATAR ================= */
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
             Box(modifier = Modifier.size(120.dp), contentAlignment = Alignment.BottomEnd) {
 
                 Box(
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFFE5E7EB)),
+                        .background(Color(0xFFE9F5EE)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Person, null, modifier = Modifier.size(64.dp))
+                    Icon(
+                        Icons.Default.Person,
+                        null,
+                        tint = darkText,
+                        modifier = Modifier.size(64.dp)
+                    )
                 }
 
                 Box(
@@ -88,52 +108,87 @@ fun AdminEditProfileScreen(
                         .background(green),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.CameraAlt, null, tint = Color.Black)
+                    Icon(Icons.Default.CameraAlt, null, tint = Color.White)
                 }
             }
         }
 
         Spacer(Modifier.height(12.dp))
 
-        Button(
+        OutlinedButton(
             onClick = {},
-            colors = ButtonDefaults.buttonColors(containerColor = card),
+            border = BorderStroke(1.dp, green),
             shape = RoundedCornerShape(50),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text("Ganti Foto", color = green)
+            Text("Ganti Foto", color = green, fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(24.dp))
 
-        /* PERSONAL INFO */
-        ProfileSectionTitle("INFORMASI PRIBADI")
+        /* ================= PERSONAL INFO ================= */
+        ProfileSectionTitleLight("INFORMASI PRIBADI", darkText)
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("Nama Lengkap", fullName) { fullName = it }
-        ProfileTextField("Jabatan", jobTitle) { jobTitle = it }
+        ProfileTextFieldLight("Nama Lengkap", fullName, darkText, grayText) {
+            fullName = it
+        }
+        ProfileTextFieldLight("Jabatan", jobTitle, darkText, grayText) {
+            jobTitle = it
+        }
 
         Spacer(Modifier.height(20.dp))
 
-        /* CONTACT */
-        ProfileSectionTitle("DETAIL KONTAK")
+        /* ================= CONTACT ================= */
+        ProfileSectionTitleLight("DETAIL KONTAK", darkText)
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("Alamat Email", email, Icons.Default.Email, enabled = false) {}
-        ProfileTextField("Nomor Telepon", phone, Icons.Default.Phone) { phone = it }
+        ProfileTextFieldLight(
+            "Alamat Email",
+            email,
+            darkText,
+            grayText,
+            Icons.Default.Email,
+            enabled = false
+        ) {}
+        ProfileTextFieldLight(
+            "Nomor Telepon",
+            phone,
+            darkText,
+            grayText,
+            Icons.Default.Phone
+        ) { phone = it }
 
         Spacer(Modifier.height(20.dp))
 
-        /* SECURITY */
-        ProfileSectionTitle("KEAMANAN")
+        /* ================= SECURITY ================= */
+        ProfileSectionTitleLight("KEAMANAN", darkText)
         Spacer(Modifier.height(12.dp))
-        ProfileTextField("Kata Sandi Baru", newPassword, Icons.Default.Lock, true) { newPassword = it }
-        ProfileTextField("Konfirmasi Kata Sandi", confirmPassword, Icons.Default.Lock, true) { confirmPassword = it }
+        ProfileTextFieldLight(
+            "Kata Sandi Baru",
+            newPassword,
+            darkText,
+            grayText,
+            Icons.Default.Lock,
+            isPassword = true
+        ) { newPassword = it }
+
+        ProfileTextFieldLight(
+            "Konfirmasi Kata Sandi",
+            confirmPassword,
+            darkText,
+            grayText,
+            Icons.Default.Lock,
+            isPassword = true
+        ) { confirmPassword = it }
 
         Spacer(Modifier.height(24.dp))
 
-        TextButton(onClick = onDelete, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+        TextButton(
+            onClick = onDelete,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
             Icon(Icons.Default.Delete, null, tint = red)
             Spacer(Modifier.width(6.dp))
-            Text("Hapus Akun", color = red)
+            Text("Hapus Akun", color = red, fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(24.dp))
@@ -146,7 +201,11 @@ fun AdminEditProfileScreen(
             colors = ButtonDefaults.buttonColors(containerColor = green),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Text("Simpan Perubahan", color = Color.Black, fontWeight = FontWeight.Bold)
+            Text(
+                "Simpan Perubahan",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -154,39 +213,47 @@ fun AdminEditProfileScreen(
 /* ================= COMPONENTS ================= */
 
 @Composable
-private fun ProfileSectionTitle(text: String) {
-    Text(text, color = Color(0xFF2DFF8F), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+private fun ProfileSectionTitleLight(text: String, color: Color) {
+    Text(
+        text,
+        color = color,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold
+    )
 }
 
 @Composable
-private fun ProfileTextField(
+private fun ProfileTextFieldLight(
     label: String,
     value: String,
+    darkText: Color,
+    grayText: Color,
     icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
     isPassword: Boolean = false,
     enabled: Boolean = true,
     onValueChange: (String) -> Unit
 ) {
     Column {
-        Text(label, color = Color.White, fontSize = 13.sp)
+        Text(label, color = darkText, fontSize = 13.sp)
         Spacer(Modifier.height(6.dp))
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             enabled = enabled,
             leadingIcon = { icon?.let { Icon(it, null) } },
-            visualTransformation = if (isPassword)
-                PasswordVisualTransformation()
-            else
-                VisualTransformation.None,
+            visualTransformation =
+                if (isPassword) PasswordVisualTransformation()
+                else VisualTransformation.None,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF163828),
-                unfocusedContainerColor = Color(0xFF163828),
-                focusedBorderColor = Color(0xFF2DFF8F),
-                unfocusedBorderColor = Color(0xFF245C3A),
-                cursorColor = Color(0xFF2DFF8F)
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White,
+                focusedBorderColor = Color(0xFF2ECC71),
+                unfocusedBorderColor = Color(0xFFE0E0E0),
+                cursorColor = Color(0xFF2ECC71),
+                focusedTextColor = darkText,
+                unfocusedTextColor = darkText
             )
         )
     }

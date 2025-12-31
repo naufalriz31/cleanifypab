@@ -9,7 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,153 +23,175 @@ fun AdminReportScreen(
     onAssignClick: () -> Unit
 ) {
 
-    /* ===== COLORS ===== */
-    val bg = Color(0xFF0F2A1D)
-    val card = Color(0xFF163828)
-    val green = Color(0xFF2DFF8F)
+    /* ===== PALET LIGHT CLEANIFY (SAMA DASHBOARD) ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val cardColor = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
     val red = Color(0xFFFF6B6B)
     val yellow = Color(0xFFFFC107)
-    val gray = Color(0xFF9E9E9E)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     var selectedFilter by remember { mutableStateOf("Semua") }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
+            .padding(16.dp)
     ) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+        /* ================= HEADER ================= */
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(Icons.Default.ArrowBack, null, tint = darkText)
 
-            /* ===== HEADER ===== */
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Kembali", tint = Color.White)
-                Text(
-                    "Manajemen Laporan",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Icon(Icons.Default.Download, contentDescription = "Unduh", tint = Color.White)
+            Text(
+                "Manajemen Laporan",
+                color = darkText,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Icon(Icons.Default.Download, null, tint = darkText)
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        /* ================= SEARCH ================= */
+        OutlinedTextField(
+            value = "",
+            onValueChange = {},
+            placeholder = {
+                Text("Cari berdasarkan ruangan atau masalah...", color = grayText)
+            },
+            leadingIcon = {
+                Icon(Icons.Default.Search, null, tint = grayText)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = cardColor,
+                unfocusedContainerColor = cardColor,
+                focusedBorderColor = borderSoft,
+                unfocusedBorderColor = borderSoft,
+                cursorColor = darkText,
+                focusedTextColor = darkText,
+                unfocusedTextColor = darkText
+            )
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        /* ================= FILTER ================= */
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            FilterChipLight("Semua", selectedFilter == "Semua") {
+                selectedFilter = "Semua"
             }
-
-            Spacer(Modifier.height(16.dp))
-
-            /* ===== SEARCH ===== */
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(card, RoundedCornerShape(16.dp))
-                    .padding(horizontal = 16.dp, vertical = 14.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Search, contentDescription = "Cari", tint = gray)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Cari berdasarkan ruangan atau masalah...", color = gray)
-                }
+            FilterChipLight("Baru", selectedFilter == "Baru", dot = true) {
+                selectedFilter = "Baru"
             }
-
-            Spacer(Modifier.height(16.dp))
-
-            /* ===== FILTER ===== */
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FilterChip("Semua", selectedFilter == "Semua", green) { selectedFilter = "Semua" }
-                FilterChip("Baru", selectedFilter == "Baru", green, dot = true) { selectedFilter = "Baru" }
-                FilterChip("Ditugaskan", selectedFilter == "Ditugaskan", green) { selectedFilter = "Ditugaskan" }
-                FilterChip("Selesai", selectedFilter == "Selesai", green) { selectedFilter = "Selesai" }
+            FilterChipLight("Ditugaskan", selectedFilter == "Ditugaskan") {
+                selectedFilter = "Ditugaskan"
             }
-
-            Spacer(Modifier.height(20.dp))
-
-            /* ===== LIST ===== */
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-
-                item {
-                    ReportItem(
-                        title = "Ruang 304 - AC Bermasalah",
-                        desc = "Unit AC mengeluarkan suara keras dan tidak mendinginkan ruangan...",
-                        status = "KRITIS",
-                        statusColor = red,
-                        time = "2 jam lalu",
-                        user = "John Doe",
-                        actionText = "Tetapkan >",
-                        onActionClick = onAssignClick
-                    )
-                }
-
-                item {
-                    ReportItem(
-                        title = "Lobi - Tumpahan",
-                        desc = "Tumpahan kopi besar di dekat pintu masuk utama...",
-                        status = "BARU",
-                        statusColor = green,
-                        time = "4 jam lalu",
-                        user = "Sarah Smith",
-                        actionText = "Detail >",
-                        onActionClick = {}
-                    )
-                }
-
-                item {
-                    ReportItem(
-                        title = "Koridor Lt. 2 - Lampu Berkedip",
-                        desc = "Lampu berkedip terus-menerus. Suku cadang telah dipesan.",
-                        status = "DALAM PROSES",
-                        statusColor = yellow,
-                        time = "Diperbarui 10 menit lalu",
-                        user = "Mike R.",
-                        actionText = "",
-                        onActionClick = {}
-                    )
-                }
+            FilterChipLight("Selesai", selectedFilter == "Selesai") {
+                selectedFilter = "Selesai"
             }
         }
 
-        /* ===== FAB ===== */
-        FloatingActionButton(
-            onClick = {},
-            containerColor = green,
-            shape = CircleShape,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp)
-        ) {
-            Icon(Icons.Default.Add, contentDescription = "Tambah", tint = Color.Black)
+        Spacer(Modifier.height(20.dp))
+
+        /* ================= LIST ================= */
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+
+            item {
+                ReportItemLight(
+                    title = "Ruang 304 - AC Bermasalah",
+                    desc = "Unit AC mengeluarkan suara keras dan tidak mendinginkan ruangan...",
+                    status = "KRITIS",
+                    statusColor = red,
+                    time = "2 jam lalu",
+                    user = "John Doe",
+                    actionText = "Tetapkan",
+                    actionColor = green,
+                    darkText = darkText,
+                    grayText = grayText,
+                    cardColor = cardColor
+                ) { onAssignClick() }
+            }
+
+            item {
+                ReportItemLight(
+                    title = "Lobi - Tumpahan",
+                    desc = "Tumpahan kopi besar di dekat pintu masuk utama...",
+                    status = "BARU",
+                    statusColor = green,
+                    time = "4 jam lalu",
+                    user = "Sarah Smith",
+                    actionText = "Detail",
+                    actionColor = green,
+                    darkText = darkText,
+                    grayText = grayText,
+                    cardColor = cardColor
+                ) {}
+            }
+
+            item {
+                ReportItemLight(
+                    title = "Koridor Lt. 2 - Lampu Berkedip",
+                    desc = "Lampu berkedip terus-menerus. Suku cadang telah dipesan.",
+                    status = "DALAM PROSES",
+                    statusColor = yellow,
+                    time = "Diperbarui 10 menit lalu",
+                    user = "Mike R.",
+                    actionText = "",
+                    actionColor = green,
+                    darkText = darkText,
+                    grayText = grayText,
+                    cardColor = cardColor
+                ) {}
+            }
+
+            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= COMPONENT ================= */
 
 @Composable
-fun FilterChip(
+fun FilterChipLight(
     text: String,
     selected: Boolean,
-    accent: Color,
     dot: Boolean = false,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .background(
-                if (selected) accent else Color(0xFF1C3A2A),
+                if (selected) Color(0xFFE9F5EE) else Color.Transparent,
                 RoundedCornerShape(50)
             )
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(50))
             .clickable { onClick() }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text,
-            color = if (selected) Color.Black else Color.White,
+            color = Color(0xFF1E2D28),
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
         )
@@ -176,14 +200,14 @@ fun FilterChip(
             Box(
                 modifier = Modifier
                     .size(6.dp)
-                    .background(accent, CircleShape)
+                    .background(Color(0xFF2ECC71), CircleShape)
             )
         }
     }
 }
 
 @Composable
-fun ReportItem(
+fun ReportItemLight(
     title: String,
     desc: String,
     status: String,
@@ -191,24 +215,33 @@ fun ReportItem(
     time: String,
     user: String,
     actionText: String,
+    actionColor: Color,
+    darkText: Color,
+    grayText: Color,
+    cardColor: Color,
     onActionClick: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF163828), RoundedCornerShape(20.dp))
+            .background(cardColor, RoundedCornerShape(20.dp))
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(20.dp))
             .padding(16.dp)
     ) {
 
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-            Box(
-                modifier = Modifier
-                    .background(statusColor.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            Text(title, color = darkText, fontWeight = FontWeight.Bold)
+            Surface(
+                color = statusColor.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Text(status, color = statusColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    status,
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                    color = statusColor,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
@@ -216,7 +249,7 @@ fun ReportItem(
 
         Text(
             desc,
-            color = Color.Gray,
+            color = grayText,
             fontSize = 13.sp,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
@@ -224,12 +257,15 @@ fun ReportItem(
 
         Spacer(Modifier.height(12.dp))
 
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Text("$time • $user", color = Color.Gray, fontSize = 12.sp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("$time • $user", color = grayText, fontSize = 12.sp)
             if (actionText.isNotEmpty()) {
                 Text(
                     actionText,
-                    color = Color(0xFF2DFF8F),
+                    color = actionColor,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { onActionClick() }
                 )

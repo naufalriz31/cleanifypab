@@ -1,7 +1,6 @@
 package com.example.cleanfypab.ui.admin
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,35 +28,52 @@ fun AdminProfileScreen(
     onSignOut: () -> Unit = {}
 ) {
 
-    val bg = Color(0xFF0F2A1D)
-    val card = Color(0xFF163828)
-    val green = Color(0xFF2DFF8F)
-    val red = Color(0xFFFF5C5C)
+    /* ===== CLEANIFY LIGHT PALET ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val cardColor = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val red = Color(0xFFFF6B6B)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
 
-        /* ================= HEADER ================= */
         Spacer(Modifier.height(12.dp))
 
+        /* ================= HEADER ================= */
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             IconButton(onClick = onBack) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.White)
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Kembali",
+                    tint = darkText
+                )
             }
 
             Spacer(Modifier.weight(1f))
 
             Text(
                 "Profil",
-                color = Color.White,
+                color = darkText,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -82,20 +99,20 @@ fun AdminProfileScreen(
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape)
-                        .background(green)
-                        .padding(5.dp)
+                        .background(Color(0xFFE9F5EE))
+                        .padding(6.dp)
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(CircleShape)
-                            .background(Color.DarkGray),
+                            .background(cardColor),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             Icons.Default.Person,
                             null,
-                            tint = Color.White,
+                            tint = darkText,
                             modifier = Modifier.size(56.dp)
                         )
                     }
@@ -111,7 +128,7 @@ fun AdminProfileScreen(
                     Icon(
                         Icons.Default.Edit,
                         null,
-                        tint = Color.Black,
+                        tint = Color.White,
                         modifier = Modifier.size(16.dp)
                     )
                 }
@@ -121,7 +138,7 @@ fun AdminProfileScreen(
 
             Text(
                 "Jane Doe",
-                color = Color.White,
+                color = darkText,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -143,8 +160,8 @@ fun AdminProfileScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            Text("jane.doe@company.com", color = Color.Gray, fontSize = 13.sp)
-            Text("Manajer Fasilitas Senior", color = Color.Gray, fontSize = 13.sp)
+            Text("jane.doe@company.com", color = grayText, fontSize = 13.sp)
+            Text("Manajer Fasilitas Senior", color = grayText, fontSize = 13.sp)
         }
 
         Spacer(Modifier.height(28.dp))
@@ -154,28 +171,28 @@ fun AdminProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            StatBox("12", "TUGAS\nMENUNGGU", card, green)
-            StatBox("30", "RUANGAN\nDIKELOLA", card, green) // ✅ TOTAL 30 RUANGAN
-            StatBox("98%", "TINGKAT\nRESPON", card, green)
+            StatBoxLight("12", "TUGAS\nMENUNGGU", cardColor, green, darkText)
+            StatBoxLight("30", "RUANGAN\nDIKELOLA", cardColor, green, darkText)
+            StatBoxLight("98%", "TINGKAT\nRESPON", cardColor, green, darkText)
         }
 
         Spacer(Modifier.height(32.dp))
 
-        SectionTitle("PENGATURAN AKUN")
-        MenuItem(Icons.Default.Lock, "Keamanan Akun", "Kata sandi, 2FA")
-        MenuItem(Icons.Default.Notifications, "Notifikasi", "Push, Email, SMS")
+        SectionTitleLight("PENGATURAN AKUN", grayText)
+        MenuItemLight(Icons.Default.Lock, "Keamanan Akun", "Kata sandi, 2FA", cardColor, darkText, grayText)
+        MenuItemLight(Icons.Default.Notifications, "Notifikasi", "Push, Email, SMS", cardColor, darkText, grayText)
 
         Spacer(Modifier.height(24.dp))
 
-        SectionTitle("PENGATURAN APLIKASI")
-        ToggleItem(Icons.Default.DarkMode, "Tampilan", "Mode Gelap Aktif")
-        MenuItem(Icons.Default.Language, "Bahasa", "Bahasa Indonesia")
+        SectionTitleLight("PENGATURAN APLIKASI", grayText)
+        ToggleItemLight(Icons.Default.DarkMode, "Tampilan", "Mode Gelap Aktif", cardColor, green, darkText, grayText)
+        MenuItemLight(Icons.Default.Language, "Bahasa", "Bahasa Indonesia", cardColor, darkText, grayText)
 
         Spacer(Modifier.height(24.dp))
 
-        SectionTitle("DUKUNGAN")
-        MenuItem(Icons.Default.Help, "Pusat Bantuan")
-        MenuItem(Icons.Default.BugReport, "Laporkan Bug")
+        SectionTitleLight("DUKUNGAN", grayText)
+        MenuItemLight(Icons.Default.Help, "Pusat Bantuan", null, cardColor, darkText, grayText)
+        MenuItemLight(Icons.Default.BugReport, "Laporkan Bug", null, cardColor, darkText, grayText)
 
         Spacer(Modifier.height(28.dp))
 
@@ -184,6 +201,7 @@ fun AdminProfileScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(54.dp),
+            border = BorderStroke(1.dp, red),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = red)
         ) {
             Icon(Icons.AutoMirrored.Filled.Logout, null)
@@ -195,7 +213,7 @@ fun AdminProfileScreen(
 
         Text(
             "Versi 1.0.2 (Build 240)",
-            color = Color.Gray,
+            color = grayText,
             fontSize = 12.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
@@ -207,83 +225,98 @@ fun AdminProfileScreen(
 /* ================= COMPONENTS ================= */
 
 @Composable
-private fun StatBox(value: String, label: String, bg: Color, accent: Color) {
+private fun StatBoxLight(
+    value: String,
+    label: String,
+    card: Color,
+    accent: Color,
+    darkText: Color
+) {
     Column(
         modifier = Modifier
             .width(110.dp)
-            .background(bg, RoundedCornerShape(18.dp))
+            .background(card, RoundedCornerShape(18.dp))
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(18.dp))
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(value, color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Text(value, color = darkText, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(6.dp))
         Text(label, color = accent, fontSize = 11.sp, fontWeight = FontWeight.Bold)
     }
 }
 
 @Composable
-private fun SectionTitle(text: String) {
-    Text(
-        text,
-        color = Color(0xFF2DFF8F),
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Bold
-    )
+private fun SectionTitleLight(text: String, color: Color) {
+    Text(text, color = color, fontSize = 13.sp, fontWeight = FontWeight.Bold)
     Spacer(Modifier.height(12.dp))
 }
 
 @Composable
-private fun MenuItem(
+private fun MenuItemLight(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
-    subtitle: String? = null
+    subtitle: String?,
+    card: Color,
+    darkText: Color,
+    grayText: Color
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF163828), RoundedCornerShape(16.dp))
+            .background(card, RoundedCornerShape(16.dp))
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, null, tint = Color(0xFF2DFF8F))
+        Icon(icon, null, tint = darkText)
         Spacer(Modifier.width(12.dp))
         Column {
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
+            Text(title, color = darkText, fontWeight = FontWeight.Bold)
             subtitle?.let {
-                Text(it, color = Color.Gray, fontSize = 12.sp)
+                Text(it, color = grayText, fontSize = 12.sp)
             }
         }
         Spacer(Modifier.weight(1f))
-        Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
+        Icon(Icons.Default.ChevronRight, null, tint = grayText)
     }
     Spacer(Modifier.height(12.dp))
 }
 
 @Composable
-private fun ToggleItem(
+private fun ToggleItemLight(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
-    subtitle: String
+    subtitle: String,
+    card: Color,
+    accent: Color,
+    darkText: Color,
+    grayText: Color
 ) {
     var enabled by remember { mutableStateOf(true) }
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF163828), RoundedCornerShape(16.dp))
+            .background(card, RoundedCornerShape(16.dp))
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, null, tint = Color(0xFF2DFF8F))
+        Icon(icon, null, tint = darkText)
         Spacer(Modifier.width(12.dp))
         Column {
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-            Text(subtitle, color = Color.Gray, fontSize = 12.sp)
+            Text(title, color = darkText, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = grayText, fontSize = 12.sp)
         }
         Spacer(Modifier.weight(1f))
         Switch(
             checked = enabled,
-            onCheckedChange = { enabled = it }
+            onCheckedChange = { enabled = it },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = accent,
+                checkedTrackColor = accent.copy(alpha = 0.4f)
+            )
         )
     }
     Spacer(Modifier.height(12.dp))

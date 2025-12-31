@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -21,10 +22,20 @@ fun AdminCreateTaskScreen(
     onAssign: () -> Unit = {}
 ) {
 
-    val bg = Color(0xFF0F2A1D)
-    val cardBg = Color(0xFF163828)
-    val border = Color(0xFF245C3A)
-    val green = Color(0xFF2DFF8F)
+    /* ===== PALET SAMA DENGAN AdminRoomScreen ===== */
+    val bgGradient = Brush.verticalGradient(
+        listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     var taskType by remember { mutableStateOf("ROOM") }
     var title by remember { mutableStateOf("") }
@@ -34,7 +45,7 @@ fun AdminCreateTaskScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
     ) {
 
         Column(
@@ -45,7 +56,7 @@ fun AdminCreateTaskScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            /* HEADER */
+            /* ================= HEADER ================= */
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -54,116 +65,120 @@ fun AdminCreateTaskScreen(
                 Text(
                     "Batal",
                     color = green,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable { onCancel() }
                 )
 
                 Text(
                     "Buat Tugas",
-                    color = Color.White,
+                    color = darkText,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.width(48.dp))
+                Spacer(Modifier.width(48.dp))
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("PENUGASAN")
+            SectionTitle("PENUGASAN")
 
-            AdminTaskCard(cardBg, border) {
+            CardWhite(borderSoft) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Person, null, tint = Color.Gray)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text("Pilih Petugas", color = Color.White)
-                        Text("Siapa yang bertanggung jawab?", color = Color.Gray, fontSize = 12.sp)
+                    Icon(Icons.Default.Person, null, tint = grayText)
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("Pilih Petugas", color = darkText, fontWeight = FontWeight.Bold)
+                        Text("Siapa yang bertanggung jawab?", color = grayText, fontSize = 12.sp)
                     }
-                    Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
+                    Icon(Icons.Default.ChevronRight, null, tint = grayText)
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("KONTEKS & JENIS")
+            SectionTitle("KONTEKS & JENIS")
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                AdminTaskTypeChip("Spesifik Ruangan", taskType == "ROOM", green) {
+                TypeChipLight("Spesifik Ruangan", taskType == "ROOM", green) {
                     taskType = "ROOM"
                 }
-                AdminTaskTypeChip("Umum", taskType == "GENERAL", green) {
+                TypeChipLight("Umum", taskType == "GENERAL", green) {
                     taskType = "GENERAL"
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-            AdminTaskCard(cardBg, border) {
+            CardWhite(borderSoft) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.MeetingRoom, null, tint = green)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text("Cari Nomor Ruangan (mis. 101)", color = Color.Gray)
+                    Spacer(Modifier.width(12.dp))
+                    Text("Cari Nomor Ruangan (mis. 101)", color = grayText)
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("DETAIL TUGAS")
+            SectionTitle("DETAIL TUGAS")
 
-            AdminTaskCard(cardBg, border) {
-                Column {
+            CardWhite(borderSoft) {
+                Text("JUDUL TUGAS", color = green, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(4.dp))
 
-                    Text("JUDUL TUGAS", color = green, fontSize = 12.sp)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    AdminTaskInput(
-                        value = title,
-                        placeholder = "mis., Perbaiki Unit AC"
-                    ) { title = it }
+                InputLight(
+                    value = title,
+                    placeholder = "mis. Perbaiki Unit AC",
+                    green = green,
+                    border = borderSoft
+                ) { title = it }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-                    Text("CATATAN", color = Color.Gray, fontSize = 12.sp)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    AdminTaskInput(
-                        value = notes,
-                        placeholder = "Tambahkan instruksi detail...",
-                        height = 120.dp
-                    ) { notes = it }
+                Text("CATATAN", color = grayText, fontSize = 12.sp)
+                Spacer(Modifier.height(4.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Text("${notes.length}/200", color = Color.Gray, fontSize = 12.sp)
-                    }
+                InputLight(
+                    value = notes,
+                    placeholder = "Tambahkan instruksi detail...",
+                    height = 120.dp,
+                    green = green,
+                    border = borderSoft
+                ) { notes = it }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Text("${notes.length}/200", color = grayText, fontSize = 12.sp)
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
-            AdminTaskSectionTitle("WAKTU & PRIORITAS")
+            SectionTitle("WAKTU & PRIORITAS")
 
-            AdminTaskCard(cardBg, border) {
+            CardWhite(borderSoft) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.CalendarToday, null, tint = green)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text("Batas Waktu", color = Color.White)
-                        Text("Besok, 10:00", color = Color.Gray, fontSize = 12.sp)
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("Batas Waktu", color = darkText, fontWeight = FontWeight.Bold)
+                        Text("Besok, 10:00", color = grayText, fontSize = 12.sp)
                     }
-                    Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
+                    Icon(Icons.Default.ChevronRight, null, tint = grayText)
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
-            AdminTaskCard(cardBg, border) {
+            CardWhite(borderSoft) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.PriorityHigh, null, tint = Color.Red)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text("Prioritas Tinggi", color = Color.White)
-                        Text("Tandai tugas ini sebagai mendesak", color = Color.Gray, fontSize = 12.sp)
+                    Icon(Icons.Default.PriorityHigh, null, tint = Color(0xFFFF6B6B))
+                    Spacer(Modifier.width(12.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text("Prioritas Tinggi", color = darkText, fontWeight = FontWeight.Bold)
+                        Text("Tandai tugas ini sebagai mendesak", color = grayText, fontSize = 12.sp)
                     }
                     Switch(
                         checked = urgent,
@@ -177,6 +192,7 @@ fun AdminCreateTaskScreen(
             }
         }
 
+        /* ================= BUTTON ================= */
         Button(
             onClick = onAssign,
             modifier = Modifier
@@ -187,30 +203,33 @@ fun AdminCreateTaskScreen(
             colors = ButtonDefaults.buttonColors(containerColor = green),
             shape = RoundedCornerShape(16.dp)
         ) {
-            Icon(Icons.Default.CheckCircle, null, tint = Color.Black)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Tetapkan Tugas", color = Color.Black, fontWeight = FontWeight.Bold)
+            Icon(Icons.Default.CheckCircle, null, tint = Color.White)
+            Spacer(Modifier.width(8.dp))
+            Text(
+                "Tetapkan Tugas",
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
 
-/* ===== COMPONENTS ===== */
+/* ================= COMPONENT ================= */
 
 @Composable
-private fun AdminTaskSectionTitle(text: String) {
-    Text(text, color = Color.Gray, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+private fun SectionTitle(text: String) {
+    Text(text, color = Color(0xFF6B7C75), fontSize = 12.sp, fontWeight = FontWeight.Bold)
 }
 
 @Composable
-private fun AdminTaskCard(
-    bg: Color,
+private fun CardWhite(
     border: Color,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(bg, RoundedCornerShape(16.dp))
+            .background(Color.White, RoundedCornerShape(16.dp))
             .border(1.dp, border, RoundedCornerShape(16.dp))
             .padding(16.dp),
         content = content
@@ -218,35 +237,35 @@ private fun AdminTaskCard(
 }
 
 @Composable
-private fun AdminTaskTypeChip(
+private fun TypeChipLight(
     text: String,
     selected: Boolean,
     accent: Color,
     onClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .background(
-                if (selected) accent else Color.Transparent,
-                RoundedCornerShape(12.dp)
-            )
-            .border(1.dp, accent, RoundedCornerShape(12.dp))
-            .clickable { onClick() }
-            .padding(horizontal = 20.dp, vertical = 10.dp)
+    Surface(
+        color = if (selected) accent.copy(alpha = 0.15f) else Color.Transparent,
+        shape = RoundedCornerShape(50),
+        border = BorderStroke(1.dp, accent),
+        modifier = Modifier.clickable { onClick() }
     ) {
         Text(
             text,
-            color = if (selected) Color.Black else Color.White,
-            fontWeight = FontWeight.Bold
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            color = if (selected) accent else Color(0xFF1E2D28),
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
         )
     }
 }
 
 @Composable
-private fun AdminTaskInput(
+private fun InputLight(
     value: String,
     placeholder: String,
     height: Dp = 48.dp,
+    green: Color,
+    border: Color,
     onChange: (String) -> Unit
 ) {
     OutlinedTextField(
@@ -256,13 +275,15 @@ private fun AdminTaskInput(
         modifier = Modifier
             .fillMaxWidth()
             .height(height),
+        shape = RoundedCornerShape(14.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFF163828),
-            unfocusedContainerColor = Color(0xFF163828),
-            focusedBorderColor = Color(0xFF2DFF8F),
-            unfocusedBorderColor = Color(0xFF245C3A),
-            cursorColor = Color(0xFF2DFF8F)
-        ),
-        shape = RoundedCornerShape(12.dp)
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedBorderColor = green,
+            unfocusedBorderColor = border,
+            cursorColor = green,
+            focusedTextColor = Color(0xFF1E2D28),
+            unfocusedTextColor = Color(0xFF1E2D28)
+        )
     )
 }

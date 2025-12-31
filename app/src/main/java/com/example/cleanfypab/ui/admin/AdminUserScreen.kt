@@ -2,7 +2,6 @@ package com.example.cleanfypab.ui.admin
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -25,10 +23,11 @@ fun AdminUserScreen(
     onBack: () -> Unit = {}
 ) {
 
+    /* ===== PALET ADMIN ===== */
     val bgColor = Color(0xFF0F2A1D)
     val cardColor = Color(0xFF163828)
-    val green = Color(0xFF2DFF8F)
-    val gray = Color(0xFF9E9E9E)
+    val green = Color(0xFF2ECC71) // ✅ KONSISTEN
+    val gray = Color(0xFF9BA5A0)
 
     var selectedTab by remember { mutableStateOf("ALL") }
 
@@ -183,8 +182,7 @@ fun AdminUserScreen(
                     role = "Admin",
                     roleColor = Color(0xFF9EFFA0),
                     active = true,
-                    cardColor = cardColor,
-                    swipeDelete = true
+                    cardColor = cardColor
                 )
             }
 
@@ -204,15 +202,15 @@ fun UserFilter(
     onClick: () -> Unit
 ) {
     Surface(
-        color = if (selected == key) accent else Color.Transparent,
+        color = if (selected == key) accent.copy(alpha = 0.15f) else Color.Transparent,
         shape = RoundedCornerShape(50),
-        border = if (selected != key) BorderStroke(1.dp, accent) else null,
+        border = BorderStroke(1.dp, accent),
         modifier = Modifier.clickable { onClick() }
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            color = if (selected == key) Color.Black else accent,
+            color = if (selected == key) accent else Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 12.sp
         )
@@ -227,8 +225,7 @@ fun UserCard(
     roleColor: Color,
     active: Boolean,
     cardColor: Color,
-    initials: String? = null,
-    swipeDelete: Boolean = false
+    initials: String? = null
 ) {
     Row(
         modifier = Modifier
@@ -244,7 +241,7 @@ fun UserCard(
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(roleColor.copy(alpha = 0.3f), CircleShape),
+                    .background(roleColor.copy(alpha = 0.25f), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 if (initials != null) {
