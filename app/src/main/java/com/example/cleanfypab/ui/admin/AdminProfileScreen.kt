@@ -37,7 +37,7 @@ fun AdminProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(bg)
-            .verticalScroll(rememberScrollState()) // ✅ SCROLL FIX
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp)
     ) {
 
@@ -108,17 +108,30 @@ fun AdminProfileScreen(
                         .background(green),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Edit, null, tint = Color.Black, modifier = Modifier.size(16.dp))
+                    Icon(
+                        Icons.Default.Edit,
+                        null,
+                        tint = Color.Black,
+                        modifier = Modifier.size(16.dp)
+                    )
                 }
             }
 
             Spacer(Modifier.height(16.dp))
 
-            Text("Jane Doe", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "Jane Doe",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
 
             Spacer(Modifier.height(6.dp))
 
-            Surface(color = green.copy(alpha = 0.15f), shape = RoundedCornerShape(50)) {
+            Surface(
+                color = green.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(50)
+            ) {
                 Text(
                     "SUPER ADMIN",
                     modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
@@ -142,7 +155,7 @@ fun AdminProfileScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             StatBox("12", "TUGAS\nMENUNGGU", card, green)
-            StatBox("45", "RUANGAN\nDIKELOLA", card, green)
+            StatBox("30", "RUANGAN\nDIKELOLA", card, green) // ✅ TOTAL 30 RUANGAN
             StatBox("98%", "TINGKAT\nRESPON", card, green)
         }
 
@@ -187,7 +200,7 @@ fun AdminProfileScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
-        Spacer(Modifier.height(24.dp)) // ruang aman bawah
+        Spacer(Modifier.height(24.dp))
     }
 }
 
@@ -210,7 +223,12 @@ private fun StatBox(value: String, label: String, bg: Color, accent: Color) {
 
 @Composable
 private fun SectionTitle(text: String) {
-    Text(text, color = Color(0xFF2DFF8F), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+    Text(
+        text,
+        color = Color(0xFF2DFF8F),
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold
+    )
     Spacer(Modifier.height(12.dp))
 }
 
@@ -231,7 +249,9 @@ private fun MenuItem(
         Spacer(Modifier.width(12.dp))
         Column {
             Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-            subtitle?.let { Text(it, color = Color.Gray, fontSize = 12.sp) }
+            subtitle?.let {
+                Text(it, color = Color.Gray, fontSize = 12.sp)
+            }
         }
         Spacer(Modifier.weight(1f))
         Icon(Icons.Default.ChevronRight, null, tint = Color.Gray)
@@ -261,7 +281,10 @@ private fun ToggleItem(
             Text(subtitle, color = Color.Gray, fontSize = 12.sp)
         }
         Spacer(Modifier.weight(1f))
-        Switch(checked = enabled, onCheckedChange = { enabled = it })
+        Switch(
+            checked = enabled,
+            onCheckedChange = { enabled = it }
+        )
     }
     Spacer(Modifier.height(12.dp))
 }

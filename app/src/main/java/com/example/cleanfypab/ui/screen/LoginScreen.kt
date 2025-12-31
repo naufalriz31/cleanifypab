@@ -1,5 +1,6 @@
 package com.example.cleanfypab.ui.screen
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,12 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cleanfypab.R
 import com.example.cleanfypab.viewmodel.AuthViewModel
 
 @Composable
@@ -31,7 +34,7 @@ fun LoginScreen(
 
     val state by vm.uiState.collectAsState()
 
-    // ✅ kalau login sukses, lempar role ke AppNavHost
+    // ✅ LOGIN SUCCESS HANDLER
     LaunchedEffect(state.loggedIn) {
         if (state.loggedIn) {
             val role = state.role ?: "petugas"
@@ -48,19 +51,16 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Spacer(Modifier.height(60.dp))
+        Spacer(Modifier.height(40.dp))
 
-        // ICON
-        Box(
-            modifier = Modifier
-                .size(90.dp)
-                .background(Color(0xFF0F3D23), RoundedCornerShape(20.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("▣", fontSize = 42.sp, color = Color(0xFF00E676))
-        }
+        /* ================= LOGO CLEANIFY ================= */
+        Image(
+            painter = painterResource(id = R.drawable.logo_cleanify),
+            contentDescription = "Logo Cleanify",
+            modifier = Modifier.size(160.dp)
+        )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(20.dp))
 
         Text(
             "CLEANIFY",
@@ -70,15 +70,15 @@ fun LoginScreen(
         )
 
         Text(
-            "Log in to manage your rooms.",
+            "Monitoring Petugas Kebersihan",
             color = Color(0xFF8FA69B),
-            fontSize = 16.sp,
-            modifier = Modifier.padding(top = 8.dp)
+            fontSize = 14.sp,
+            modifier = Modifier.padding(top = 6.dp)
         )
 
-        Spacer(Modifier.height(34.dp))
+        Spacer(Modifier.height(32.dp))
 
-        // EMAIL FIELD
+        /* ================= EMAIL ================= */
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -90,7 +90,8 @@ fun LoginScreen(
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                focusedLabelColor = Color.White
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -99,7 +100,7 @@ fun LoginScreen(
 
         Spacer(Modifier.height(16.dp))
 
-        // PASSWORD FIELD
+        /* ================= PASSWORD ================= */
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -112,13 +113,17 @@ fun LoginScreen(
                     modifier = Modifier.clickable { showPassword = !showPassword }
                 )
             },
-            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation =
+                if (showPassword) VisualTransformation.None
+                else PasswordVisualTransformation(),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color(0xFF15261D),
                 unfocusedContainerColor = Color(0xFF15261D),
                 cursorColor = Color.White,
                 focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -132,10 +137,10 @@ fun LoginScreen(
             color = Color(0xFF00E676),
             modifier = Modifier
                 .align(Alignment.End)
-                .clickable { /* optional */ }
+                .clickable { }
         )
 
-        // ✅ ERROR MESSAGE (tambah tanpa mengubah layout besar)
+        /* ================= ERROR ================= */
         if (state.error != null) {
             Spacer(Modifier.height(10.dp))
             Text(
@@ -148,12 +153,9 @@ fun LoginScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        // LOGIN BUTTON (✅ sekarang validasi via Firebase)
+        /* ================= LOGIN BUTTON ================= */
         Button(
-            onClick = {
-                // email bisa diisi: admin / user / admin@gmail.com / user@gmail.com
-                vm.login(email, password)
-            },
+            onClick = { vm.login(email, password) },
             enabled = !state.loading,
             modifier = Modifier
                 .fillMaxWidth()
@@ -164,7 +166,8 @@ fun LoginScreen(
             Text(
                 text = if (state.loading) "Checking..." else "Log In",
                 fontSize = 18.sp,
-                color = Color.Black
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -181,13 +184,9 @@ fun LoginScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        // APPLE LOGIN (dummy UI)
-        LoginOptionButton(label = "Sign in with Apple", bg = Color.White, fg = Color.Black)
-
+        LoginOptionButton("Sign in with Apple", Color.White, Color.Black)
         Spacer(Modifier.height(12.dp))
-
-        // GOOGLE LOGIN (dummy UI)
-        LoginOptionButton(label = "Sign in with Google", bg = Color(0xFF1A2D23), fg = Color.White)
+        LoginOptionButton("Sign in with Google", Color(0xFF1A2D23), Color.White)
     }
 }
 
