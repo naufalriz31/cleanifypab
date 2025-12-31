@@ -38,7 +38,6 @@ fun ProfileScreen(nav: NavHostController) {
         )
     )
 
-    val card = Color.White
     val cardSoft = Color(0xFFF2F7F4)
     val borderSoft = Color(0xFFE0E0E0)
 
@@ -143,6 +142,7 @@ fun ProfileScreen(nav: NavHostController) {
         Spacer(Modifier.height(10.dp))
 
         SettingsCardLight {
+
             SettingsItemLight(
                 icon = Icons.Default.Notifications,
                 title = "Notifikasi",
@@ -164,20 +164,20 @@ fun ProfileScreen(nav: NavHostController) {
 
             SettingsItemLight(
                 icon = Icons.Default.DarkMode,
-                title = "Tampilan",
+                title = "Tampilan (Akan Datang)",
                 trailing = { ArrowIconLight(grayText) },
                 primaryGreen = primaryGreen,
-                darkText = darkText
+                darkText = grayText
             )
 
             Divider(color = borderSoft)
 
             SettingsItemLight(
                 icon = Icons.Default.Language,
-                title = "Bahasa",
+                title = "Bahasa (Akan Datang)",
                 trailing = { ArrowIconLight(grayText) },
                 primaryGreen = primaryGreen,
-                darkText = darkText
+                darkText = grayText
             )
         }
 
@@ -194,15 +194,6 @@ fun ProfileScreen(nav: NavHostController) {
         Spacer(Modifier.height(10.dp))
 
         SettingsCardLight {
-            SettingsItemLight(
-                icon = Icons.Default.Lock,
-                title = "Ganti Kata Sandi",
-                trailing = { ArrowIconLight(grayText) },
-                primaryGreen = primaryGreen,
-                darkText = darkText
-            )
-
-            Divider(color = borderSoft)
 
             SettingsItemLight(
                 icon = Icons.Default.Security,
@@ -250,7 +241,7 @@ fun ProfileScreen(nav: NavHostController) {
     }
 }
 
-/* ================= KOMPONEN (LIGHT) ================= */
+/* ================= KOMPONEN ================= */
 
 @Composable
 fun SettingsCardLight(content: @Composable ColumnScope.() -> Unit) {

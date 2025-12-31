@@ -27,17 +27,12 @@ import com.example.cleanfypab.ui.navigation.Routes
 @Composable
 fun HomeScreen(nav: NavHostController) {
 
-    /* ===== PALET WARNA (SESUAI LOGIN) ===== */
+    /* ===== PALET WARNA ===== */
     val bgGradient = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFF6FBF8),
-            Color(0xFFE9F5EE)
-        )
+        listOf(Color(0xFFF6FBF8), Color(0xFFE9F5EE))
     )
 
     val card = Color.White
-    val cardAlt = Color(0xFFF2F7F4)
-
     val primaryGreen = Color(0xFF2ECC71)
     val blue = Color(0xFF4DA3FF)
     val orange = Color(0xFFFFA000)
@@ -63,13 +58,13 @@ fun HomeScreen(nav: NavHostController) {
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Selamat Pagi, Olivia",
+                        "Selamat Pagi, Olivia",
                         color = darkText,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Semoga harimu produktif",
+                        "Semoga harimu produktif",
                         color = grayText,
                         fontSize = 13.sp
                     )
@@ -80,14 +75,12 @@ fun HomeScreen(nav: NavHostController) {
                         .size(42.dp)
                         .background(card, CircleShape)
                         .border(1.dp, borderSoft, CircleShape)
-                        .clickable {
-                            nav.navigate(Routes.NOTIFICATION)
-                        },
+                        .clickable { nav.navigate(Routes.NOTIFICATION) },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Notifications,
-                        contentDescription = "Notifikasi",
+                        contentDescription = null,
                         tint = darkText
                     )
                 }
@@ -113,19 +106,11 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            TaskCard(
-                title = "Ruang 305",
-                subtitle = "Perlu Pembersihan Mendalam",
-                indicatorColor = orange
-            )
+            TaskCard("Ruang 305", "Perlu Pembersihan Mendalam", orange)
         }
 
         item {
-            TaskCard(
-                title = "Ruang 405",
-                subtitle = "Pembersihan Standar",
-                indicatorColor = blue
-            )
+            TaskCard("Ruang 405", "Pembersihan Standar", blue)
         }
 
         /* ================= PROGRES ================= */
@@ -185,7 +170,7 @@ fun HomeScreen(nav: NavHostController) {
                 ) {
                     Icon(
                         Icons.Default.QrCodeScanner,
-                        contentDescription = null,
+                        null,
                         tint = Color.White,
                         modifier = Modifier.size(28.dp)
                     )
@@ -204,7 +189,7 @@ fun HomeScreen(nav: NavHostController) {
                 ) {
                     Icon(
                         Icons.Default.Warning,
-                        contentDescription = null,
+                        null,
                         tint = orange,
                         modifier = Modifier.size(26.dp)
                     )
@@ -234,15 +219,27 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            RecentReportItem("Ruang Meeting A101", "Selesai • 10:45", primaryGreen)
+            RecentReportItem(
+                title = "Ruang Meeting A101",
+                subtitle = "Selesai • 10:45",
+                statusColor = primaryGreen
+            ) { nav.navigate("detail/1") }
         }
 
         item {
-            RecentReportItem("Lobi Utama", "Sedang Dibersihkan • 09:30", orange)
+            RecentReportItem(
+                title = "Lobi Utama",
+                subtitle = "Sedang Dibersihkan • 09:30",
+                statusColor = orange
+            ) { nav.navigate("detail/2") }
         }
 
         item {
-            RecentReportItem("Toilet Lt.2", "Selesai • 08:12", primaryGreen)
+            RecentReportItem(
+                title = "Toilet Lt.2",
+                subtitle = "Selesai • 08:12",
+                statusColor = primaryGreen
+            ) { nav.navigate("detail/3") }
         }
 
         item { Spacer(Modifier.height(30.dp)) }
@@ -296,7 +293,8 @@ private fun TaskCard(
 private fun RecentReportItem(
     title: String,
     subtitle: String,
-    statusColor: Color
+    statusColor: Color,
+    onClick: () -> Unit
 ) {
     val darkText = Color(0xFF1E2D28)
     val grayText = Color(0xFF6B7C75)
@@ -307,6 +305,7 @@ private fun RecentReportItem(
             .fillMaxWidth()
             .background(Color.White, RoundedCornerShape(16.dp))
             .border(1.dp, borderSoft, RoundedCornerShape(16.dp))
+            .clickable { onClick() }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
