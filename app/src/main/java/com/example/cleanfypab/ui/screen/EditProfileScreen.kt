@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,13 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-// ===== WARNA EDIT PROFIL =====
-private val EP_BG = Color(0xFF071A12)
-private val EP_CARD = Color(0xFF0F2A1D)
-private val EP_GREEN = Color(0xFF00E676)
-private val EP_GRAY = Color(0xFF9BA5A0)
-private val EP_WHITE = Color.White
-
 @Composable
 fun EditProfileScreen(nav: NavHostController) {
 
@@ -39,11 +33,27 @@ fun EditProfileScreen(nav: NavHostController) {
     var phone by remember { mutableStateOf("+1 (555) 000-0000") }
     var password by remember { mutableStateOf("password") }
 
+    /* ===== PALET WARNA CLEANIFY (LIGHT) ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardSoft = Color(0xFFF2F7F4)
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(EP_BG)
-            .verticalScroll(rememberScrollState()) // ✅ FIX SCROLL
+            .background(bgGradient)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
 
@@ -55,7 +65,7 @@ fun EditProfileScreen(nav: NavHostController) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Kembali",
-                tint = EP_WHITE,
+                tint = darkText,
                 modifier = Modifier
                     .size(28.dp)
                     .clickable { nav.popBackStack() }
@@ -65,7 +75,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
             Text(
                 "Edit Profil",
-                color = EP_WHITE,
+                color = darkText,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -74,7 +84,7 @@ fun EditProfileScreen(nav: NavHostController) {
 
             Text(
                 "Simpan",
-                color = EP_GREEN,
+                color = primaryGreen,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { nav.popBackStack() }
             )
@@ -88,11 +98,11 @@ fun EditProfileScreen(nav: NavHostController) {
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
-                    .background(EP_CARD)
-                    .border(3.dp, EP_GREEN, CircleShape),
+                    .background(cardSoft)
+                    .border(3.dp, primaryGreen, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.Person, null, tint = EP_GRAY, modifier = Modifier.size(70.dp))
+                Icon(Icons.Default.Person, null, tint = grayText, modifier = Modifier.size(70.dp))
             }
 
             Box(
@@ -100,65 +110,77 @@ fun EditProfileScreen(nav: NavHostController) {
                     .offset(x = 42.dp, y = 42.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(EP_GREEN)
+                    .background(primaryGreen)
                     .clickable { },
                 contentAlignment = Alignment.Center
             ) {
-                Icon(Icons.Default.CameraAlt, null, tint = EP_BG, modifier = Modifier.size(18.dp))
+                Icon(Icons.Default.CameraAlt, null, tint = Color.White, modifier = Modifier.size(18.dp))
             }
         }
 
         Spacer(Modifier.height(10.dp))
         Text(
             "Ganti Foto",
-            color = EP_GREEN,
+            color = primaryGreen,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
         Spacer(Modifier.height(28.dp))
 
         /* ===== INFORMASI PRIBADI ===== */
-        EditProfileSectionTitle("INFORMASI PRIBADI")
+        EditProfileSectionTitleLight("INFORMASI PRIBADI", grayText)
 
-        EditProfileInput(
+        EditProfileInputLight(
             label = "Nama Lengkap",
             value = fullName,
             onValueChange = { fullName = it },
-            trailingIcon = Icons.Default.CheckCircle
+            trailingIcon = Icons.Default.CheckCircle,
+            primaryGreen = primaryGreen,
+            darkText = darkText
         )
 
-        EditProfileDisabled(
+        EditProfileDisabledLight(
             label = "Alamat Email",
             value = "john.doe@company.com",
-            note = "Hubungi admin untuk memperbarui alamat email."
+            note = "Hubungi admin untuk memperbarui alamat email.",
+            darkText = darkText,
+            grayText = grayText,
+            cardSoft = cardSoft
         )
 
-        EditProfileInput(
+        EditProfileInputLight(
             label = "Nomor Telepon",
             value = phone,
-            onValueChange = { phone = it }
+            onValueChange = { phone = it },
+            primaryGreen = primaryGreen,
+            darkText = darkText
         )
 
-        EditProfileDisabled(
+        EditProfileDisabledLight(
             label = "Jabatan",
             value = "Manajer Ruangan",
-            leadingIcon = Icons.Default.Badge
+            leadingIcon = Icons.Default.Badge,
+            darkText = darkText,
+            grayText = grayText,
+            cardSoft = cardSoft
         )
 
         Spacer(Modifier.height(28.dp))
 
         /* ===== KEAMANAN ===== */
-        EditProfileSectionTitle("KEAMANAN")
+        EditProfileSectionTitleLight("KEAMANAN", grayText)
 
-        EditProfileInput(
+        EditProfileInputLight(
             label = "Kata Sandi",
             value = password,
             onValueChange = { password = it },
             isPassword = true,
-            trailingIcon = Icons.Default.Visibility
+            trailingIcon = Icons.Default.Visibility,
+            primaryGreen = primaryGreen,
+            darkText = darkText
         )
 
-        Text("Ubah Kata Sandi", color = EP_GREEN, fontSize = 14.sp)
+        Text("Ubah Kata Sandi", color = primaryGreen, fontSize = 14.sp)
 
         Spacer(Modifier.height(32.dp))
 
@@ -172,33 +194,35 @@ fun EditProfileScreen(nav: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(55.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = EP_GREEN),
+            colors = ButtonDefaults.buttonColors(containerColor = primaryGreen),
             shape = RoundedCornerShape(14.dp)
         ) {
-            Text("Simpan Perubahan", fontWeight = FontWeight.Bold, color = EP_BG)
+            Text("Simpan Perubahan", fontWeight = FontWeight.Bold, color = Color.White)
         }
 
-        Spacer(Modifier.height(24.dp)) // ruang aman bawah
+        Spacer(Modifier.height(24.dp))
     }
 }
 
-/* ===== KOMPONEN ===== */
+/* ===== KOMPONEN (LIGHT) ===== */
 
 @Composable
-fun EditProfileSectionTitle(text: String) {
-    Text(text, color = EP_GRAY, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+fun EditProfileSectionTitleLight(text: String, grayText: Color) {
+    Text(text, color = grayText, fontWeight = FontWeight.Bold, fontSize = 14.sp)
     Spacer(Modifier.height(12.dp))
 }
 
 @Composable
-fun EditProfileInput(
+fun EditProfileInputLight(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false,
-    trailingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null
+    trailingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    primaryGreen: Color,
+    darkText: Color
 ) {
-    Text(label, color = EP_WHITE, fontSize = 14.sp)
+    Text(label, color = darkText, fontSize = 14.sp)
     Spacer(Modifier.height(6.dp))
 
     TextField(
@@ -210,15 +234,15 @@ fun EditProfileInput(
         else
             VisualTransformation.None,
         trailingIcon = {
-            trailingIcon?.let { Icon(it, null, tint = EP_GREEN) }
+            trailingIcon?.let { Icon(it, null, tint = primaryGreen) }
         },
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = EP_CARD,
-            unfocusedContainerColor = EP_CARD,
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedTextColor = EP_WHITE,
-            unfocusedTextColor = EP_WHITE
+            focusedTextColor = darkText,
+            unfocusedTextColor = darkText
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -229,32 +253,35 @@ fun EditProfileInput(
 }
 
 @Composable
-fun EditProfileDisabled(
+fun EditProfileDisabledLight(
     label: String,
     value: String,
     note: String? = null,
-    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null
+    leadingIcon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    darkText: Color,
+    grayText: Color,
+    cardSoft: Color
 ) {
-    Text(label, color = EP_WHITE, fontSize = 14.sp)
+    Text(label, color = darkText, fontSize = 14.sp)
     Spacer(Modifier.height(6.dp))
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(EP_CARD, RoundedCornerShape(14.dp))
+            .background(cardSoft, RoundedCornerShape(14.dp))
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         leadingIcon?.let {
-            Icon(it, null, tint = EP_GRAY)
+            Icon(it, null, tint = grayText)
             Spacer(Modifier.width(8.dp))
         }
-        Text(value, color = EP_GRAY)
+        Text(value, color = grayText)
     }
 
     note?.let {
         Spacer(Modifier.height(6.dp))
-        Text(it, color = EP_GRAY, fontSize = 12.sp)
+        Text(it, color = grayText, fontSize = 12.sp)
     }
 
     Spacer(Modifier.height(16.dp))

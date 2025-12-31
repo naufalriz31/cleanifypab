@@ -1,6 +1,5 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,13 +15,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun EditReportScreen(nav: NavHostController, id: Int) {
+fun EditReportScreen(
+    nav: NavHostController,
+    id: Int
+) {
 
     var notes by remember { mutableStateOf("") }
 
@@ -37,21 +41,35 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
         mutableStateOf(mutableSetOf("Membersihkan permukaan kamar mandi"))
     }
 
+    /* ===== PALET WARNA (SESUAI LOGIN & HOME) ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardSoft = Color(0xFFF2F7F4)
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0A1C12))
+            .background(bgGradient)
             .padding(16.dp)
     ) {
 
-        // BAR ATAS
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        /* ================= BAR ATAS ================= */
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Kembali",
-                tint = Color.White,
+                tint = darkText,
                 modifier = Modifier
                     .size(28.dp)
                     .clickable { nav.popBackStack() }
@@ -62,7 +80,7 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
             Text(
                 "Edit Laporan",
                 fontSize = 20.sp,
-                color = Color.White,
+                color = darkText,
                 fontWeight = FontWeight.Bold
             )
 
@@ -70,36 +88,37 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
 
             Text(
                 "Simpan",
-                fontSize = 18.sp,
-                color = Color(0xFF00E676),
+                fontSize = 16.sp,
+                color = primaryGreen,
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { nav.popBackStack() }
             )
         }
 
         Spacer(Modifier.height(24.dp))
 
-        // JUDUL
+        /* ================= JUDUL ================= */
         Text(
             "Ruang 301 - Laporan Pembersihan",
-            fontSize = 28.sp,
+            fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = darkText
         )
 
         Spacer(Modifier.height(6.dp))
 
         Text(
             "Dibuat: 24 Jan 2024 pukul 10:32",
-            color = Color(0xFF4CAF50),
+            color = primaryGreen,
             fontSize = 14.sp
         )
 
         Spacer(Modifier.height(20.dp))
 
-        // BAGIAN FOTO
+        /* ================= FOTO ================= */
         Text(
             "Foto",
-            color = Color.White,
+            color = darkText,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
@@ -112,14 +131,15 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                     modifier = Modifier
                         .size(120.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(Color(0xFF1D2A22)),
+                        .background(cardSoft)
+                        .border(1.dp, borderSoft, RoundedCornerShape(12.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Image,
                         contentDescription = "Foto",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(50.dp)
+                        tint = grayText,
+                        modifier = Modifier.size(48.dp)
                     )
                 }
 
@@ -131,7 +151,8 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                     modifier = Modifier
                         .size(120.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, Color.Gray, RoundedCornerShape(12.dp))
+                        .background(card)
+                        .border(1.dp, borderSoft, RoundedCornerShape(12.dp))
                         .clickable { }
                         .padding(12.dp),
                     contentAlignment = Alignment.Center
@@ -140,11 +161,15 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                         Icon(
                             Icons.Default.AddAPhoto,
                             contentDescription = "Tambah Foto",
-                            tint = Color.Gray,
+                            tint = primaryGreen,
                             modifier = Modifier.size(32.dp)
                         )
                         Spacer(Modifier.height(4.dp))
-                        Text("Tambah Foto", color = Color.Gray, fontSize = 12.sp)
+                        Text(
+                            "Tambah Foto",
+                            color = darkText,
+                            fontSize = 12.sp
+                        )
                     }
                 }
             }
@@ -152,45 +177,48 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
 
         Spacer(Modifier.height(20.dp))
 
-        // BAGIAN CATATAN
+        /* ================= CATATAN ================= */
         Text(
             "Catatan",
-            color = Color.White,
+            color = darkText,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
+
         Spacer(Modifier.height(8.dp))
 
         TextField(
             value = notes,
             onValueChange = { notes = it },
             placeholder = {
-                Text("Tambahkan detail yang relevan...", color = Color.Gray)
+                Text("Tambahkan detail yang relevan...", color = grayText)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(140.dp)
-                .background(Color(0xFF0F2A1D), RoundedCornerShape(12.dp)),
+                .background(cardSoft, RoundedCornerShape(12.dp))
+                .border(1.dp, borderSoft, RoundedCornerShape(12.dp)),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFF0F2A1D),
-                unfocusedContainerColor = Color(0xFF0F2A1D),
+                focusedContainerColor = cardSoft,
+                unfocusedContainerColor = cardSoft,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = Color.White,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                cursorColor = primaryGreen,
+                focusedTextColor = darkText,
+                unfocusedTextColor = darkText
             )
         )
 
         Spacer(Modifier.height(24.dp))
 
-        // BAGIAN CHECKLIST
+        /* ================= CHECKLIST ================= */
         Text(
             "Checklist Opsional",
-            color = Color.White,
+            color = darkText,
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
+
         Spacer(Modifier.height(12.dp))
 
         checklistItems.forEach { item ->
@@ -217,19 +245,20 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                         }
                     },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Color(0xFF00E676),
-                        uncheckedColor = Color.White
+                        checkedColor = primaryGreen,
+                        uncheckedColor = grayText
                     )
                 )
 
                 Spacer(Modifier.width(8.dp))
 
-                Text(item, color = Color.White, fontSize = 16.sp)
+                Text(item, color = darkText, fontSize = 16.sp)
             }
         }
 
         Spacer(Modifier.height(40.dp))
 
+        /* ================= BUTTON SIMPAN ================= */
         Button(
             onClick = { nav.popBackStack() },
             modifier = Modifier
@@ -237,14 +266,14 @@ fun EditReportScreen(nav: NavHostController, id: Int) {
                 .height(54.dp),
             shape = RoundedCornerShape(30.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF00E676)
+                containerColor = primaryGreen
             )
         ) {
             Text(
                 "Simpan Perubahan",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = Color.White
             )
         }
     }

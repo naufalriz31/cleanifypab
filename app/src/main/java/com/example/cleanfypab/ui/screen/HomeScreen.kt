@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -26,18 +27,29 @@ import com.example.cleanfypab.ui.navigation.Routes
 @Composable
 fun HomeScreen(nav: NavHostController) {
 
-    /* ===== PALET WARNA ===== */
-    val bg = Color(0xFF0D1F15)
-    val card = Color(0xFF14231C)
-    val cardAlt = Color(0xFF1F2C25)
-    val green = Color(0xFF00E676)
-    val blue = Color(0xFF2196F3)
+    /* ===== PALET WARNA (SESUAI LOGIN) ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardAlt = Color(0xFFF2F7F4)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val blue = Color(0xFF4DA3FF)
     val orange = Color(0xFFFFA000)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+    val borderSoft = Color(0xFFE0E0E0)
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
@@ -52,22 +64,22 @@ fun HomeScreen(nav: NavHostController) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Selamat Pagi, Olivia",
-                        color = Color.White,
+                        color = darkText,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "Semoga harimu produktif",
-                        color = Color(0xFF9BA5A0),
+                        color = grayText,
                         fontSize = 13.sp
                     )
                 }
 
-                // 🔔 TOMBOL NOTIFIKASI
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
-                        .background(cardAlt, CircleShape)
+                        .size(42.dp)
+                        .background(card, CircleShape)
+                        .border(1.dp, borderSoft, CircleShape)
                         .clickable {
                             nav.navigate(Routes.NOTIFICATION)
                         },
@@ -76,7 +88,7 @@ fun HomeScreen(nav: NavHostController) {
                     Icon(
                         Icons.Default.Notifications,
                         contentDescription = "Notifikasi",
-                        tint = Color.White
+                        tint = darkText
                     )
                 }
             }
@@ -88,10 +100,10 @@ fun HomeScreen(nav: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Tugas Hari Ini", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Tugas Hari Ini", color = darkText, fontWeight = FontWeight.Bold)
                 Text(
                     "Lihat Semua",
-                    color = green,
+                    color = primaryGreen,
                     fontSize = 13.sp,
                     modifier = Modifier.clickable {
                         nav.navigate(Routes.TASK_TODAY)
@@ -104,8 +116,7 @@ fun HomeScreen(nav: NavHostController) {
             TaskCard(
                 title = "Ruang 305",
                 subtitle = "Perlu Pembersihan Mendalam",
-                indicatorColor = orange,
-                cardColor = card
+                indicatorColor = orange
             )
         }
 
@@ -113,8 +124,7 @@ fun HomeScreen(nav: NavHostController) {
             TaskCard(
                 title = "Ruang 405",
                 subtitle = "Pembersihan Standar",
-                indicatorColor = blue,
-                cardColor = card
+                indicatorColor = blue
             )
         }
 
@@ -124,16 +134,17 @@ fun HomeScreen(nav: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(card, RoundedCornerShape(20.dp))
+                    .border(1.dp, borderSoft, RoundedCornerShape(20.dp))
                     .padding(16.dp)
             ) {
 
-                Text("Progres Hari Ini", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Progres Hari Ini", color = darkText, fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(8.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("3/10 ruangan", color = Color.White)
+                    Text("3/10 ruangan", color = darkText)
                     Spacer(Modifier.weight(1f))
-                    Text("30%", color = green, fontWeight = FontWeight.Bold)
+                    Text("30%", color = primaryGreen, fontWeight = FontWeight.Bold)
                 }
 
                 Spacer(Modifier.height(8.dp))
@@ -144,14 +155,14 @@ fun HomeScreen(nav: NavHostController) {
                         .fillMaxWidth()
                         .height(8.dp)
                         .clip(RoundedCornerShape(10.dp)),
-                    color = green,
-                    trackColor = Color(0xFF0F2A1D)
+                    color = primaryGreen,
+                    trackColor = Color(0xFFE0EFE7)
                 )
 
                 Spacer(Modifier.height(6.dp))
                 Text(
                     "7 ruangan tersisa dalam antrean",
-                    color = Color(0xFF9BA5A0),
+                    color = grayText,
                     fontSize = 12.sp
                 )
             }
@@ -167,7 +178,7 @@ fun HomeScreen(nav: NavHostController) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .background(blue, RoundedCornerShape(18.dp))
+                        .background(primaryGreen, RoundedCornerShape(18.dp))
                         .clickable { nav.navigate(Routes.SCAN) }
                         .padding(vertical = 22.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -186,6 +197,7 @@ fun HomeScreen(nav: NavHostController) {
                     modifier = Modifier
                         .weight(1f)
                         .background(card, RoundedCornerShape(18.dp))
+                        .border(1.dp, borderSoft, RoundedCornerShape(18.dp))
                         .clickable { nav.navigate(Routes.HISTORY) }
                         .padding(vertical = 22.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -197,7 +209,7 @@ fun HomeScreen(nav: NavHostController) {
                         modifier = Modifier.size(26.dp)
                     )
                     Spacer(Modifier.height(8.dp))
-                    Text("Laporan Masuk", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text("Laporan Masuk", color = darkText, fontWeight = FontWeight.Bold)
                     Text("3 Perlu Tindakan", color = orange, fontSize = 12.sp)
                 }
             }
@@ -209,10 +221,10 @@ fun HomeScreen(nav: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Laporan Terbaru", color = Color.White, fontWeight = FontWeight.Bold)
+                Text("Laporan Terbaru", color = darkText, fontWeight = FontWeight.Bold)
                 Text(
                     "Lihat Semua",
-                    color = green,
+                    color = primaryGreen,
                     fontSize = 13.sp,
                     modifier = Modifier.clickable {
                         nav.navigate(Routes.HISTORY)
@@ -222,7 +234,7 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            RecentReportItem("Ruang 301", "Selesai • 10:45", Color(0xFF2ECC71))
+            RecentReportItem("Ruang 301", "Selesai • 10:45", primaryGreen)
         }
 
         item {
@@ -230,7 +242,7 @@ fun HomeScreen(nav: NavHostController) {
         }
 
         item {
-            RecentReportItem("Ruang 101", "Selesai • 08:12", Color(0xFF2ECC71))
+            RecentReportItem("Ruang 101", "Selesai • 08:12", primaryGreen)
         }
 
         item { Spacer(Modifier.height(30.dp)) }
@@ -243,13 +255,17 @@ fun HomeScreen(nav: NavHostController) {
 private fun TaskCard(
     title: String,
     subtitle: String,
-    indicatorColor: Color,
-    cardColor: Color
+    indicatorColor: Color
 ) {
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+    val borderSoft = Color(0xFFE0E0E0)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(cardColor, RoundedCornerShape(18.dp))
+            .background(Color.White, RoundedCornerShape(18.dp))
+            .border(1.dp, borderSoft, RoundedCornerShape(18.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -264,14 +280,14 @@ private fun TaskCard(
         Spacer(Modifier.width(12.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, color = Color.White, fontWeight = FontWeight.Bold)
-            Text(subtitle, color = Color(0xFF9BA5A0), fontSize = 12.sp)
+            Text(title, color = darkText, fontWeight = FontWeight.Bold)
+            Text(subtitle, color = grayText, fontSize = 12.sp)
         }
 
         Box(
             modifier = Modifier
                 .size(22.dp)
-                .border(2.dp, Color(0xFF3C4B44), CircleShape)
+                .border(2.dp, Color(0xFFE0E0E0), CircleShape)
         )
     }
 }
@@ -282,10 +298,15 @@ private fun RecentReportItem(
     subtitle: String,
     statusColor: Color
 ) {
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+    val borderSoft = Color(0xFFE0E0E0)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF14231C), RoundedCornerShape(16.dp))
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .border(1.dp, borderSoft, RoundedCornerShape(16.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -296,9 +317,9 @@ private fun RecentReportItem(
         )
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
-            Text(title, color = Color.White, fontWeight = FontWeight.SemiBold)
-            Text(subtitle, color = Color(0xFF9BA5A0), fontSize = 12.sp)
+            Text(title, color = darkText, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = grayText, fontSize = 12.sp)
         }
-        Text("›", color = Color(0xFF5F6F67), fontSize = 28.sp)
+        Text("›", color = grayText, fontSize = 26.sp)
     }
 }

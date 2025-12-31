@@ -17,6 +17,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,23 +25,32 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.cleanfypab.ui.navigation.Routes
 
-/* ================= WARNA ================= */
-val BG_DARK = Color(0xFF071A12)
-val CARD_DARK = Color(0xFF0F2A1D)
-val GREEN_ACCENT = Color(0xFF00E676)
-val GRAY_TEXT = Color(0xFF9BA5A0)
-val WHITE = Color.White
-
 @Composable
 fun ProfileScreen(nav: NavHostController) {
 
     var notificationEnabled by remember { mutableStateOf(true) }
 
+    /* ===== PALET WARNA CLEANIFY (LIGHT) ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardSoft = Color(0xFFF2F7F4)
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(BG_DARK)
-            .verticalScroll(rememberScrollState()) // ✅ FIX SCROLL
+            .background(bgGradient)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
 
@@ -52,7 +62,7 @@ fun ProfileScreen(nav: NavHostController) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Kembali",
-                tint = WHITE,
+                tint = darkText,
                 modifier = Modifier
                     .size(28.dp)
                     .clickable { nav.popBackStack() }
@@ -64,7 +74,7 @@ fun ProfileScreen(nav: NavHostController) {
                 text = "Profil",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                color = WHITE
+                color = darkText
             )
         }
 
@@ -80,14 +90,14 @@ fun ProfileScreen(nav: NavHostController) {
                 modifier = Modifier
                     .size(120.dp)
                     .clip(CircleShape)
-                    .background(CARD_DARK)
-                    .border(4.dp, GREEN_ACCENT, CircleShape),
+                    .background(cardSoft)
+                    .border(4.dp, primaryGreen, CircleShape),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Icons.Default.Person,
                     contentDescription = "Foto Profil",
-                    tint = GRAY_TEXT,
+                    tint = grayText,
                     modifier = Modifier.size(70.dp)
                 )
             }
@@ -98,13 +108,13 @@ fun ProfileScreen(nav: NavHostController) {
                 "Raffi Andika Awal",
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = WHITE
+                color = darkText
             )
 
             Text(
                 "Petugas Pemeriksa Ruangan",
                 fontSize = 16.sp,
-                color = GRAY_TEXT
+                color = grayText
             )
 
             Spacer(Modifier.height(10.dp))
@@ -113,7 +123,7 @@ fun ProfileScreen(nav: NavHostController) {
                 "Ubah Profil",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = GREEN_ACCENT,
+                color = primaryGreen,
                 modifier = Modifier.clickable {
                     nav.navigate(Routes.EDIT_PROFILE)
                 }
@@ -127,13 +137,13 @@ fun ProfileScreen(nav: NavHostController) {
             "PENGATURAN",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = GRAY_TEXT
+            color = grayText
         )
 
         Spacer(Modifier.height(10.dp))
 
-        SettingsCard {
-            SettingsItem(
+        SettingsCardLight {
+            SettingsItemLight(
                 icon = Icons.Default.Notifications,
                 title = "Notifikasi",
                 trailing = {
@@ -141,27 +151,33 @@ fun ProfileScreen(nav: NavHostController) {
                         checked = notificationEnabled,
                         onCheckedChange = { notificationEnabled = it },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = WHITE,
-                            checkedTrackColor = GREEN_ACCENT
+                            checkedThumbColor = Color.White,
+                            checkedTrackColor = primaryGreen
                         )
                     )
-                }
+                },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
 
-            Divider(color = Color(0xFF173327))
+            Divider(color = borderSoft)
 
-            SettingsItem(
+            SettingsItemLight(
                 icon = Icons.Default.DarkMode,
                 title = "Tampilan",
-                trailing = { ArrowIcon() }
+                trailing = { ArrowIconLight(grayText) },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
 
-            Divider(color = Color(0xFF173327))
+            Divider(color = borderSoft)
 
-            SettingsItem(
+            SettingsItemLight(
                 icon = Icons.Default.Language,
                 title = "Bahasa",
-                trailing = { ArrowIcon() }
+                trailing = { ArrowIconLight(grayText) },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
         }
 
@@ -172,32 +188,38 @@ fun ProfileScreen(nav: NavHostController) {
             "AKUN",
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
-            color = GRAY_TEXT
+            color = grayText
         )
 
         Spacer(Modifier.height(10.dp))
 
-        SettingsCard {
-            SettingsItem(
+        SettingsCardLight {
+            SettingsItemLight(
                 icon = Icons.Default.Lock,
                 title = "Ganti Kata Sandi",
-                trailing = { ArrowIcon() }
+                trailing = { ArrowIconLight(grayText) },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
 
-            Divider(color = Color(0xFF173327))
+            Divider(color = borderSoft)
 
-            SettingsItem(
+            SettingsItemLight(
                 icon = Icons.Default.Security,
                 title = "Kebijakan Privasi",
-                trailing = { ArrowIcon() }
+                trailing = { ArrowIconLight(grayText) },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
 
-            Divider(color = Color(0xFF173327))
+            Divider(color = borderSoft)
 
-            SettingsItem(
+            SettingsItemLight(
                 icon = Icons.Default.Description,
                 title = "Syarat & Ketentuan",
-                trailing = { ArrowIcon() }
+                trailing = { ArrowIconLight(grayText) },
+                primaryGreen = primaryGreen,
+                darkText = darkText
             )
         }
 
@@ -214,13 +236,13 @@ fun ProfileScreen(nav: NavHostController) {
                 .fillMaxWidth()
                 .height(55.dp),
             shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = GREEN_ACCENT)
+            colors = ButtonDefaults.buttonColors(containerColor = primaryGreen)
         ) {
             Text(
                 "Keluar",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = BG_DARK
+                color = Color.White
             )
         }
 
@@ -228,24 +250,27 @@ fun ProfileScreen(nav: NavHostController) {
     }
 }
 
-/* ================= KOMPONEN ================= */
+/* ================= KOMPONEN (LIGHT) ================= */
 
 @Composable
-fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
+fun SettingsCardLight(content: @Composable ColumnScope.() -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(CARD_DARK, RoundedCornerShape(16.dp))
+            .background(Color.White, RoundedCornerShape(16.dp))
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(16.dp))
             .padding(4.dp),
         content = content
     )
 }
 
 @Composable
-fun SettingsItem(
+fun SettingsItemLight(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
-    trailing: @Composable (() -> Unit)? = null
+    trailing: @Composable (() -> Unit)? = null,
+    primaryGreen: Color,
+    darkText: Color
 ) {
     Row(
         modifier = Modifier
@@ -253,18 +278,23 @@ fun SettingsItem(
             .padding(14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, contentDescription = title, tint = GREEN_ACCENT)
+        Icon(icon, contentDescription = title, tint = primaryGreen)
         Spacer(Modifier.width(16.dp))
-        Text(title, fontSize = 18.sp, color = WHITE, modifier = Modifier.weight(1f))
+        Text(
+            title,
+            fontSize = 18.sp,
+            color = darkText,
+            modifier = Modifier.weight(1f)
+        )
         trailing?.invoke()
     }
 }
 
 @Composable
-fun ArrowIcon() {
+fun ArrowIconLight(color: Color) {
     Icon(
         Icons.AutoMirrored.Filled.KeyboardArrowRight,
         contentDescription = "Lanjut",
-        tint = GRAY_TEXT
+        tint = color
     )
 }

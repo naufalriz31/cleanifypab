@@ -1,6 +1,7 @@
 package com.example.cleanfypab.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -28,11 +30,24 @@ fun ReportHistoryScreen(
     rooms: List<RoomModel>
 ) {
 
-    val bg = Color(0xFF0D1F15)
-    val card = Color(0xFF14231C)
-    val cardSoft = Color(0xFF1F2C25)
-    val green = Color(0xFF00E676)
-    val textSecondary = Color(0xFF9BA5A0)
+    /* ===== PALET WARNA (SESUAI LOGIN / HOME) ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardSoft = Color(0xFFF2F7F4)
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val orange = Color(0xFFE67E22)
+    val red = Color(0xFFE74C3C)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     var selectedTab by remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
@@ -52,7 +67,7 @@ fun ReportHistoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(bg)
+            .background(bgGradient)
             .padding(16.dp)
     ) {
 
@@ -64,12 +79,12 @@ fun ReportHistoryScreen(
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Kembali",
-                    tint = Color.White
+                    tint = darkText
                 )
             }
             Text(
                 "Riwayat Laporan",
-                color = Color.White,
+                color = darkText,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -82,22 +97,25 @@ fun ReportHistoryScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .background(cardSoft, RoundedCornerShape(14.dp)),
+                .background(cardSoft, RoundedCornerShape(14.dp))
+                .border(1.dp, borderSoft, RoundedCornerShape(14.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 placeholder = {
-                    Text("Cari ruangan...", color = textSecondary)
+                    Text("Cari ruangan...", color = grayText)
                 },
                 modifier = Modifier.weight(1f),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    cursorColor = Color.White,
+                    cursorColor = primaryGreen,
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = darkText,
+                    unfocusedTextColor = darkText
                 ),
                 singleLine = true
             )
@@ -107,13 +125,14 @@ fun ReportHistoryScreen(
                     .padding(horizontal = 12.dp)
                     .size(32.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(card),
+                    .background(card)
+                    .border(1.dp, borderSoft, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Icons.Default.FilterList,
                     contentDescription = "Filter",
-                    tint = Color.White
+                    tint = darkText
                 )
             }
         }
@@ -130,14 +149,21 @@ fun ReportHistoryScreen(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(30.dp))
-                        .background(if (selected) green else cardSoft)
+                        .background(
+                            if (selected) primaryGreen.copy(alpha = 0.15f) else card
+                        )
+                        .border(
+                            1.dp,
+                            if (selected) primaryGreen else borderSoft,
+                            RoundedCornerShape(30.dp)
+                        )
                         .clickable { selectedTab = index }
                         .padding(horizontal = 16.dp, vertical = 10.dp)
                 ) {
                     Text(
                         title,
                         fontSize = 14.sp,
-                        color = if (selected) Color.Black else Color.White,
+                        color = if (selected) primaryGreen else darkText,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -149,7 +175,7 @@ fun ReportHistoryScreen(
         /* ===== DAFTAR LAPORAN ===== */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(filteredRooms) { room ->
-                ReportHistoryItem(room) {
+                ReportHistoryItemLight(room) {
                     nav.navigate("detail/${room.id}")
                 }
             }
@@ -157,8 +183,10 @@ fun ReportHistoryScreen(
     }
 }
 
+/* ================= ITEM ================= */
+
 @Composable
-private fun ReportHistoryItem(
+private fun ReportHistoryItemLight(
     room: RoomModel,
     onClick: () -> Unit
 ) {
@@ -170,15 +198,21 @@ private fun ReportHistoryItem(
         else -> Color.Gray
     }
 
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+    val borderSoft = Color(0xFFE0E0E0)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF14231C)),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .border(1.dp, borderSoft, RoundedCornerShape(16.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
@@ -186,10 +220,10 @@ private fun ReportHistoryItem(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFF1F2C25)),
+                    .background(Color(0xFFF2F7F4)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("▣", color = Color.White, fontSize = 22.sp)
+                Text("▣", color = darkText, fontSize = 22.sp)
             }
 
             Spacer(Modifier.width(16.dp))
@@ -197,13 +231,13 @@ private fun ReportHistoryItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     room.name,
-                    color = Color.White,
+                    color = darkText,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
                     room.time,
-                    color = Color(0xFF9BA5A0),
+                    color = grayText,
                     fontSize = 13.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -213,7 +247,7 @@ private fun ReportHistoryItem(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(30.dp))
-                    .background(statusColor.copy(alpha = 0.2f))
+                    .background(statusColor.copy(alpha = 0.15f))
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
@@ -225,7 +259,7 @@ private fun ReportHistoryItem(
             }
 
             Spacer(Modifier.width(6.dp))
-            Text("›", color = Color(0xFF5F6F67), fontSize = 26.sp)
+            Text("›", color = grayText, fontSize = 26.sp)
         }
     }
 }

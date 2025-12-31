@@ -3,6 +3,7 @@ package com.example.cleanfypab.ui.screen
 import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,17 +25,28 @@ fun SuccessStatusPopupScreen(nav: NavHostController) {
         nav.popBackStack()
     }
 
+    /* ===== PALET WARNA CLEANIFY ===== */
+    val overlay = Color(0x55000000)
+    val card = Color.White
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0x55000000)),
+            .background(overlay),
         contentAlignment = Alignment.Center
     ) {
 
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF0E0F0E)),
-            modifier = Modifier.padding(24.dp)
+            colors = CardDefaults.cardColors(containerColor = card),
+            modifier = Modifier
+                .padding(24.dp)
+                .border(1.dp, borderSoft, RoundedCornerShape(20.dp))
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
@@ -44,7 +56,7 @@ fun SuccessStatusPopupScreen(nav: NavHostController) {
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Berhasil",
-                    tint = Color(0xFF00E676),
+                    tint = primaryGreen,
                     modifier = Modifier.size(80.dp)
                 )
 
@@ -52,12 +64,15 @@ fun SuccessStatusPopupScreen(nav: NavHostController) {
 
                 Text(
                     "Status Berhasil Diperbarui!",
-                    color = Color.White,
+                    color = darkText,
                     fontSize = 22.sp
                 )
+
+                Spacer(Modifier.height(4.dp))
+
                 Text(
                     "Menyimpan laporan Anda...",
-                    color = Color(0xFFB8C3BD),
+                    color = grayText,
                     fontSize = 14.sp
                 )
             }

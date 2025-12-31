@@ -6,9 +6,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.ui.unit.dp
 import com.example.cleanfypab.ui.navigation.Routes
 
 @Composable
@@ -18,8 +19,15 @@ fun BottomNavigationBar(navController: NavController) {
         ?.destination
         ?.route
 
+    // 🎨 WARNA NETRAL
+    val navBg = Color(0xFFF5F7F6)
+    val activeColor = Color(0xFF1E2D28)     // teks/icon aktif
+    val inactiveColor = Color(0xFF8A9A94)   // teks/icon non-aktif
+    val indicatorColor = Color(0xFFE1E6E4)  // background tab aktif
+
     NavigationBar(
-        containerColor = Color(0xFF07120D)
+        containerColor = navBg,
+        tonalElevation = 8.dp
     ) {
 
         NavigationBarItem(
@@ -32,7 +40,7 @@ fun BottomNavigationBar(navController: NavController) {
             },
             icon = { Icon(Icons.Default.Home, contentDescription = "Dashboard") },
             label = { Text("Dashboard") },
-            colors = navColors()
+            colors = navItemColors(activeColor, inactiveColor, indicatorColor)
         )
 
         NavigationBarItem(
@@ -42,9 +50,9 @@ fun BottomNavigationBar(navController: NavController) {
                     launchSingleTop = true
                 }
             },
-            icon = { Icon(Icons.Default.List, contentDescription = "Reports") },
+            icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = "Reports") },
             label = { Text("Reports") },
-            colors = navColors()
+            colors = navItemColors(activeColor, inactiveColor, indicatorColor)
         )
 
         NavigationBarItem(
@@ -56,7 +64,7 @@ fun BottomNavigationBar(navController: NavController) {
             },
             icon = { Icon(Icons.Default.QrCodeScanner, contentDescription = "Scan") },
             label = { Text("Scan") },
-            colors = navColors()
+            colors = navItemColors(activeColor, inactiveColor, indicatorColor)
         )
 
         NavigationBarItem(
@@ -68,16 +76,20 @@ fun BottomNavigationBar(navController: NavController) {
             },
             icon = { Icon(Icons.Default.Settings, contentDescription = "Profile") },
             label = { Text("Profile") },
-            colors = navColors()
+            colors = navItemColors(activeColor, inactiveColor, indicatorColor)
         )
     }
 }
 
 @Composable
-private fun navColors() = NavigationBarItemDefaults.colors(
-    selectedIconColor = Color.Black,
-    selectedTextColor = Color.Black,
-    unselectedIconColor = Color.White,
-    unselectedTextColor = Color.White,
-    indicatorColor = Color(0xFF00E676)
+private fun navItemColors(
+    active: Color,
+    inactive: Color,
+    indicator: Color
+) = NavigationBarItemDefaults.colors(
+    selectedIconColor = active,
+    selectedTextColor = active,
+    unselectedIconColor = inactive,
+    unselectedTextColor = inactive,
+    indicatorColor = indicator
 )

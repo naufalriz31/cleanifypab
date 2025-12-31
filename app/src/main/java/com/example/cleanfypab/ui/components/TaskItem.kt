@@ -1,6 +1,7 @@
 package com.example.cleanfypab.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,13 +21,17 @@ fun TaskItem(
     onScanClick: () -> Unit
 ) {
 
-    // 🎨 WARNA KONSISTEN DENGAN HOME & REPORT
-    val cardColor = Color(0xFF14231C)
-    val mutedText = Color(0xFF9BA5A0)
-    val green = Color(0xFF00E676)
-    val orange = Color(0xFFFFA000)
-    val red = Color(0xFFE53935)
+    /* ===== WARNA LIGHT CLEANIFY ===== */
+    val cardColor = Color.White
+    val borderColor = Color(0xFFE0E0E0)
+
+    val green = Color(0xFF2ECC71)
+    val orange = Color(0xFFE67E22)
+    val red = Color(0xFFE74C3C)
     val blue = Color(0xFF2196F3)
+
+    val darkText = Color(0xFF1E2D28)
+    val mutedText = Color(0xFF6B7C75)
 
     val statusColor = when (room.status) {
         "Selesai" -> green
@@ -39,10 +44,9 @@ fun TaskItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = cardColor // ✅ INI KUNCI UTAMA
-        )
+        shape = RoundedCornerShape(18.dp),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
 
         Row(
@@ -52,12 +56,12 @@ fun TaskItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // LEFT — INFO
+            /* ===== INFO RUANGAN ===== */
             Column(modifier = Modifier.weight(1f)) {
 
                 Text(
                     room.name,
-                    color = Color.White,
+                    color = darkText,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
@@ -80,10 +84,16 @@ fun TaskItem(
                 )
             }
 
-            // RIGHT — SCAN BUTTON
+            /* ===== BUTTON SCAN ===== */
             Box(
                 modifier = Modifier
-                    .background(blue, RoundedCornerShape(10.dp))
+                    .background(
+                        if (room.status == "Selesai")
+                            Color(0xFFE0E0E0)
+                        else
+                            blue,
+                        RoundedCornerShape(10.dp)
+                    )
                     .clickable(enabled = room.status != "Selesai") {
                         onScanClick()
                     }
@@ -92,7 +102,10 @@ fun TaskItem(
             ) {
                 Text(
                     "Scan",
-                    color = Color.White,
+                    color = if (room.status == "Selesai")
+                        Color.Gray
+                    else
+                        Color.White,
                     fontWeight = FontWeight.Bold
                 )
             }

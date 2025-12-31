@@ -1,8 +1,8 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,71 +35,102 @@ fun UpdateStatusScreen(
 
     val roomName = vm.getRoomById(roomId)?.name ?: "Ruang #$roomId"
 
+    /* ===== PALET WARNA CLEANIFY ===== */
+    val bgGradient = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFF6FBF8),
+            Color(0xFFE9F5EE)
+        )
+    )
+
+    val card = Color.White
+    val cardSoft = Color(0xFFF2F7F4)
+    val borderSoft = Color(0xFFE0E0E0)
+
+    val primaryGreen = Color(0xFF2ECC71)
+    val yellow = Color(0xFFFFC107)
+    val red = Color(0xFFE53935)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF05150E))
+            .background(bgGradient)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp)
         ) {
-            Spacer(Modifier.height(40.dp))
 
+            Spacer(Modifier.height(16.dp))
+
+            /* ================= HEADER ================= */
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { nav.popBackStack() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Kembali",
-                        tint = Color.White
+                        tint = darkText
                     )
                 }
-                Text("Perbarui Status", color = Color.White, fontSize = 22.sp)
+                Text(
+                    "Perbarui Status",
+                    color = darkText,
+                    fontSize = 22.sp
+                )
             }
 
             Spacer(Modifier.height(20.dp))
 
+            /* ================= INFO RUANGAN ================= */
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(18.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF0A2018))
+                colors = CardDefaults.cardColors(containerColor = card),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
             ) {
                 Column(Modifier.padding(20.dp)) {
-                    Text("Nama Ruangan", color = Color(0xFF9BA5A0), fontSize = 14.sp)
-                    Text(roomName, color = Color.White, fontSize = 20.sp)
+                    Text("Nama Ruangan", color = grayText, fontSize = 14.sp)
+                    Text(roomName, color = darkText, fontSize = 20.sp)
                     Spacer(Modifier.height(12.dp))
-                    Text("Pemeriksaan Terakhir: -", color = Color(0xFF6F7B75), fontSize = 14.sp)
+                    Text(
+                        "Pemeriksaan Terakhir: -",
+                        color = grayText,
+                        fontSize = 14.sp
+                    )
                 }
             }
 
             Spacer(Modifier.height(30.dp))
 
-            Text("Pilih Status Ruangan", color = Color.White, fontSize = 18.sp)
+            Text("Pilih Status Ruangan", color = darkText, fontSize = 18.sp)
             Spacer(Modifier.height(16.dp))
 
-            StatusOptionCard(
+            StatusOptionCardLight(
                 title = "Sudah Dibersihkan",
                 description = "Ruangan telah dibersihkan dengan baik",
-                color = Color(0xFF4CAF50),
+                color = primaryGreen,
                 icon = Icons.Default.CheckCircle,
                 selected = selected == "cleaned",
                 onClick = { selected = "cleaned" }
             )
 
-            StatusOptionCard(
+            StatusOptionCardLight(
                 title = "Belum Dibersihkan",
                 description = "Ruangan belum dibersihkan",
-                color = Color(0xFFFFC107),
+                color = yellow,
                 icon = Icons.Default.Close,
                 selected = selected == "notyet",
                 onClick = { selected = "notyet" }
             )
 
-            StatusOptionCard(
+            StatusOptionCardLight(
                 title = "Perlu Pembersihan",
                 description = "Ruangan memerlukan pembersihan segera",
-                color = Color(0xFFE53935),
+                color = red,
                 icon = Icons.Default.Warning,
                 selected = selected == "issue",
                 onClick = { selected = "issue" }
@@ -106,6 +138,7 @@ fun UpdateStatusScreen(
 
             Spacer(Modifier.height(30.dp))
 
+            /* ================= BUTTON ================= */
             Button(
                 onClick = {
                     val status = when (selected) {
@@ -122,25 +155,31 @@ fun UpdateStatusScreen(
                     .fillMaxWidth()
                     .height(54.dp),
                 shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00E676))
+                colors = ButtonDefaults.buttonColors(containerColor = primaryGreen)
             ) {
-                Text("Kirim Status", color = Color.Black, fontSize = 18.sp)
+                Text(
+                    "Kirim Status",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
             }
         }
 
         if (showPopup) {
-            SuccessUpdatePopup(
-                onFinished = {
-                    showPopup = false
-                    nav.navigate("history")
-                }
-            )
+            SuccessUpdatePopupLight {
+                showPopup = false
+                nav.navigate("history")
+            }
         }
     }
 }
 
+/* ==================================================
+                STATUS OPTION CARD (LIGHT)
+================================================== */
+
 @Composable
-fun StatusOptionCard(
+fun StatusOptionCardLight(
     title: String,
     description: String,
     color: Color,
@@ -148,8 +187,11 @@ fun StatusOptionCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val bg = if (selected) color.copy(alpha = 0.15f) else Color(0xFF0F2A1D)
-    val borderColor = if (selected) color else Color(0xFF1E2D24)
+    val bg = if (selected) color.copy(alpha = 0.15f) else Color.White
+    val borderColor = if (selected) color else Color(0xFFE0E0E0)
+
+    val darkText = Color(0xFF1E2D28)
+    val grayText = Color(0xFF6B7C75)
 
     Card(
         modifier = Modifier
@@ -167,8 +209,8 @@ fun StatusOptionCard(
             Icon(icon, contentDescription = title, tint = color, modifier = Modifier.size(32.dp))
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
-                Text(title, color = Color.White, fontSize = 18.sp)
-                Text(description, color = Color(0xFF9BA5A0), fontSize = 13.sp)
+                Text(title, color = darkText, fontSize = 18.sp)
+                Text(description, color = grayText, fontSize = 13.sp)
             }
             if (selected) {
                 Icon(Icons.Default.CheckCircle, contentDescription = "Dipilih", tint = color)
@@ -177,8 +219,12 @@ fun StatusOptionCard(
     }
 }
 
+/* ==================================================
+                SUCCESS POPUP (LIGHT)
+================================================== */
+
 @Composable
-fun SuccessUpdatePopup(onFinished: () -> Unit) {
+fun SuccessUpdatePopupLight(onFinished: () -> Unit) {
     var visible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -202,7 +248,8 @@ fun SuccessUpdatePopup(onFinished: () -> Unit) {
             Card(
                 modifier = Modifier.align(Alignment.Center),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(Color(0xFF0E0F0E))
+                colors = CardDefaults.cardColors(Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
                     modifier = Modifier.padding(26.dp),
@@ -211,12 +258,20 @@ fun SuccessUpdatePopup(onFinished: () -> Unit) {
                     Icon(
                         Icons.Default.CheckCircle,
                         contentDescription = "Berhasil",
-                        tint = Color(0xFF00E676),
+                        tint = Color(0xFF2ECC71),
                         modifier = Modifier.size(80.dp)
                     )
                     Spacer(Modifier.height(10.dp))
-                    Text("Status Berhasil Diperbarui!", color = Color.White, fontSize = 22.sp)
-                    Text("Data berhasil disimpan.", color = Color(0xFFB8C3BD), fontSize = 14.sp)
+                    Text(
+                        "Status Berhasil Diperbarui!",
+                        color = Color(0xFF1E2D28),
+                        fontSize = 22.sp
+                    )
+                    Text(
+                        "Data berhasil disimpan.",
+                        color = Color(0xFF6B7C75),
+                        fontSize = 14.sp
+                    )
                 }
             }
         }

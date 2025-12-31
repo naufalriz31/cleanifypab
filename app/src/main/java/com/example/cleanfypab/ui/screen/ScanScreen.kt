@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -44,20 +45,27 @@ fun ScanScreen(nav: NavHostController) {
     var hasScanned by remember { mutableStateOf(false) }
     val previewView = remember { PreviewView(context) }
 
-    // ==== REQUEST CAMERA PERMISSION ====
+    /* ===== WARNA CLEANIFY ===== */
+    val primaryGreen = Color(0xFF2ECC71)
+    val darkOverlay = Color(0x66000000)
+    val whiteText = Color.White
+
+    /* ===== REQUEST CAMERA PERMISSION ===== */
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                (context as ComponentActivity),
+                context as ComponentActivity,
                 arrayOf(Manifest.permission.CAMERA),
                 0
             )
         }
     }
 
-    // ==== SETUP CAMERA ====
+    /* ===== SETUP CAMERA ===== */
     LaunchedEffect(Unit) {
 
         val preview = Preview.Builder().build().also {
@@ -65,7 +73,9 @@ fun ScanScreen(nav: NavHostController) {
         }
 
         val scannerOptions = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE)
+            .setBarcodeFormats(
+                com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE
+            )
             .build()
 
         val scanner = BarcodeScanning.getClient(scannerOptions)
@@ -111,7 +121,6 @@ fun ScanScreen(nav: NavHostController) {
         cameraProviderFuture.addListener(
             {
                 val cameraProvider = cameraProviderFuture.get()
-
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner,
@@ -124,40 +133,65 @@ fun ScanScreen(nav: NavHostController) {
         )
     }
 
-    // ==== UI ====
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
+    /* ================= UI ================= */
+    Box(modifier = Modifier.fillMaxSize()) {
 
+        // Kamera
         AndroidView(
             factory = { previewView },
             modifier = Modifier.fillMaxSize()
         )
 
+        // Overlay gelap tipis (biar teks kebaca)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(darkOverlay)
+        )
+
+        /* ===== HEADER ===== */
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .align(Alignment.TopCenter),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = Color.White
+                    tint = whiteText
                 )
             }
             Spacer(Modifier.width(10.dp))
-            Text("Scan QR Code", color = Color.White, fontSize = 20.sp)
+            Text(
+                "Scan QR Code",
+                color = whiteText,
+                fontSize = 20.sp
+            )
         }
 
+        /* ===== FRAME SCAN ===== */
         Box(
             modifier = Modifier
                 .size(260.dp)
                 .align(Alignment.Center)
-                .border(3.dp, Color(0xFF00E676), RoundedCornerShape(20.dp))
+                .border(
+                    3.dp,
+                    primaryGreen,
+                    RoundedCornerShape(22.dp)
+                )
+        )
+
+        /* ===== HINT ===== */
+        Text(
+            "Arahkan QR Code ke dalam kotak",
+            color = whiteText,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 36.dp)
         )
     }
 }
