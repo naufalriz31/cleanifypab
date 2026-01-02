@@ -55,7 +55,7 @@ fun AdminProfileScreen(
 
         Spacer(Modifier.height(12.dp))
 
-        /* ================= HEADER ================= */
+        /* ================= HEADER (TETAP) ================= */
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -90,83 +90,90 @@ fun AdminProfileScreen(
 
         Spacer(Modifier.height(28.dp))
 
-        /* ================= AVATAR ================= */
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        /* ================= AVATAR (CENTER FIX – ISI SAMA) ================= */
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            Box(contentAlignment = Alignment.BottomEnd) {
+                Box(contentAlignment = Alignment.BottomEnd) {
 
-                Box(
-                    modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFFE9F5EE))
-                        .padding(6.dp)
-                ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .size(120.dp)
                             .clip(CircleShape)
-                            .background(cardColor),
+                            .background(Color(0xFFE9F5EE))
+                            .padding(6.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape)
+                                .background(cardColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.Person,
+                                null,
+                                tint = darkText,
+                                modifier = Modifier.size(56.dp)
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clip(CircleShape)
+                            .background(green),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            Icons.Default.Person,
+                            Icons.Default.Edit,
                             null,
-                            tint = darkText,
-                            modifier = Modifier.size(56.dp)
+                            tint = Color.White,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(green),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.Edit,
-                        null,
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
-                    )
-                }
-            }
+                Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                "Jane Doe",
-                color = darkText,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(Modifier.height(6.dp))
-
-            Surface(
-                color = green.copy(alpha = 0.15f),
-                shape = RoundedCornerShape(50)
-            ) {
                 Text(
-                    "SUPER ADMIN",
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
-                    color = green,
-                    fontSize = 12.sp,
+                    "Jane Doe",
+                    color = darkText,
+                    fontSize = 22.sp,
                     fontWeight = FontWeight.Bold
                 )
+
+                Spacer(Modifier.height(6.dp))
+
+                Surface(
+                    color = green.copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(50)
+                ) {
+                    Text(
+                        "SUPER ADMIN",
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                        color = green,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(8.dp))
+
+                Text("jane.doe@company.com", color = grayText, fontSize = 13.sp)
+                Text("Manajer Fasilitas Senior", color = grayText, fontSize = 13.sp)
             }
-
-            Spacer(Modifier.height(8.dp))
-
-            Text("jane.doe@company.com", color = grayText, fontSize = 13.sp)
-            Text("Manajer Fasilitas Senior", color = grayText, fontSize = 13.sp)
         }
 
         Spacer(Modifier.height(28.dp))
 
-        /* ================= STATS ================= */
+        /* ================= STATS (TETAP) ================= */
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -222,7 +229,7 @@ fun AdminProfileScreen(
     }
 }
 
-/* ================= COMPONENTS ================= */
+/* ================= COMPONENTS (TETAP) ================= */
 
 @Composable
 private fun StatBoxLight(

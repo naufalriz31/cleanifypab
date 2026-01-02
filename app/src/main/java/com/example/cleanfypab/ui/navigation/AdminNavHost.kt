@@ -4,28 +4,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.cleanfypab.ui.admin.*
 import com.example.cleanfypab.ui.components.admin.BottomNavigationAdmin
 
 @Composable
-fun AdminNavHost() {
+fun AdminNavHost(
+    rootNavController: NavHostController
+) {
 
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val adminNavController = rememberNavController()
+    val navBackStackEntry by adminNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
         bottomBar = {
             BottomNavigationAdmin(
-                navController = navController,
+                navController = adminNavController,
                 currentRoute = currentRoute
             )
         }
     ) { innerPadding ->
 
         NavHost(
-            navController = navController,
+            navController = adminNavController,
             startDestination = AdminRoutes.DASHBOARD,
             modifier = Modifier.padding(innerPadding)
         ) {
@@ -34,7 +37,7 @@ fun AdminNavHost() {
             composable(AdminRoutes.DASHBOARD) {
                 AdminDashboardScreen(
                     onNotificationClick = {
-                        navController.navigate(AdminRoutes.NOTIFICATIONS)
+                        adminNavController.navigate(AdminRoutes.NOTIFICATIONS)
                     }
                 )
             }
@@ -43,7 +46,7 @@ fun AdminNavHost() {
             composable(AdminRoutes.ROOMS) {
                 AdminRoomScreen(
                     onAddTask = {
-                        navController.navigate(AdminRoutes.CREATE_TASK)
+                        adminNavController.navigate(AdminRoutes.CREATE_TASK)
                     }
                 )
             }
@@ -52,7 +55,7 @@ fun AdminNavHost() {
             composable(AdminRoutes.REPORTS) {
                 AdminReportScreen(
                     onAssignClick = {
-                        navController.navigate(AdminRoutes.CREATE_TASK)
+                        adminNavController.navigate(AdminRoutes.CREATE_TASK)
                     }
                 )
             }
@@ -66,12 +69,12 @@ fun AdminNavHost() {
             composable(AdminRoutes.PROFILE) {
                 AdminProfileScreen(
                     onEdit = {
-                        navController.navigate(AdminRoutes.EDIT_PROFILE)
+                        adminNavController.navigate(AdminRoutes.EDIT_PROFILE)
                     },
                     onSignOut = {
-                        // ✅ LOGOUT → LOGIN SCREEN (BUKAN KELUAR APLIKASI)
-                        navController.navigate(Routes.LOGIN) {
-                            popUpTo(0) { inclusive = true } // hapus semua backstack
+                        // 🔥 LOGOUT ADMIN → LOGIN
+                        rootNavController.navigate(Routes.LOGIN) {
+                            popUpTo(Routes.ADMIN_ROOT) { inclusive = true }
                             launchSingleTop = true
                         }
                     }
@@ -81,17 +84,17 @@ fun AdminNavHost() {
             /* ================= EDIT PROFILE ================= */
             composable(AdminRoutes.EDIT_PROFILE) {
                 AdminEditProfileScreen(
-                    onBack = { navController.popBackStack() },
-                    onSave = { navController.popBackStack() }
+                    onBack = { adminNavController.popBackStack() },
+                    onSave = { adminNavController.popBackStack() }
                 )
             }
 
             /* ================= NOTIFICATIONS ================= */
             composable(AdminRoutes.NOTIFICATIONS) {
                 AdminNotificationScreen(
-                    onBack = { navController.popBackStack() },
+                    onBack = { adminNavController.popBackStack() },
                     onAssignTask = {
-                        navController.navigate(AdminRoutes.CREATE_TASK)
+                        adminNavController.navigate(AdminRoutes.CREATE_TASK)
                     }
                 )
             }
@@ -99,9 +102,9 @@ fun AdminNavHost() {
             /* ================= CREATE TASK ================= */
             composable(AdminRoutes.CREATE_TASK) {
                 AdminCreateTaskScreen(
-                    onCancel = { navController.popBackStack() },
+                    onCancel = { adminNavController.popBackStack() },
                     onAssign = {
-                        navController.popBackStack(AdminRoutes.REPORTS, false)
+                        adminNavController.popBackStack(AdminRoutes.REPORTS, false)
                     }
                 )
             }
