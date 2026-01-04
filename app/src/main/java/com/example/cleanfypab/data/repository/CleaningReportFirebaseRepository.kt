@@ -7,6 +7,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CleaningReportFirebaseRepository {
 
@@ -36,8 +39,10 @@ class CleaningReportFirebaseRepository {
     }
 
     /**
-     * "Paling sempurna": Update status room + buat report dalam 1 batch.
-     * Jadi history & status pasti sinkron.
+     * ✅ Paling sinkron:
+     * - Buat 1 report history baru
+     * - Update status + time room
+     * Dalam 1 batch commit
      */
     suspend fun addReportAndUpdateRoom(
         report: CleaningReportDoc,
@@ -45,14 +50,19 @@ class CleaningReportFirebaseRepository {
     ) {
         val batch = FirebaseProvider.db.batch()
 
-        val reportRef = reportsCol.document() // auto id
+        val nowTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+        // report baru (id auto)
+        val reportRef = reportsCol.document()
         batch.set(reportRef, report.copy(id = ""))
 
+        // update room
         val roomRef = roomsCol.document(report.roomId.toString())
         batch.update(
             roomRef,
             mapOf(
                 "status" to newRoomStatus,
+                "time" to nowTime,
                 "updatedAt" to System.currentTimeMillis()
             )
         )

@@ -22,6 +22,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CleanifyApp() {
     val navController = rememberNavController()
+
+    // ✅ Cukup pakai 1 VM sesuai AppNavHost
     val vm: RoomViewModel = viewModel()
 
     MaterialTheme {

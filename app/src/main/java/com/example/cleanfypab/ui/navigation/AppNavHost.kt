@@ -2,20 +2,37 @@ package com.example.cleanfypab.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.cleanfypab.ui.components.BottomNavigationBar
-import com.example.cleanfypab.ui.screen.*
+import com.example.cleanfypab.ui.screen.EditProfileScreen
+import com.example.cleanfypab.ui.screen.EditReportScreen
+import com.example.cleanfypab.ui.screen.HomeScreen
+import com.example.cleanfypab.ui.screen.LoginScreen
+import com.example.cleanfypab.ui.screen.NotificationScreen
+import com.example.cleanfypab.ui.screen.ProfileScreen
+import com.example.cleanfypab.ui.screen.ReportHistoryScreen
+import com.example.cleanfypab.ui.screen.RoomDetailScreen
+import com.example.cleanfypab.ui.screen.ScanScreen
+import com.example.cleanfypab.ui.screen.TaskTodayScreen
+import com.example.cleanfypab.ui.screen.UpdateStatusScreen
 import com.example.cleanfypab.viewmodel.RoomViewModel
 
 @Composable
 fun AppNavHost(
     nav: NavHostController,
-    vm: RoomViewModel
+    vm: RoomViewModel,
+    // ✅ BIAR AMAN: kalau kamu pernah panggil rootNavController, tetap bisa.
+    // Kalau tidak dikirim, otomatis pakai nav.
+    rootNavController: NavHostController = nav
 ) {
-
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -63,8 +80,8 @@ fun AppNavHost(
 
             /* ================= ADMIN ROOT ================= */
             composable(Routes.ADMIN_ROOT) {
-                // ⬇️ PENTING: kirim root NavController
-                AdminNavHost(rootNavController = nav)
+                // AdminNavHost butuh rootNavController untuk logout balik ke LOGIN
+                AdminNavHost(rootNavController = rootNavController)
             }
 
             /* ================= PETUGAS ROOT ================= */

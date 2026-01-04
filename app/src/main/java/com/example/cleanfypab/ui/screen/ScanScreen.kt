@@ -1,10 +1,12 @@
+@file:OptIn(androidx.camera.core.ExperimentalGetImage::class)
+
 package com.example.cleanfypab.ui.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -21,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -31,41 +32,50 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import com.example.cleanfypab.data.model.CleaningReportDoc
+import com.example.cleanfypab.data.remote.FirebaseProvider
+import com.example.cleanfypab.data.repository.CleaningReportFirebaseRepository
+import com.example.cleanfypab.data.repository.RoomFirebaseRepository
+import com.example.cleanfypab.ui.navigation.Routes
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalGetImage::class)
 @Composable
 fun ScanScreen(nav: NavHostController) {
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+
+    // Repo langsung, supaya AppNavHost tidak perlu diubah
+    val roomRepo = remember { RoomFirebaseRepository() }
+    val reportRepo = remember { CleaningReportFirebaseRepository() }
 
     var hasScanned by remember { mutableStateOf(false) }
     val previewView = remember { PreviewView(context) }
+    var cameraProvider: ProcessCameraProvider? by remember { mutableStateOf(null) }
 
-    /* ===== WARNA CLEANIFY ===== */
-    val primaryGreen = Color(0xFF2ECC71)
-    val darkOverlay = Color(0x66000000)
-    val whiteText = Color.White
+    // Stop kamera saat keluar screen
+    DisposableEffect(Unit) {
+        onDispose { cameraProvider?.unbindAll() }
+    }
 
-    /* ===== REQUEST CAMERA PERMISSION ===== */
+    /* ================= PERMISSION ================= */
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                context as ComponentActivity,
+                (context as ComponentActivity),
                 arrayOf(Manifest.permission.CAMERA),
                 0
             )
         }
     }
 
-    /* ===== SETUP CAMERA ===== */
+    /* ================= CAMERA SETUP ================= */
     LaunchedEffect(Unit) {
 
         val preview = Preview.Builder().build().also {
@@ -73,9 +83,7 @@ fun ScanScreen(nav: NavHostController) {
         }
 
         val scannerOptions = BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(
-                com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE
-            )
+            .setBarcodeFormats(com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE)
             .build()
 
         val scanner = BarcodeScanning.getClient(scannerOptions)
@@ -98,31 +106,84 @@ fun ScanScreen(nav: NavHostController) {
 
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
-                    if (!hasScanned) {
-                        for (barcode in barcodes) {
-                            barcode.rawValue?.let { result ->
-                                val id = result.toIntOrNull()
-                                if (id != null) {
-                                    hasScanned = true
-                                    nav.navigate("detail/$id") {
-                                        launchSingleTop = true
-                                    }
+                    if (hasScanned) return@addOnSuccessListener
+
+                    for (barcode in barcodes) {
+                        val raw = barcode.rawValue ?: continue
+                        val roomId = raw.toIntOrNull()
+
+                        if (roomId == null) {
+                            Toast.makeText(
+                                context,
+                                "QR tidak valid. QR harus berisi angka ID ruangan.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            continue
+                        }
+
+                        // cegah double scan
+                        hasScanned = true
+                        cameraProvider?.unbindAll()
+
+                        scope.launch {
+                            try {
+                                // getRoomById() di project kamu return Result<RoomDoc?>
+                                val room = roomRepo.getRoomById(roomId).getOrNull()
+                                val roomName = room?.name ?: "Ruang #$roomId"
+
+                                val uid = FirebaseProvider.auth.currentUser?.uid
+                                val email = FirebaseProvider.auth.currentUser?.email
+
+                                // ✅ Buat riwayat otomatis
+                                val report = CleaningReportDoc(
+                                    roomId = roomId,
+                                    roomName = roomName,
+                                    status = "Selesai",
+                                    note = "Update otomatis via QR Scan",
+                                    cleanerName = email,
+                                    updatedByUid = uid,
+                                    createdAt = System.currentTimeMillis()
+                                )
+
+                                // ✅ Batch: add report + update room status
+                                reportRepo.addReportAndUpdateRoom(report, "Selesai")
+
+                                Toast.makeText(
+                                    context,
+                                    "$roomName → Selesai (masuk Riwayat)",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                // ✅ Setelah scan langsung ke HISTORY (bukan detail)
+                                nav.navigate(Routes.HISTORY) {
+                                    launchSingleTop = true
+                                    popUpTo(Routes.SCAN) { inclusive = true }
                                 }
+
+                            } catch (e: Exception) {
+                                hasScanned = false
+                                Toast.makeText(
+                                    context,
+                                    "Gagal update: ${e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
+
+                        break
                     }
                 }
-                .addOnCompleteListener {
-                    imageProxy.close()
-                }
+                .addOnCompleteListener { imageProxy.close() }
         }
 
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-        cameraProviderFuture.addListener(
+        val future = ProcessCameraProvider.getInstance(context)
+        future.addListener(
             {
-                val cameraProvider = cameraProviderFuture.get()
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
+                val provider = future.get()
+                cameraProvider = provider
+
+                provider.unbindAll()
+                provider.bindToLifecycle(
                     lifecycleOwner,
                     CameraSelector.DEFAULT_BACK_CAMERA,
                     preview,
@@ -134,60 +195,46 @@ fun ScanScreen(nav: NavHostController) {
     }
 
     /* ================= UI ================= */
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
 
-        // Kamera
         AndroidView(
             factory = { previewView },
             modifier = Modifier.fillMaxSize()
         )
 
-        // Overlay gelap tipis (biar teks kebaca)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(darkOverlay)
-        )
-
-        /* ===== HEADER ===== */
+        // Top bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                .align(Alignment.TopCenter),
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { nav.popBackStack() }) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
-                    tint = whiteText
+                    tint = Color.White
                 )
             }
             Spacer(Modifier.width(10.dp))
-            Text(
-                "Scan QR Code",
-                color = whiteText,
-                fontSize = 20.sp
-            )
+            Text("Scan QR Code", color = Color.White, fontSize = 20.sp)
         }
 
-        /* ===== FRAME SCAN ===== */
+        // Frame scan
         Box(
             modifier = Modifier
                 .size(260.dp)
                 .align(Alignment.Center)
-                .border(
-                    3.dp,
-                    primaryGreen,
-                    RoundedCornerShape(22.dp)
-                )
+                .border(3.dp, Color(0xFF00E676), RoundedCornerShape(20.dp))
         )
 
-        /* ===== HINT ===== */
         Text(
-            "Arahkan QR Code ke dalam kotak",
-            color = whiteText,
+            "Arahkan QR Code ke dalam kotak\nAuto selesai + masuk Riwayat",
+            color = Color.White,
             fontSize = 14.sp,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
