@@ -167,8 +167,8 @@ fun AdminDashboardScreen(
                 )
 
                 QuickActionCard(
-                    "Lihat Laporan",
-                    "5 masalah aktif",
+                    "Lihat Petugas",
+                    "10 petugas aktif",
                     Icons.AutoMirrored.Filled.List,
                     green,
                     cardColor,
