@@ -17,16 +17,17 @@ import com.example.cleanfypab.ui.navigation.Routes
 fun BottomNavigationBar(
     navController: NavController
 ) {
-
     val currentRoute = navController.currentBackStackEntry
         ?.destination
         ?.route
 
     /* ===== CLEANIFY LIGHT PALET (SAMA DENGAN ADMIN) ===== */
     val bg = Color.White
-    val green = Color(0xFF2ECC71)
     val inactive = Color(0xFF6B7C75)
     val borderTop = Color(0xFFE0E0E0)
+
+    // ✅ Warna aktif mengikuti halaman yang sedang dibuka
+    val activeColor = activeColorByRoute(currentRoute)
 
     Surface(
         color = bg,
@@ -37,7 +38,6 @@ fun BottomNavigationBar(
         NavigationBar(
             containerColor = bg
         ) {
-
             NavigationBarItem(
                 selected = currentRoute?.startsWith(Routes.HOME) == true,
                 onClick = {
@@ -53,7 +53,7 @@ fun BottomNavigationBar(
                     )
                 },
                 label = { Text("Dashboard") },
-                colors = navItemColors(green, inactive)
+                colors = navItemColors(activeColor, inactive)
             )
 
             NavigationBarItem(
@@ -70,7 +70,7 @@ fun BottomNavigationBar(
                     )
                 },
                 label = { Text("Reports") },
-                colors = navItemColors(green, inactive)
+                colors = navItemColors(activeColor, inactive)
             )
 
             NavigationBarItem(
@@ -87,7 +87,7 @@ fun BottomNavigationBar(
                     )
                 },
                 label = { Text("Scan") },
-                colors = navItemColors(green, inactive)
+                colors = navItemColors(activeColor, inactive)
             )
 
             NavigationBarItem(
@@ -104,9 +104,31 @@ fun BottomNavigationBar(
                     )
                 },
                 label = { Text("Profile") },
-                colors = navItemColors(green, inactive)
+                colors = navItemColors(activeColor, inactive)
             )
         }
+    }
+}
+
+/* ================= ROUTE -> COLOR MAPPING ================ */
+/**
+ * Atur warna aktif sesuai halaman.
+ * Tidak mengubah fungsi navigasi, hanya menentukan warna highlight item.
+ */
+@Composable
+private fun activeColorByRoute(currentRoute: String?): Color {
+    // Kamu bebas ganti hex warnanya sesuai tema per halaman
+    val homeColor = Color(0xFF2ECC71)    // hijau
+    val historyColor = Color(0xFF3498DB) // biru
+    val scanColor = Color(0xFFF1C40F)    // kuning
+    val profileColor = Color(0xFFE67E22) // oranye
+
+    return when {
+        currentRoute?.startsWith(Routes.HOME) == true -> homeColor
+        currentRoute?.startsWith(Routes.HISTORY) == true -> historyColor
+        currentRoute?.startsWith(Routes.SCAN) == true -> scanColor
+        currentRoute?.startsWith(Routes.PROFILE) == true -> profileColor
+        else -> homeColor
     }
 }
 
