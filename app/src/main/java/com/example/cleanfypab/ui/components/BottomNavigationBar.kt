@@ -110,7 +110,7 @@ fun BottomNavigationBar(
     }
 }
 
-/* ================= HELPER ================= */
+/* ================= HELPER ================ */
 
 @Composable
 private fun navItemColors(
