@@ -3,48 +3,57 @@ package com.example.cleanfypab.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleanfypab.data.repository.FirebaseAuthRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 data class AuthUiState(
     val loading: Boolean = false,
     val error: String? = null,
-    val role: String? = null,  // "admin"/"petugas"
-    val loggedIn: Boolean = false
+    val role: String? = null
 )
 
-class AuthViewModel(
-    private val repo: FirebaseAuthRepository = FirebaseAuthRepository()
-) : ViewModel() {
+class AuthViewModel : ViewModel() {
+
+    private val authRepo = FirebaseAuthRepository()
+    private val firestore = FirebaseFirestore.getInstance()
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState
 
-    fun login(identifierOrEmail: String, password: String) {
-        _uiState.update { it.copy(loading = true, error = null, role = null, loggedIn = false) }
-
+    fun login(email: String, password: String) {
         viewModelScope.launch {
-            when (val res = repo.login(identifierOrEmail, password)) {
-                is FirebaseAuthRepository.LoginResult.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            loading = false,
-                            loggedIn = true,
-                            role = res.role
-                        )
-                    }
+            _uiState.value = AuthUiState(loading = true)
+
+            try {
+                val user = authRepo.signIn(email, password)
+                val uid = user.uid
+
+                val snap = firestore.collection("users").document(uid).get().await()
+                val role = snap.getString("role")
+
+                if (role.isNullOrBlank()) {
+                    _uiState.value = AuthUiState(
+                        loading = false,
+                        error = "Role belum diset di Firestore untuk akun ini."
+                    )
+                    return@launch
                 }
 
-                is FirebaseAuthRepository.LoginResult.Error -> {
-                    _uiState.update { it.copy(loading = false, error = res.message) }
-                }
+                _uiState.value = AuthUiState(loading = false, role = role)
+            } catch (e: Exception) {
+                _uiState.value = AuthUiState(
+                    loading = false,
+                    error = authRepo.readableError(e)
+                )
             }
         }
     }
 
-    fun consumeLogin() {
-        _uiState.update { it.copy(loggedIn = false) }
+    fun logout() {
+        authRepo.signOut()
+        _uiState.value = AuthUiState()
     }
 }

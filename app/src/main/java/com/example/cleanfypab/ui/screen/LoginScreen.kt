@@ -47,12 +47,10 @@ fun LoginScreen(
         )
     )
 
-    LaunchedEffect(state.loggedIn) {
-        if (state.loggedIn) {
-            val role = state.role ?: "petugas"
-            vm.consumeLogin()
-            onLoginSuccess(role)
-        }
+    // ✅ Redirect setelah berhasil login (role sudah didapat dari Firestore)
+    LaunchedEffect(state.role) {
+        val role = state.role ?: return@LaunchedEffect
+        onLoginSuccess(role)
     }
 
     Box(
@@ -78,7 +76,6 @@ fun LoginScreen(
                     .size(250.dp)
                     .padding(bottom = 4.dp)
             )
-
 
             Text(
                 text = "CLEANIFY",
@@ -127,7 +124,8 @@ fun LoginScreen(
                         ),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(14.dp),
-                        enabled = !state.loading
+                        enabled = !state.loading,
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(16.dp))
@@ -162,7 +160,8 @@ fun LoginScreen(
                         ),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(14.dp),
-                        enabled = !state.loading
+                        enabled = !state.loading,
+                        singleLine = true
                     )
 
                     Spacer(Modifier.height(8.dp))
@@ -172,13 +171,13 @@ fun LoginScreen(
                         color = primaryGreen,
                         modifier = Modifier
                             .align(Alignment.End)
-                            .clickable { }
+                            .clickable { /* TODO: reset password */ }
                     )
 
                     if (state.error != null) {
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            state.error!!,
+                            text = state.error!!,
                             color = Color.Red,
                             fontSize = 13.sp
                         )
@@ -192,9 +191,7 @@ fun LoginScreen(
                             .fillMaxWidth()
                             .height(50.dp),
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = primaryGreen
-                        ),
+                        colors = ButtonDefaults.buttonColors(containerColor = primaryGreen),
                         enabled = !state.loading
                     ) {
                         Text(

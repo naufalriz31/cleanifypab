@@ -49,6 +49,20 @@ configurations.all {
 }
 
 dependencies {
+    // QR Generator (ZXing embedded)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+// Print helper
+    implementation("androidx.print:print:1.1.0")
+
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
+
+    // Coroutine await() untuk Firebase tasks
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // ===== Compose BOM =====
     implementation(platform(libs.androidx.compose.bom))
@@ -76,21 +90,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
 
 
+
+
     // ✅ WAJIB: Guava asli (berisi com.google.common.util.concurrent.ListenableFuture)
     implementation("com.google.guava:guava:33.2.1-android")
 
     // ===== ML Kit =====
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
-    // ===== Firebase =====
-    implementation(platform("com.google.firebase:firebase-bom:34.7.0"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation("com.google.firebase:firebase-storage")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
+
+
 
     // ===== Testing =====
     testImplementation(libs.junit)

@@ -1,8 +1,10 @@
 package com.example.cleanfypab.data.model
 
 data class RoomModel(
-    val id: Int,
-    val name: String,
-    val status: String,
-    val time: String
+    val id: String = "",
+    val name: String = "",
+    val type: String = "",
+    val qrValue: String = "",
+    val status: String = "AVAILABLE",
+    val time: String = ""
 )

@@ -10,49 +10,53 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cleanfypab.data.model.PetugasFirestore
+import com.example.cleanfypab.viewmodel.admin.AdminPetugasViewModel
+import androidx.compose.foundation.BorderStroke
 
 @Composable
 fun AdminPetugasScreen(
-    onAddPetugas: () -> Unit
+    onAddTask: () -> Unit,                  // ✅ tombol +
+    onPetugasClick: (String) -> Unit = {},  // opsional: detail petugas
+    vm: AdminPetugasViewModel = viewModel()
 ) {
+    val state by vm.state.collectAsState()
 
     /* ===== WARNA CLEANIFY ===== */
-    val bgGradient = Brush.verticalGradient(
-        listOf(
-            Color(0xFFF6FBF8),
-            Color(0xFFE9F5EE)
-        )
-    )
-
-    val green = Color(0xFF2ECC71)
-    val blue = Color(0xFF3498DB)
-    val yellow = Color(0xFFF1C40F)
-
-    val cardColor = Color.White
+    val bgGradient = Brush.verticalGradient(listOf(Color(0xFFF6FBF8), Color(0xFFE9F5EE)))
+    val card = Color.White
     val borderSoft = Color(0xFFE0E0E0)
+    val green = Color(0xFF2ECC71)
     val darkText = Color(0xFF1E2D28)
     val grayText = Color(0xFF6B7C75)
 
-    var search by remember { mutableStateOf("") }
-    var selectedFilter by remember { mutableStateOf("ALL") }
+    var searchQuery by remember { mutableStateOf("") }
+    var selectedFilter by remember { mutableStateOf("ALL") } // ALL / ACTIVE / INACTIVE
 
-    val petugasList = listOf(
-        Petugas("Ahmad Fauzi", "Petugas Kebersihan", "Aktif"),
-        Petugas("Rina Aulia", "Supervisor", "Bertugas"),
-        Petugas("Budi Santoso", "Petugas Kebersihan", "Cuti")
-    )
+    LaunchedEffect(Unit) { vm.loadPetugas() }
+
+    val filtered = state.petugas
+        .filter { p -> p.name.contains(searchQuery, ignoreCase = true) || p.id.contains(searchQuery, ignoreCase = true) }
+        .filter { p ->
+            when (selectedFilter) {
+                "ACTIVE" -> p.active
+                "INACTIVE" -> !p.active
+                else -> true
+            }
+        }
 
     Column(
         modifier = Modifier
@@ -67,20 +71,26 @@ fun AdminPetugasScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                "Manajemen Petugas",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = darkText
-            )
+            Column {
+                Text(
+                    "Manajemen Petugas",
+                    color = darkText,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    "Assign tugas ke petugas",
+                    color = grayText,
+                    fontSize = 13.sp
+                )
+            }
 
             FloatingActionButton(
-                onClick = onAddPetugas,
+                onClick = onAddTask,
                 containerColor = green,
-                modifier = Modifier.size(48.dp),
-                shape = CircleShape
+                modifier = Modifier.size(48.dp)
             ) {
-                Icon(Icons.Default.Add, null, tint = Color.White)
+                Icon(Icons.Default.Add, contentDescription = "Tambah Task", tint = Color.White)
             }
         }
 
@@ -88,82 +98,63 @@ fun AdminPetugasScreen(
 
         /* ================= SEARCH ================= */
         OutlinedTextField(
-            value = search,
-            onValueChange = { search = it },
-            placeholder = { Text("Cari nama atau role petugas...") },
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            placeholder = { Text("Cari petugas (nama/uid)...") },
             leadingIcon = { Icon(Icons.Default.Search, null) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = cardColor,
-                unfocusedContainerColor = cardColor,
+                focusedContainerColor = card,
+                unfocusedContainerColor = card,
                 focusedBorderColor = green,
                 unfocusedBorderColor = borderSoft,
                 cursorColor = green
-            )
+            ),
+            singleLine = true
         )
 
-        Spacer(Modifier.height(20.dp))
-
-        /* ================= OVERVIEW (SAMA DENGAN ROOMS) ================= */
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            OverviewCardPetugas(
-                modifier = Modifier.weight(1f),
-                value = "15",
-                label = "Total Petugas",
-                icon = Icons.Default.Person,
-                accent = green
-            )
-            OverviewCardPetugas(
-                modifier = Modifier.weight(1f),
-                value = "10",
-                label = "Aktif",
-                icon = Icons.Default.Person,
-                accent = green
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            OverviewCardPetugas(
-                modifier = Modifier.weight(1f),
-                value = "3",
-                label = "Bertugas",
-                icon = Icons.Default.Work,
-                accent = blue
-            )
-            OverviewCardPetugas(
-                modifier = Modifier.weight(1f),
-                value = "2",
-                label = "Cuti",
-                icon = Icons.Default.Person,
-                accent = yellow
-            )
-        }
-
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(14.dp))
 
         /* ================= FILTER ================= */
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            FilterChipPetugas("ALL", "Semua", selectedFilter, green) { selectedFilter = "ALL" }
-            FilterChipPetugas("AKTIF", "Aktif", selectedFilter, green) { selectedFilter = "AKTIF" }
-            FilterChipPetugas("BERTUGAS", "Bertugas", selectedFilter, green) { selectedFilter = "BERTUGAS" }
-            FilterChipPetugas("CUTI", "Cuti", selectedFilter, green) { selectedFilter = "CUTI" }
+            FilterChipLight("Semua", selectedFilter == "ALL", green) { selectedFilter = "ALL" }
+            FilterChipLight("Aktif", selectedFilter == "ACTIVE", green) { selectedFilter = "ACTIVE" }
+            FilterChipLight("Nonaktif", selectedFilter == "INACTIVE", green) { selectedFilter = "INACTIVE" }
         }
 
         Spacer(Modifier.height(16.dp))
 
-        /* ================= LIST ================= */
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            items(petugasList) { petugas ->
-                PetugasItemLight(petugas, cardColor, darkText, grayText)
+        /* ================= STATE: LOADING / ERROR ================= */
+        if (state.loading) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                CircularProgressIndicator()
+            }
+            Spacer(Modifier.height(12.dp))
+        }
+
+        state.error?.let {
+            Text(it, color = Color.Red, fontSize = 13.sp)
+            Spacer(Modifier.height(8.dp))
+        }
+
+        if (!state.loading && filtered.isEmpty()) {
+            Text("Belum ada data petugas.", color = grayText)
+            return@Column
+        }
+
+        /* ================= LIST PETUGAS ================= */
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(filtered, key = { it.id }) { p ->
+                PetugasItemLight(
+                    petugas = p,
+                    card = card,
+                    border = borderSoft,
+                    green = green,
+                    darkText = darkText,
+                    grayText = grayText,
+                    onClick = { onPetugasClick(p.id) }
+                )
             }
             item { Spacer(Modifier.height(24.dp)) }
         }
@@ -173,103 +164,93 @@ fun AdminPetugasScreen(
 /* ================= KOMPONEN ================= */
 
 @Composable
-fun OverviewCardPetugas(
-    modifier: Modifier,
-    value: String,
+private fun FilterChipLight(
     label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    accent: Color
-) {
-    Row(
-        modifier = modifier
-            .background(Color.White, RoundedCornerShape(18.dp))
-            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(18.dp))
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(value, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text(label, color = accent, fontSize = 13.sp)
-        }
-        Icon(icon, null, tint = accent)
-    }
-}
-
-@Composable
-fun FilterChipPetugas(
-    filter: String,
-    label: String,
-    selected: String,
+    selected: Boolean,
     accent: Color,
     onClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .border(1.dp, accent, RoundedCornerShape(50))
-            .background(
-                if (selected == filter) accent.copy(alpha = 0.15f) else Color.Transparent,
-                RoundedCornerShape(50)
-            )
-            .clickable { onClick() }
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+    Surface(
+        color = if (selected) accent.copy(alpha = 0.15f) else Color.Transparent,
+        shape = RoundedCornerShape(50),
+        border = BorderStroke(1.dp, if (selected) accent else Color(0xFFE0E0E0)),
+        modifier = Modifier.clickable { onClick() }
     ) {
         Text(
             label,
-            color = if (selected == filter) accent else Color(0xFF1E2D28),
-            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+            color = if (selected) accent else Color(0xFF1E2D28),
+            fontWeight = FontWeight.SemiBold,
             fontSize = 12.sp
         )
     }
 }
 
 @Composable
-fun PetugasItemLight(
-    petugas: Petugas,
+private fun PetugasItemLight(
+    petugas: PetugasFirestore,
     card: Color,
+    border: Color,
+    green: Color,
     darkText: Color,
-    grayText: Color
+    grayText: Color,
+    onClick: () -> Unit
 ) {
+    val statusColor = if (petugas.active) green else Color(0xFFB0B0B0)
+    val statusText = if (petugas.active) "Aktif" else "Nonaktif"
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(card, RoundedCornerShape(20.dp))
-            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(20.dp))
+            .border(1.dp, border, RoundedCornerShape(20.dp))
+            .clickable { onClick() }
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Column {
-            Text(petugas.nama, fontWeight = FontWeight.Bold, color = darkText)
-            Text(petugas.role, fontSize = 13.sp, color = grayText)
+        Box(
+            modifier = Modifier
+                .size(46.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFF2F7F4))
+                .border(1.dp, border, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = petugas.name.take(1).uppercase(),
+                color = darkText,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        StatusBadge(petugas.status)
+        Spacer(Modifier.width(12.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                petugas.name.ifBlank { "Tanpa Nama" },
+                color = darkText,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                "UID: ${petugas.id.take(10)}...",
+                color = grayText,
+                fontSize = 12.sp
+            )
+        }
+
+        Surface(
+            color = statusColor.copy(alpha = 0.15f),
+            shape = RoundedCornerShape(50)
+        ) {
+            Text(
+                statusText,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                color = statusColor,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
-
-@Composable
-fun StatusBadge(status: String) {
-    val (bg, text) = when (status) {
-        "Aktif" -> Color(0xFFE8F8F0) to Color(0xFF2ECC71)
-        "Bertugas" -> Color(0xFFEAF2FB) to Color(0xFF3498DB)
-        else -> Color(0xFFFFF6E5) to Color(0xFFF1C40F)
-    }
-
-    Box(
-        modifier = Modifier
-            .background(bg, RoundedCornerShape(50))
-            .padding(horizontal = 14.dp, vertical = 6.dp)
-    ) {
-        Text(status, color = text, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-    }
-}
-
-/* ================= MODEL ================= */
-
-data class Petugas(
-    val nama: String,
-    val role: String,
-    val status: String
-)

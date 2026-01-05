@@ -1,10 +1,11 @@
 package com.example.cleanfypab.ui.admin
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,278 +13,198 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cleanfypab.data.model.PetugasFirestore
+import com.example.cleanfypab.data.model.RoomFirestore
+import com.example.cleanfypab.viewmodel.admin.AdminTaskViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminCreateTaskScreen(
-    onCancel: () -> Unit = {},
-    onAssign: () -> Unit = {}
+    onCancel: () -> Unit,
+    onAssign: () -> Unit,
+    vm: AdminTaskViewModel = viewModel()
 ) {
+    val state by vm.state.collectAsState()
 
-    /* ===== PALET SAMA DENGAN AdminRoomScreen ===== */
-    val bgGradient = Brush.verticalGradient(
-        listOf(
-            Color(0xFFF6FBF8),
-            Color(0xFFE9F5EE)
-        )
-    )
-
+    /* ===== STYLE CLEANIFY ===== */
+    val bgGradient = Brush.verticalGradient(listOf(Color(0xFFF6FBF8), Color(0xFFE9F5EE)))
     val card = Color.White
     val borderSoft = Color(0xFFE0E0E0)
-
     val green = Color(0xFF2ECC71)
     val darkText = Color(0xFF1E2D28)
     val grayText = Color(0xFF6B7C75)
 
-    var taskType by remember { mutableStateOf("ROOM") }
-    var title by remember { mutableStateOf("") }
-    var notes by remember { mutableStateOf("") }
-    var urgent by remember { mutableStateOf(false) }
+    var selectedPetugas by remember { mutableStateOf<PetugasFirestore?>(null) }
+    var selectedRoom by remember { mutableStateOf<RoomFirestore?>(null) }
+    var note by remember { mutableStateOf("") }
 
-    Box(
+    var petugasExpanded by remember { mutableStateOf(false) }
+    var roomExpanded by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { vm.loadData() }
+
+    // ✅ kalau sukses create task → balik
+    LaunchedEffect(state.success) {
+        if (state.success) {
+            vm.clearFlags()
+            onAssign()
+        }
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(bgGradient)
+            .padding(16.dp)
     ) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .padding(bottom = 90.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-
-            /* ================= HEADER ================= */
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Batal",
-                    color = green,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onCancel() }
-                )
-
-                Text(
-                    "Buat Tugas",
-                    color = darkText,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(Modifier.width(48.dp))
+        /* ===== HEADER ===== */
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            IconButton(onClick = onCancel) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Kembali", tint = darkText)
             }
-
-            Spacer(Modifier.height(24.dp))
-
-            SectionTitle("PENUGASAN")
-
-            CardWhite(borderSoft) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Person, null, tint = grayText)
-                    Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text("Pilih Petugas", color = darkText, fontWeight = FontWeight.Bold)
-                        Text("Siapa yang bertanggung jawab?", color = grayText, fontSize = 12.sp)
-                    }
-                    Icon(Icons.Default.ChevronRight, null, tint = grayText)
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            SectionTitle("KONTEKS & JENIS")
-
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                TypeChipLight("Spesifik Ruangan", taskType == "ROOM", green) {
-                    taskType = "ROOM"
-                }
-                TypeChipLight("Umum", taskType == "GENERAL", green) {
-                    taskType = "GENERAL"
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            CardWhite(borderSoft) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.MeetingRoom, null, tint = green)
-                    Spacer(Modifier.width(12.dp))
-                    Text("Cari Nomor Ruangan (mis. 101)", color = grayText)
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            SectionTitle("DETAIL TUGAS")
-
-            CardWhite(borderSoft) {
-                Text("JUDUL TUGAS", color = green, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                Spacer(Modifier.height(4.dp))
-
-                InputLight(
-                    value = title,
-                    placeholder = "mis. Perbaiki Unit AC",
-                    green = green,
-                    border = borderSoft
-                ) { title = it }
-
-                Spacer(Modifier.height(16.dp))
-
-                Text("CATATAN", color = grayText, fontSize = 12.sp)
-                Spacer(Modifier.height(4.dp))
-
-                InputLight(
-                    value = notes,
-                    placeholder = "Tambahkan instruksi detail...",
-                    height = 120.dp,
-                    green = green,
-                    border = borderSoft
-                ) { notes = it }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    Text("${notes.length}/200", color = grayText, fontSize = 12.sp)
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            SectionTitle("WAKTU & PRIORITAS")
-
-            CardWhite(borderSoft) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.CalendarToday, null, tint = green)
-                    Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text("Batas Waktu", color = darkText, fontWeight = FontWeight.Bold)
-                        Text("Besok, 10:00", color = grayText, fontSize = 12.sp)
-                    }
-                    Icon(Icons.Default.ChevronRight, null, tint = grayText)
-                }
-            }
-
-            Spacer(Modifier.height(12.dp))
-
-            CardWhite(borderSoft) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.PriorityHigh, null, tint = Color(0xFFFF6B6B))
-                    Spacer(Modifier.width(12.dp))
-                    Column(Modifier.weight(1f)) {
-                        Text("Prioritas Tinggi", color = darkText, fontWeight = FontWeight.Bold)
-                        Text("Tandai tugas ini sebagai mendesak", color = grayText, fontSize = 12.sp)
-                    }
-                    Switch(
-                        checked = urgent,
-                        onCheckedChange = { urgent = it },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = green,
-                            checkedTrackColor = green.copy(alpha = 0.4f)
-                        )
-                    )
-                }
-            }
-        }
-
-        /* ================= BUTTON ================= */
-        Button(
-            onClick = onAssign,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(16.dp)
-                .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = green),
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Icon(Icons.Default.CheckCircle, null, tint = Color.White)
-            Spacer(Modifier.width(8.dp))
             Text(
-                "Tetapkan Tugas",
-                color = Color.White,
-                fontWeight = FontWeight.Bold
+                "Assign Task",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = darkText
             )
         }
+
+        Spacer(Modifier.height(14.dp))
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = card),
+            shape = RoundedCornerShape(20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, borderSoft, RoundedCornerShape(20.dp))
+        ) {
+            Column(Modifier.padding(16.dp)) {
+
+                Text("Pilih Petugas & Ruangan", color = darkText, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(12.dp))
+
+                // ===== PETUGAS DROPDOWN =====
+                ExposedDropdownMenuBox(
+                    expanded = petugasExpanded,
+                    onExpandedChange = { petugasExpanded = !petugasExpanded }
+
+                ) {
+                    OutlinedTextField(
+                        value = selectedPetugas?.let { "${it.name}" } ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Petugas") },
+                        placeholder = { Text("Pilih petugas", color = grayText) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(),
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    ExposedDropdownMenu(
+                        expanded = petugasExpanded,
+                        onDismissRequest = { petugasExpanded = false }
+
+                    ) {
+                        state.petugas.forEach { p ->
+                            DropdownMenuItem(
+                                text = { Text("${p.name} ") },
+                                onClick = {
+                                    selectedPetugas = p
+                                    petugasExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                // ===== ROOM DROPDOWN =====
+                ExposedDropdownMenuBox(
+                    expanded = roomExpanded,
+                    onExpandedChange = { roomExpanded = !roomExpanded }
+                ) {
+                    OutlinedTextField(
+                        value = selectedRoom?.let { "${it.name} • ${it.qrValue}" } ?: "",
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Ruangan") },
+                        placeholder = { Text("Pilih ruangan", color = grayText) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(),
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    ExposedDropdownMenu(
+                        expanded = roomExpanded,
+                        onDismissRequest = { roomExpanded = false }
+                    ) {
+                        state.rooms.forEach { r ->
+                            DropdownMenuItem(
+                                text = { Text("${r.name} • ${r.qrValue}") },
+                                onClick = {
+                                    selectedRoom = r
+                                    roomExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = note,
+                    onValueChange = { note = it },
+                    label = { Text("Catatan Tugas") },
+                    placeholder = { Text("Contoh: Bersihkan lantai & buang sampah", color = grayText) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(14.dp),
+                    minLines = 3
+                )
+
+                Spacer(Modifier.height(14.dp))
+
+                state.error?.let {
+                    Text(it, color = Color.Red, fontSize = 13.sp)
+                    Spacer(Modifier.height(8.dp))
+                }
+
+                Button(
+                    onClick = { vm.createTask(selectedPetugas, selectedRoom, note) },
+                    enabled = !state.loading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = green)
+                ) {
+                    if (state.loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text("Menyimpan...", color = Color.White, fontWeight = FontWeight.Bold)
+                    } else {
+                        Text("Assign Task", color = Color.White, fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        if (state.loading && (state.petugas.isEmpty() || state.rooms.isEmpty())) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Text("Memuat data...", color = grayText)
+            }
+        }
     }
-}
-
-/* ================= COMPONENT ================= */
-
-@Composable
-private fun SectionTitle(text: String) {
-    Text(text, color = Color(0xFF6B7C75), fontSize = 12.sp, fontWeight = FontWeight.Bold)
-}
-
-@Composable
-private fun CardWhite(
-    border: Color,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(16.dp))
-            .border(1.dp, border, RoundedCornerShape(16.dp))
-            .padding(16.dp),
-        content = content
-    )
-}
-
-@Composable
-private fun TypeChipLight(
-    text: String,
-    selected: Boolean,
-    accent: Color,
-    onClick: () -> Unit
-) {
-    Surface(
-        color = if (selected) accent.copy(alpha = 0.15f) else Color.Transparent,
-        shape = RoundedCornerShape(50),
-        border = BorderStroke(1.dp, accent),
-        modifier = Modifier.clickable { onClick() }
-    ) {
-        Text(
-            text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            color = if (selected) accent else Color(0xFF1E2D28),
-            fontWeight = FontWeight.Bold,
-            fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-private fun InputLight(
-    value: String,
-    placeholder: String,
-    height: Dp = 48.dp,
-    green: Color,
-    border: Color,
-    onChange: (String) -> Unit
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onChange,
-        placeholder = { Text(placeholder) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(height),
-        shape = RoundedCornerShape(14.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            focusedBorderColor = green,
-            unfocusedBorderColor = border,
-            cursorColor = green,
-            focusedTextColor = Color(0xFF1E2D28),
-            unfocusedTextColor = Color(0xFF1E2D28)
-        )
-    )
 }

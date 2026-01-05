@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 fun UpdateStatusScreen(
     nav: NavHostController,
     vm: RoomViewModel,
-    roomId: Int
+    roomId: String
 ) {
     var selected by remember { mutableStateOf("") }
     var showPopup by remember { mutableStateOf(false) }

@@ -23,7 +23,7 @@ import com.example.cleanfypab.viewmodel.RoomViewModel
 fun RoomDetailScreen(
     nav: NavHostController,
     vm: RoomViewModel,
-    id: Int
+    id: String
 ) {
     val room = vm.getRoomById(id)
 

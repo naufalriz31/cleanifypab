@@ -1,7 +1,7 @@
 package com.example.cleanfypab.ui.screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,7 +26,7 @@ import com.example.cleanfypab.viewmodel.RoomViewModel
 fun DetailRoomScreen(
     nav: NavHostController,
     vm: RoomViewModel,
-    roomId: Int
+    roomId: String // ✅ ubah ke String (docId Firestore)
 ) {
     val room = vm.getRoomById(roomId)
 
@@ -146,7 +146,7 @@ fun DetailRoomScreen(
                     fontSize = 12.sp
                 )
                 Text(
-                    room.time,
+                    room.time.ifBlank { "-" }, // ✅ aman kalau kosong
                     color = darkText,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium
@@ -187,9 +187,7 @@ fun DetailRoomScreen(
         TextField(
             value = note,
             onValueChange = { note = it },
-            placeholder = {
-                Text("Tulis catatan singkat...", color = grayText)
-            },
+            placeholder = { Text("Tulis catatan singkat...", color = grayText) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(120.dp),
@@ -210,7 +208,7 @@ fun DetailRoomScreen(
         /* ===== BUTTON KONFIRMASI ===== */
         Button(
             onClick = {
-                vm.markRoomClean(roomId)
+                vm.markRoomClean(roomId) // ✅ sekarang String
                 nav.popBackStack()
             },
             modifier = Modifier
