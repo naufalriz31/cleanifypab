@@ -8,14 +8,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,11 +70,11 @@ fun AdminRoomScreen(
                 containerColor = green,
                 modifier = Modifier.size(48.dp)
             ) {
-                Icon(Icons.Default.Add, null, tint = Color.White)
+                Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
             }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         /* ================= SEARCH ================= */
         OutlinedTextField(
@@ -93,60 +93,7 @@ fun AdminRoomScreen(
             )
         )
 
-        Spacer(Modifier.height(20.dp))
-
-        /* ================= OVERVIEW ================= */
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            OverviewCardLight(
-                modifier = Modifier.weight(1f),
-                value = "30",
-                label = "Total Ruangan",
-                icon = Icons.Default.Apartment,
-                accent = green,
-                card = cardColor,
-                darkText = darkText
-            )
-            OverviewCardLight(
-                modifier = Modifier.weight(1f),
-                value = "12",
-                label = "Tersedia",
-                icon = Icons.Default.CheckCircle,
-                accent = green,
-                card = cardColor,
-                darkText = darkText
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            OverviewCardLight(
-                modifier = Modifier.weight(1f),
-                value = "13",
-                label = "Terpakai",
-                icon = Icons.Default.Person,
-                accent = red,
-                card = cardColor,
-                darkText = darkText
-            )
-            OverviewCardLight(
-                modifier = Modifier.weight(1f),
-                value = "5",
-                label = "Perawatan",
-                icon = Icons.Default.Build,
-                accent = yellow,
-                card = cardColor,
-                darkText = darkText
-            )
-        }
-
-        Spacer(Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         /* ================= FILTER ================= */
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -156,50 +103,89 @@ fun AdminRoomScreen(
             RoomFilterLight("MAINT", "Perawatan", selectedFilter, green) { selectedFilter = "MAINT" }
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         /* ================= ROOM LIST ================= */
         LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
 
-            item { RoomItemLight("Ruang 101", "Standar Single", "Tersedia", green, cardColor, darkText, grayText) }
-            item { RoomItemLight("Ruang 102", "Standar Single", "Terpakai", red, cardColor, darkText, grayText) }
-            item { RoomItemLight("Ruang 105", "Suite Deluxe", "Perawatan", yellow, cardColor, darkText, grayText) }
-            item { RoomItemLight("Ruang 205", "Superior Queen", "Tersedia", green, cardColor, darkText, grayText) }
-            item { RoomItemLight("Ruang 304", "Ruang Eksekutif", "Terpakai", red, cardColor, darkText, grayText) }
-            item { RoomItemLight("Ruang 401", "Ruang Rapat", "Tersedia", green, cardColor, darkText, grayText) }
+            item {
+                RoomItemLight(
+                    "Ruang 101",
+                    "Standar Single",
+                    "Tersedia",
+                    green,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
 
-            item { Spacer(Modifier.height(24.dp)) }
+            item {
+                RoomItemLight(
+                    "Ruang 102",
+                    "Standar Single",
+                    "Terpakai",
+                    red,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
+
+            item {
+                RoomItemLight(
+                    "Ruang 105",
+                    "Suite Deluxe",
+                    "Perawatan",
+                    yellow,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
+
+            item {
+                RoomItemLight(
+                    "Ruang 205",
+                    "Superior Queen",
+                    "Tersedia",
+                    green,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
+
+            item {
+                RoomItemLight(
+                    "Ruang 304",
+                    "Ruang Eksekutif",
+                    "Terpakai",
+                    red,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
+
+            item {
+                RoomItemLight(
+                    "Ruang 401",
+                    "Ruang Rapat",
+                    "Tersedia",
+                    green,
+                    cardColor,
+                    darkText,
+                    grayText
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
 
 /* ================= KOMPONEN ================= */
-
-@Composable
-fun OverviewCardLight(
-    modifier: Modifier,
-    value: String,
-    label: String,
-    icon: ImageVector,
-    accent: Color,
-    card: Color,
-    darkText: Color
-) {
-    Row(
-        modifier = modifier
-            .background(card, RoundedCornerShape(18.dp))
-            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(18.dp))
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(value, color = darkText, fontSize = 22.sp, fontWeight = FontWeight.Bold)
-            Text(label, color = accent, fontSize = 13.sp)
-        }
-        Icon(icon, null, tint = accent)
-    }
-}
 
 @Composable
 fun RoomFilterLight(

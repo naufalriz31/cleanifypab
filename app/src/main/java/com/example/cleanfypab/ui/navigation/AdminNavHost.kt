@@ -51,11 +51,22 @@ fun AdminNavHost(
                 )
             }
 
-            /* ================= REPORTS ================= */
-            composable(AdminRoutes.REPORTS) {
-                AdminReportScreen(
-                    onAssignClick = {
-                        adminNavController.navigate(AdminRoutes.CREATE_TASK)
+            /* ================= PETUGAS ================= */
+            composable(AdminRoutes.PETUGAS) {
+                AdminPetugasScreen(
+                    onAddPetugas = {
+                        adminNavController.navigate(AdminRoutes.ADD_PETUGAS)
+                    }
+                )
+            }
+
+            /* ================= ADD PETUGAS ================= */
+            composable(AdminRoutes.ADD_PETUGAS) {
+                AdminAddPetugasScreen(
+                    onBack = { adminNavController.popBackStack() },
+                    onSave = {
+                        // TODO: simpan petugas ke database
+                        adminNavController.popBackStack()
                     }
                 )
             }
@@ -72,7 +83,6 @@ fun AdminNavHost(
                         adminNavController.navigate(AdminRoutes.EDIT_PROFILE)
                     },
                     onSignOut = {
-                        // 🔥 LOGOUT ADMIN → LOGIN
                         rootNavController.navigate(Routes.LOGIN) {
                             popUpTo(Routes.ADMIN_ROOT) { inclusive = true }
                             launchSingleTop = true
@@ -104,7 +114,7 @@ fun AdminNavHost(
                 AdminCreateTaskScreen(
                     onCancel = { adminNavController.popBackStack() },
                     onAssign = {
-                        adminNavController.popBackStack(AdminRoutes.REPORTS, false)
+                        adminNavController.popBackStack(AdminRoutes.PETUGAS, false)
                     }
                 )
             }
