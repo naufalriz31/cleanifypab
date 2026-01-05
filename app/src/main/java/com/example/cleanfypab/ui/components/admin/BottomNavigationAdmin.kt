@@ -2,7 +2,6 @@ package com.example.cleanfypab.ui.components.admin
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -35,9 +34,9 @@ fun BottomNavigationAdmin(
             label = "Rooms"
         ),
         AdminBottomNavItem(
-            route = AdminRoutes.REPORTS,
-            icon = Icons.AutoMirrored.Filled.Assignment,
-            label = "Reports"
+            route = AdminRoutes.PETUGAS, // ✅ GANTI
+            icon = Icons.Default.People, // 👥 ICON PETUGAS
+            label = "Petugas"
         ),
         AdminBottomNavItem(
             route = AdminRoutes.PROFILE,
@@ -52,9 +51,7 @@ fun BottomNavigationAdmin(
         tonalElevation = 0.dp,
         border = androidx.compose.foundation.BorderStroke(1.dp, borderTop)
     ) {
-        NavigationBar(
-            containerColor = bg
-        ) {
+        NavigationBar(containerColor = bg) {
             items.forEach { item ->
                 val selected = currentRoute == item.route
 
@@ -84,7 +81,7 @@ fun BottomNavigationAdmin(
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = Color.Transparent,   // ❌ tidak ada bubble hijau
+                        indicatorColor = Color.Transparent,
                         selectedIconColor = green,
                         selectedTextColor = green,
                         unselectedIconColor = inactive,
