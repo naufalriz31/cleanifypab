@@ -36,38 +36,41 @@ fun AdminNavHost(
             /* ================= DASHBOARD ================= */
             composable(AdminRoutes.DASHBOARD) {
                 AdminDashboardScreen(
-                    onNotificationClick = {
-                        adminNavController.navigate(AdminRoutes.NOTIFICATIONS)
-                    }
+                    onNotificationClick = { adminNavController.navigate(AdminRoutes.NOTIFICATIONS) },
+                    onNavigate = { route -> adminNavController.navigate(route) }
                 )
             }
+
 
             /* ================= ROOMS ================= */
             composable(AdminRoutes.ROOMS) {
                 AdminRoomScreen(
-                    onAddTask = {
-                        adminNavController.navigate(AdminRoutes.CREATE_TASK)
+                    onAddRoom = {
+                        adminNavController.navigate(AdminRoutes.ADD_ROOM)
                     }
+                )
+            }
+
+            /* ================= ADD ROOM ================= */
+            composable(AdminRoutes.ADD_ROOM) {
+                AddRoomScreen(
+                    onBack = { adminNavController.popBackStack() }
                 )
             }
 
             /* ================= PETUGAS ================= */
             composable(AdminRoutes.PETUGAS) {
                 AdminPetugasScreen(
-                    onAddPetugas = {
-                        adminNavController.navigate(AdminRoutes.ADD_PETUGAS)
-                    }
+                    onAddTask = { adminNavController.navigate(AdminRoutes.CREATE_TASK) }
                 )
             }
+
 
             /* ================= ADD PETUGAS ================= */
             composable(AdminRoutes.ADD_PETUGAS) {
                 AdminAddPetugasScreen(
                     onBack = { adminNavController.popBackStack() },
-                    onSave = {
-                        // TODO: simpan petugas ke database
-                        adminNavController.popBackStack()
-                    }
+                    onSave = { adminNavController.popBackStack() }
                 )
             }
 
@@ -109,6 +112,7 @@ fun AdminNavHost(
                 )
             }
 
+
             /* ================= CREATE TASK ================= */
             composable(AdminRoutes.CREATE_TASK) {
                 AdminCreateTaskScreen(
@@ -121,3 +125,4 @@ fun AdminNavHost(
         }
     }
 }
+

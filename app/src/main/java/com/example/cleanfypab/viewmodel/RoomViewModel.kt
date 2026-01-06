@@ -2,7 +2,6 @@ package com.example.cleanfypab.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cleanfypab.data.model.RoomDoc
 import com.example.cleanfypab.data.model.RoomModel
 import com.example.cleanfypab.data.repository.RoomFirebaseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,47 +17,28 @@ class RoomViewModel(
 
     init {
         viewModelScope.launch {
-            repo.seedDefaultRoomsIfEmpty()
             repo.streamRooms().collect { rooms ->
-                _roomList.value = rooms.map { it.toRoomModel() }
+                _roomList.value = rooms
             }
         }
     }
 
-    fun getRoomById(id: Int): RoomModel? {
+    fun getRoomById(id: String): RoomModel? {
         return _roomList.value.firstOrNull { it.id == id }
     }
-
-    /**
-     * ✅ Fungsi utama (baru) yang dipakai backend Firebase
-     */
-    fun updateStatus(roomId: Int, status: String) {
-        viewModelScope.launch {
-            repo.updateRoomStatus(roomId, status)
-        }
-    }
-
-    /**
-     * ✅ Alias untuk UI lama (biar tidak error)
-     */
-    fun markRoomClean(id: Int) {
+    fun markRoomClean(id: String) {
         updateStatus(id, "Selesai")
     }
 
-    /**
-     * ✅ Alias untuk UI lama (biar tidak error)
-     * Kamu bisa panggil status apa saja: "Menunggu" / "Selesai"
-     */
-    fun updateRoomStatus(id: Int, status: String) {
+
+    fun deleteRoom(id: String) {
+        viewModelScope.launch { repo.deleteRoom(id) }
+    }
+    fun updateRoomStatus(id: String, status: String) {
         updateStatus(id, status)
     }
 
-    private fun RoomDoc.toRoomModel(): RoomModel {
-        return RoomModel(
-            id = id,
-            name = name,
-            status = status,
-            time = time
-        )
+    fun updateStatus(roomId: String, status: String) {
+        viewModelScope.launch { repo.updateRoomStatus(roomId, status) }
     }
 }

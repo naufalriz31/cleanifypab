@@ -3,8 +3,6 @@ package com.example.cleanfypab.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -29,14 +27,11 @@ import com.example.cleanfypab.viewmodel.RoomViewModel
 fun AppNavHost(
     nav: NavHostController,
     vm: RoomViewModel,
-    // ✅ BIAR AMAN: kalau kamu pernah panggil rootNavController, tetap bisa.
-    // Kalau tidak dikirim, otomatis pakai nav.
     rootNavController: NavHostController = nav
 ) {
     val navBackStackEntry by nav.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Bottom bar hanya tampil di flow PETUGAS
     val showBottomBar = currentRoute in listOf(
         Routes.HOME,
         Routes.HISTORY,
@@ -46,11 +41,7 @@ fun AppNavHost(
     )
 
     Scaffold(
-        bottomBar = {
-            if (showBottomBar) {
-                BottomNavigationBar(navController = nav)
-            }
-        }
+        bottomBar = { if (showBottomBar) BottomNavigationBar(navController = nav) }
     ) { innerPadding ->
 
         NavHost(
@@ -59,7 +50,6 @@ fun AppNavHost(
             modifier = Modifier.padding(innerPadding)
         ) {
 
-            /* ================= LOGIN ================= */
             composable(Routes.LOGIN) {
                 LoginScreen(
                     onLoginSuccess = { role ->
@@ -69,7 +59,7 @@ fun AppNavHost(
                                 launchSingleTop = true
                             }
                         } else {
-                            nav.navigate(Routes.PETUGAS_ROOT) {
+                            nav.navigate(Routes.HOME) {
                                 popUpTo(Routes.LOGIN) { inclusive = true }
                                 launchSingleTop = true
                             }
@@ -78,67 +68,34 @@ fun AppNavHost(
                 )
             }
 
-            /* ================= ADMIN ROOT ================= */
             composable(Routes.ADMIN_ROOT) {
-                // AdminNavHost butuh rootNavController untuk logout balik ke LOGIN
                 AdminNavHost(rootNavController = rootNavController)
             }
 
-            /* ================= PETUGAS ROOT ================= */
-            composable(Routes.PETUGAS_ROOT) {
-                LaunchedEffect(Unit) {
-                    nav.navigate(Routes.HOME) {
-                        popUpTo(Routes.PETUGAS_ROOT) { inclusive = true }
-                        launchSingleTop = true
-                    }
-                }
-            }
+            composable(Routes.HOME) { HomeScreen(nav) }
+            composable(Routes.HISTORY) { ReportHistoryScreen(nav = nav) }
+            composable(Routes.TASK_TODAY) { TaskTodayScreen(nav, vm) }
+            composable(Routes.PROFILE) { ProfileScreen(nav) }
+            composable(Routes.SCAN) { ScanScreen(nav) }
+            composable(Routes.NOTIFICATION) { NotificationScreen(nav) }
 
-            /* ================= PETUGAS FLOW ================= */
-            composable(Routes.HOME) {
-                HomeScreen(nav)
-            }
-
-            composable(Routes.HISTORY) {
-                val rooms = vm.roomList.collectAsState().value
-                ReportHistoryScreen(nav = nav, rooms = rooms)
-            }
-
-            composable(Routes.TASK_TODAY) {
-                TaskTodayScreen(nav, vm)
-            }
-
-            composable(Routes.PROFILE) {
-                ProfileScreen(nav)
-            }
-
-            composable(Routes.SCAN) {
-                ScanScreen(nav)
-            }
-
-            composable(Routes.NOTIFICATION) {
-                NotificationScreen(nav)
-            }
-
-            /* ================= DETAIL & UPDATE ================= */
+            // ✅ tetap "detail/{id}" biar cocok dengan navigate lama, tapi id = String
             composable("detail/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
+                val id = backStack.arguments?.getString("id").orEmpty()
                 RoomDetailScreen(nav, vm, id)
             }
 
+            // ✅ tetap "update_status/{id}" biar cocok dengan navigate lama, tapi id = String
             composable("update_status/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
+                val id = backStack.arguments?.getString("id").orEmpty()
                 UpdateStatusScreen(nav, vm, id)
             }
 
-            /* ================= EDIT ================= */
-            composable(Routes.EDIT_PROFILE) {
-                EditProfileScreen(nav)
-            }
+            composable(Routes.EDIT_PROFILE) { EditProfileScreen(nav) }
 
-            composable("edit_report/{id}") { backStack ->
-                val id = backStack.arguments?.getString("id")?.toIntOrNull() ?: 0
-                EditReportScreen(nav, id)
+            composable("edit_report/{taskId}") { backStack ->
+                val taskId = backStack.arguments?.getString("taskId").orEmpty()
+                EditReportScreen(nav = nav, taskId = taskId)
             }
         }
     }

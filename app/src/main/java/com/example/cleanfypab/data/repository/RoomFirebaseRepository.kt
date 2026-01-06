@@ -1,6 +1,6 @@
 package com.example.cleanfypab.data.repository
 
-import com.example.cleanfypab.data.model.RoomDoc
+import com.example.cleanfypab.data.model.RoomModel
 import com.example.cleanfypab.data.remote.FirebaseProvider
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.channels.awaitClose
@@ -15,74 +15,87 @@ class RoomFirebaseRepository {
 
     private val col = FirebaseProvider.db.collection("rooms")
 
-    /**
-     * Stream real-time daftar rooms.
-     * - Kalau permission ditolak / offline → emit emptyList, tidak crash.
-     */
-    fun streamRooms(): Flow<List<RoomDoc>> = callbackFlow {
+    /** ================= STREAM ROOMS ================= */
+    fun streamRooms(): Flow<List<RoomModel>> = callbackFlow {
         var reg: ListenerRegistration? = null
 
         reg = col.addSnapshotListener { snap, err ->
-            if (err != null) {
-                // jangan crash
+            if (err != null || snap == null) {
                 trySend(emptyList())
                 return@addSnapshotListener
             }
 
-            val list = snap?.documents
-                ?.mapNotNull { it.toObject(RoomDoc::class.java) }
-                ?.sortedBy { it.id }
-                ?: emptyList()
+            val rooms = snap.documents.mapNotNull { doc ->
+                val name = doc.getString("name") ?: return@mapNotNull null
 
-            trySend(list)
+                RoomModel(
+                    id = doc.id, // ✅ AMAN
+                    name = name,
+                    type = doc.getString("type") ?: "",
+                    qrValue = doc.getString("qrValue") ?: "",
+                    status = doc.getString("status") ?: "AVAILABLE",
+                    time = doc.getString("time") ?: ""
+                )
+            }
+
+            trySend(rooms)
         }
 
         awaitClose { reg?.remove() }
     }
 
-    /**
-     * Seed data default jika koleksi kosong.
-     * - Aman: return Result, jadi pemanggil tidak crash kalau permission ditolak/offline.
-     */
-    suspend fun seedDefaultRoomsIfEmpty(): Result<Unit> = runCatching {
-        val snap = col.limit(1).get().await()
-        if (!snap.isEmpty) return@runCatching
+    /** ================= ADD ROOM ================= */
+    suspend fun addRoom(room: RoomModel): Result<String> = runCatching {
+        val doc = col.document() // auto id
 
-        val defaults = listOf(
-            RoomDoc(1, "Ruang Meeting A101", "Menunggu", "09:00"),
-            RoomDoc(2, "Lobi Utama", "Selesai", "08:30"),
-            RoomDoc(3, "Toilet Lt. 2", "Menunggu", "09:15")
-        )
+        doc.set(
+            mapOf(
+                "name" to room.name,
+                "type" to room.type,
+                "qrValue" to room.qrValue,
+                "status" to room.status,
+                "time" to room.time,
+                "createdAt" to System.currentTimeMillis()
+            )
+        ).await()
 
-        defaults.forEach { room ->
-            col.document(room.id.toString()).set(room).await()
-        }
+        doc.id
     }
 
-    /**
-     * Update status room + update time.
-     * - Aman: return Result.
-     */
-    suspend fun updateRoomStatus(roomId: Int, newStatus: String): Result<Unit> = runCatching {
-        val nowTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+    /** ================= DELETE ROOM ================= */
+    suspend fun deleteRoom(roomId: String): Result<Unit> = runCatching {
+        col.document(roomId).delete().await()
+    }
 
-        col.document(roomId.toString())
+    /** ================= UPDATE STATUS ================= */
+    suspend fun updateRoomStatus(roomId: String, status: String): Result<Unit> = runCatching {
+        val timeNow = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+
+        col.document(roomId)
             .update(
                 mapOf(
-                    "status" to newStatus,
-                    "time" to nowTime,
+                    "status" to status,
+                    "time" to timeNow,
                     "updatedAt" to System.currentTimeMillis()
                 )
             )
             .await()
     }
+    suspend fun findRoomByQrValue(qrValue: String): Result<RoomModel?> = runCatching {
+        val snap = col
+            .whereEqualTo("qrValue", qrValue)
+            .limit(1)
+            .get()
+            .await()
 
-    /**
-     * Get room by id.
-     * - Aman: return Result<RoomDoc?>
-     */
-    suspend fun getRoomById(roomId: Int): Result<RoomDoc?> = runCatching {
-        val snap = col.document(roomId.toString()).get().await()
-        snap.toObject(RoomDoc::class.java)
+        val doc = snap.documents.firstOrNull() ?: return@runCatching null
+        // pakai doc.id sebagai id utama
+        doc.toObject(RoomModel::class.java)?.copy(id = doc.id)
+    }
+
+    /** ================= CEK QR DUPLIKAT ================= */
+    suspend fun existsQrValue(qrValue: String): Result<Boolean> = runCatching {
+        val snap = col.whereEqualTo("qrValue", qrValue).limit(1).get().await()
+        !snap.isEmpty
     }
 }

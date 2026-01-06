@@ -9,7 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,30 +22,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.cleanfypab.data.model.RoomModel
+import com.example.cleanfypab.data.model.TaskHistoryItem
+import com.example.cleanfypab.viewmodel.TaskHistoryViewModel
+import androidx.compose.foundation.BorderStroke
 
 @Composable
 fun ReportHistoryScreen(
     nav: NavHostController,
-    rooms: List<RoomModel>
+    vm: TaskHistoryViewModel = viewModel()
 ) {
+    val ui by vm.state.collectAsState()
 
-    /* ===== PALET WARNA (SESUAI LOGIN / HOME) ===== */
-    val bgGradient = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFF6FBF8),
-            Color(0xFFE9F5EE)
-        )
-    )
-
+    /* ===== PALET ===== */
+    val bgGradient = Brush.verticalGradient(listOf(Color(0xFFF6FBF8), Color(0xFFE9F5EE)))
     val card = Color.White
     val cardSoft = Color(0xFFF2F7F4)
     val borderSoft = Color(0xFFE0E0E0)
 
     val primaryGreen = Color(0xFF2ECC71)
     val orange = Color(0xFFE67E22)
-    val red = Color(0xFFE74C3C)
+    val blue = Color(0xFF4DA3FF)
 
     val darkText = Color(0xFF1E2D28)
     val grayText = Color(0xFF6B7C75)
@@ -52,16 +51,19 @@ fun ReportHistoryScreen(
     var selectedTab by remember { mutableStateOf(0) }
     var searchQuery by remember { mutableStateOf("") }
 
-    val tabs = listOf("Semua", "Selesai", "Menunggu", "Perlu Dicek")
+    // Tab sesuai status tasks
+    val tabs = listOf("Semua", "Selesai", "Menunggu", "Dikerjakan")
 
-    val filteredRooms = rooms.filter { room ->
+    LaunchedEffect(Unit) { vm.load() }
+
+    val filtered = ui.items.filter { item ->
         val cocokStatus = when (selectedTab) {
-            1 -> room.status == "Selesai"
-            2 -> room.status == "Menunggu"
-            3 -> room.status == "Perlu Dicek"
+            1 -> item.status == "DONE"
+            2 -> item.status == "ASSIGNED"
+            3 -> item.status == "IN_PROGRESS"
             else -> true
         }
-        cocokStatus && room.name.contains(searchQuery, ignoreCase = true)
+        cocokStatus && item.roomName.contains(searchQuery, ignoreCase = true)
     }
 
     Column(
@@ -71,28 +73,32 @@ fun ReportHistoryScreen(
             .padding(16.dp)
     ) {
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(10.dp))
 
         /* ===== HEADER ===== */
         Row(verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { nav.popBackStack() }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Kembali",
-                    tint = darkText
-                )
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = darkText)
             }
             Text(
-                "Riwayat Laporan",
+                "Riwayat Task",
                 color = darkText,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold
             )
+            Spacer(Modifier.weight(1f))
+            Text(
+                "Refresh",
+                color = primaryGreen,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.clickable { vm.load() }
+            )
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(16.dp))
 
-        /* ===== PENCARIAN ===== */
+        /* ===== SEARCH ===== */
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -101,68 +107,51 @@ fun ReportHistoryScreen(
                 .border(1.dp, borderSoft, RoundedCornerShape(14.dp)),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TextField(
+            Icon(
+                Icons.Default.Search,
+                contentDescription = null,
+                tint = grayText,
+                modifier = Modifier.padding(start = 12.dp)
+            )
+
+            OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
-                placeholder = {
-                    Text("Cari ruangan...", color = grayText)
-                },
+                placeholder = { Text("Cari ruangan...", color = grayText) },
                 modifier = Modifier.weight(1f),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
-                    cursorColor = primaryGreen,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = primaryGreen,
                     focusedTextColor = darkText,
                     unfocusedTextColor = darkText
                 ),
                 singleLine = true
             )
-
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 12.dp)
-                    .size(32.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(card)
-                    .border(1.dp, borderSoft, RoundedCornerShape(8.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Default.FilterList,
-                    contentDescription = "Filter",
-                    tint = darkText
-                )
-            }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(14.dp))
 
         /* ===== TAB FILTER ===== */
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             tabs.forEachIndexed { index, title ->
                 val selected = selectedTab == index
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(30.dp))
-                        .background(
-                            if (selected) primaryGreen.copy(alpha = 0.15f) else card
-                        )
-                        .border(
-                            1.dp,
-                            if (selected) primaryGreen else borderSoft,
-                            RoundedCornerShape(30.dp)
-                        )
+                        .background(if (selected) primaryGreen.copy(alpha = 0.15f) else card)
+                        .border(1.dp, if (selected) primaryGreen else borderSoft, RoundedCornerShape(30.dp))
                         .clickable { selectedTab = index }
-                        .padding(horizontal = 16.dp, vertical = 10.dp)
+                        .padding(horizontal = 14.dp, vertical = 10.dp)
                 ) {
                     Text(
                         title,
-                        fontSize = 14.sp,
+                        fontSize = 13.sp,
                         color = if (selected) primaryGreen else darkText,
                         fontWeight = FontWeight.Medium
                     )
@@ -170,96 +159,126 @@ fun ReportHistoryScreen(
             }
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(16.dp))
 
-        /* ===== DAFTAR LAPORAN ===== */
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            items(filteredRooms) { room ->
-                ReportHistoryItemLight(room) {
-                    nav.navigate("detail/${room.id}")
-                }
+        ui.error?.let { Text(it, color = Color.Red, fontSize = 13.sp) }
+
+        if (ui.loading) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                CircularProgressIndicator()
             }
+            Spacer(Modifier.height(10.dp))
+        }
+
+        if (!ui.loading && filtered.isEmpty()) {
+            Text("Belum ada task.", color = grayText)
+            return@Column
+        }
+
+        /* ===== LIST ===== */
+        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(filtered, key = { it.id }) { item ->
+                TaskHistoryCard(
+                    item = item,
+                    primaryGreen = primaryGreen,
+                    orange = orange,
+                    blue = blue,
+                    darkText = darkText,
+                    grayText = grayText,
+                    borderSoft = borderSoft,
+                    onEdit = {
+                        // ✅ menuju EditReportScreen untuk ubah status
+                        nav.navigate("edit_report/${item.id}")
+                    }
+                )
+            }
+            item { Spacer(Modifier.height(24.dp)) }
         }
     }
 }
 
-/* ================= ITEM ================= */
-
 @Composable
-private fun ReportHistoryItemLight(
-    room: RoomModel,
-    onClick: () -> Unit
+private fun TaskHistoryCard(
+    item: TaskHistoryItem,
+    primaryGreen: Color,
+    orange: Color,
+    blue: Color,
+    darkText: Color,
+    grayText: Color,
+    borderSoft: Color,
+    onEdit: () -> Unit
 ) {
-
-    val statusColor = when (room.status) {
-        "Selesai" -> Color(0xFF2ECC71)
-        "Menunggu" -> Color(0xFFE67E22)
-        "Perlu Dicek" -> Color(0xFFE74C3C)
-        else -> Color.Gray
+    val (statusLabel, statusColor) = when (item.status) {
+        "DONE" -> "Selesai" to primaryGreen
+        "IN_PROGRESS" -> "Dikerjakan" to blue
+        else -> "Menunggu" to orange
     }
 
-    val darkText = Color(0xFF1E2D28)
-    val grayText = Color(0xFF6B7C75)
-    val borderSoft = Color(0xFFE0E0E0)
-
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp)
     ) {
-        Row(
+        Column(
             modifier = Modifier
+                .border(1.dp, borderSoft, RoundedCornerShape(16.dp))
                 .padding(16.dp)
-                .border(1.dp, borderSoft, RoundedCornerShape(16.dp)),
-            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color(0xFFF2F7F4)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("▣", color = darkText, fontSize = 22.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        item.roomName.ifBlank { "Ruangan" },
+                        color = darkText,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        item.timeLabel,
+                        color = grayText,
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(30.dp))
+                        .background(statusColor.copy(alpha = 0.15f))
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(statusLabel, color = statusColor, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                }
             }
 
-            Spacer(Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
+            if (item.note.isNotBlank()) {
+                Spacer(Modifier.height(10.dp))
                 Text(
-                    room.name,
-                    color = darkText,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    room.time,
+                    item.note,
                     color = grayText,
-                    fontSize = 13.sp,
-                    maxLines = 1,
+                    fontSize = 12.sp,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(statusColor.copy(alpha = 0.15f))
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ) {
-                Text(
-                    room.status,
-                    color = statusColor,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp
-                )
-            }
+            Spacer(Modifier.height(12.dp))
 
-            Spacer(Modifier.width(6.dp))
-            Text("›", color = grayText, fontSize = 26.sp)
+            // ✅ tombol ubah status
+            OutlinedButton(
+                onClick = onEdit,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(14.dp),
+                border = BorderStroke(1.dp, borderSoft),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = darkText)
+            ) {
+                Icon(Icons.Default.Edit, contentDescription = null, tint = darkText)
+                Spacer(Modifier.width(8.dp))
+                Text("Ubah Status / Isi Laporan", fontWeight = FontWeight.SemiBold)
+            }
         }
     }
 }
