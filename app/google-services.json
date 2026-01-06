@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "125841856488",
+    "project_id": "cleanifypab",
+    "storage_bucket": "cleanifypab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125841856488:android:1fe41496525d109a5af65d",
+        "android_client_info": {
+          "package_name": "com.example.cleanfypab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe4O4zIvXg21xs2gf2ciLW261G1_K7aRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
